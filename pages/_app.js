@@ -1,4 +1,4 @@
-import "../Proton.js/styles.scss";
+import "../proton/styles.scss";
 import "../styles/globals.scss";
 
 function MyApp({ Component, pageProps }) {
