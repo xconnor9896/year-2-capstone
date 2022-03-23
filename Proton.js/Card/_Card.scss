@@ -1,0 +1,251 @@
+@use "../styles/vars" as *;
+
+div.proton.card {
+	// Transition
+	transition: $transition-fast;
+
+	// Flexbox
+	display: flex;
+	flex-direction: column;
+	// gap: $padding;
+
+	// Box
+	// padding: $padding;
+	margin: $margin;
+	border: $border-width $border-style $border-color;
+	border-radius: $border-radius;
+	overflow: hidden;
+
+	// Text
+	font-size: $font-p;
+	font-weight: $font-weight;
+	color: $text-color;
+
+	// Children
+	div.proton.children {
+		// padding: $padding;
+		> :first-child {
+			padding-top: $padding;
+		}
+
+		> :last-child {
+			padding-bottom: $padding;
+			&.proton.card-content {
+				padding-bottom: calc($padding * 2);
+			}
+		}
+	}
+
+	// Focusable
+	&[focusable]:focus {
+		outline: $focus;
+	}
+
+	// Header
+	div.proton.card-header {
+		width: 100%;
+		padding: 0 $padding;
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		p {
+			margin: 0;
+		}
+	}
+
+	// Content
+	div.proton.card-content {
+		width: 100%;
+		padding: calc($padding * 2);
+
+		&[flex] {
+			display: flex;
+			flex-direction: column;
+			gap: $padding;
+		}
+	}
+
+	// Image
+	div.proton.card-image {
+		width: 100%;
+		padding: 0 !important;
+		margin: 0 !important;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		img {
+			-webkit-user-drag: none;
+			pointer-events: none;
+			user-select: none;
+		}
+	}
+
+	// Dropshadow
+	&[hovereffect] {
+		&:hover {
+			box-shadow: $light-shadow;
+		}
+	}
+	&[dropshadow] {
+		box-shadow: $light-shadow;
+
+		&[hovereffect] {
+			&:hover {
+				box-shadow: $dark-shadow;
+			}
+		}
+	}
+
+	// Square
+	&[square] {
+		border-radius: 0;
+	}
+
+	// Rounder
+	&[rounder] {
+		border-radius: calc($border-radius * 4);
+		// border-width: calc($border-width * 2);
+	}
+
+	// No border
+	&[noborder] {
+		border: none;
+	}
+
+	// Disabled
+	&[disabled] {
+		opacity: 50%;
+		pointer-events: none;
+		user-select: none;
+		-webkit-user-drag: none;
+	}
+
+	&[loading] {
+		position: relative;
+		pointer-events: none;
+
+		opacity: 100%;
+
+		div.proton.children {
+			opacity: 0;
+		}
+
+		div.proton.loading {
+			// Box
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+
+			max-width: 100px;
+
+			pointer-events: none;
+
+			// Flexbox
+			display: flex;
+			align-items: center;
+			justify-content: space-evenly;
+
+			visibility: visible;
+
+			@for $i from 1 through 3 {
+				div.proton.dot:nth-child(3n + #{$i}) {
+					animation-delay: (($i - 1) * 0.25s);
+				}
+			}
+
+			div.proton.dot {
+				width: 10%;
+				height: 0;
+				padding-bottom: 10%;
+
+				// @each $name, $value in $colors {
+				// 	&[loadingColor="#{$name}"] {
+				// 		background: $value;
+				// 	}
+				// }
+
+				border-radius: 50%;
+
+				animation: bounce 1s infinite;
+				animation-fill-mode: forwards;
+
+				transform: translateY(-0.25rem);
+
+				@keyframes bounce {
+					0% {
+						transform: translateY(-0.25rem);
+					}
+					50% {
+						transform: translateY(0.25rem);
+					}
+					100% {
+						transform: translateY(-0.25rem);
+					}
+				}
+			}
+		}
+	}
+
+	// Emphasis
+	@each $key, $value in $emphasis {
+		&[emphasis="#{$key}"] {
+			border-color: $value;
+
+			div.proton.card-header {
+				color: $value;
+			}
+
+			&[loading] {
+				div.proton.loading {
+					div.proton.dot {
+						background: $value;
+					}
+				}
+			}
+		}
+	}
+
+	// Color
+	@each $key, $value in $colors {
+		&[color="#{$key}"] {
+			border-color: $value;
+
+			div.proton.card-header {
+				color: $value;
+			}
+
+			&[loading] {
+				div.proton.loading {
+					div.proton.dot {
+						background: $value;
+					}
+				}
+			}
+		}
+	}
+}
+
+div.proton.card-group {
+	// Transition
+	transition: $transition-fast;
+
+	// Flexbox
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: $margin;
+
+	div.proton.card {
+		margin: 0;
+	}
+}
