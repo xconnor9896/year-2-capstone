@@ -17,12 +17,12 @@ $colors: (
 );
 
 $emphasis: (
-	"primary": #2f2f97,
+	"primary": #65aee9,
 	"primary-text": $text-color-alt,
-	"secondary": #a1a2a7,
+	"secondary": #f99d1c,
 	"secondary-text": $text-color-alt,
-	"default": map-get($colors, "default"),
-	"default-text": $text-color,
+	"default": #4c5255,
+	"default-text": $text-color-alt,
 );
 
 // Rect
@@ -40,6 +40,7 @@ $dark-shadow: 0px 4px 16px $dark-shadow-color;
 // Border
 $border-width: 0.15rem;
 $border-radius: 0.25rem;
+$border-radius-fancy: 0.25rem 0rem 0rem 0.25rem;
 $border-radius-circular: 1.25rem;
 $border-radius-icon-circular: 50%;
 $border-style: solid;
