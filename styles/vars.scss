@@ -1,52 +1,32 @@
-// Colors
-$text-color: black;
-$text-color-alt: white;
-$text-blur: #c7c7c7;
+$text: white;
 
-$colors: (
-	"red": #ed5564,
-	"orange": #f1b037,
-	"yellow": #ffce54,
-	"green": #a0d568,
-	"blue": #4fc1e8,
-	"purple": #ac92eb,
-	"white": white,
-	"warning": #f8de6b,
-	"error": #eb6383,
-	"default": #ebebeb,
-	"success": #90ec90,
-);
+$em-primary: #65aee9;
+$em-secondary: #f99d1c;
+$em-default: #4c5255;
 
-$emphasis: (
-	"primary": #65aee9,
-	"primary-text": $text-color-alt,
-	"secondary": #f99d1c,
-	"secondary-text": $text-color-alt,
-	"default": #4c5255,
-	"default-text": $text-color-alt,
-);
+$background-light: #4c5255;
+$background-dark: #393e41;
 
 // Rect
 $padding: 0.5rem; // If changed, the progress bar will break;
 $margin: 0.5rem;
 
-$focus: 1px solid map-get($colors, "success");
-
 // Box Shadow
-$light-shadow-color: #0000001f;
-$dark-shadow-color: #0000003f;
+$light-shadow-color: #000000c5;
+$dark-shadow-color: #000000;
 $light-shadow: 0px 4px 16px $light-shadow-color;
 $dark-shadow: 0px 4px 16px $dark-shadow-color;
+$box-shadow: 0px 8px 4px rgba(0, 0, 0, 0.5);
 
 // Border
 $border-width: 0.15rem;
-$border-radius: 0.25rem;
+$border-radius: 0.5rem;
 $border-radius-fancy: 0.25rem 0rem 0rem 0.25rem;
 $border-radius-circular: 1.25rem;
 $border-radius-icon-circular: 50%;
 $border-style: solid;
 $border-style-blur: dotted;
-$border-color: map-get($colors, "default");
+$border-color: $background-dark;
 
 $border: $border-width $border-style $border-color;
 

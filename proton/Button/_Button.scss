@@ -71,6 +71,7 @@ button.proton.button {
 
 	// SVGs
 	svg,
+	* svg,
 	div.proton.button-label svg {
 		transition: $transition-fast;
 	}
