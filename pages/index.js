@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/pages/Home.module.scss";
-import { Button, Card } from "../proton";
+import { Button } from "../proton";
 
 export default function Home() {
 	return (
@@ -23,10 +23,6 @@ export default function Home() {
 					<Button hollow underline emphasis="secondary">
 						Button Example
 					</Button>
-
-          <Card>
-            
-          </Card>
 				</Button.Group>
 			</main>
 		</div>
