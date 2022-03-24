@@ -20,7 +20,7 @@ Proton works well with these libraries:
 All components can be imported with:
 
 ```jsx
-import { ComponentName } from "proton.js";
+import { ComponentName } from "../proton";
 ```
 
 ## Applying Modifications
@@ -79,7 +79,7 @@ Certain components can have emphasis applied to them. This can be:
 The button component has a variety of animations and styles for you to pick from.
 
 ```jsx
-import { Button } from "proton.js";
+import { Button } from "../proton";
 
 return <Button>Text/Children Here</Button>;
 ```
@@ -112,7 +112,7 @@ return <Button>Text/Children Here</Button>;
 The button group holds an unlimited number of `<Button/>`s in a stylish and compact way.
 
 ```jsx
-import { Button } from "proton.js";
+import { Button } from "../proton";
 
 return (
 	<Button.Group>
@@ -136,7 +136,7 @@ return (
 A button label goes inside of a button and can be used for icons, to indicate data, or whatever else you what emphasis applied to.
 
 ```jsx
-import { Button } from "proton.js";
+import { Button } from "../proton";
 
 return (
 	<Button>
@@ -159,7 +159,7 @@ return (
 The progress bar allows you to display a percentage value with any text over it.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -194,7 +194,7 @@ return (
 The spacer goes inside of a progress bar and takes up as much space as it can.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -218,7 +218,7 @@ return (
 The label is a box that should contain any inner content for the bar, excluding spacers. You can have multiple spacers and they will stay in the bar properly spaced. Please keep in mind that the progress bar should maintain a horizontal line and won't wrap properly.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -233,7 +233,7 @@ return (
 -   If one label contains a dot component, _all of them should_.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -253,7 +253,7 @@ return (
 -   All dots should _be the first element in the label_.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -276,7 +276,7 @@ return (
 -   If a label contains text and dot components, and the progress bar has a backline property, then _all of the labels in the bar should contain text to have the dots line up properly_.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100}>
@@ -303,7 +303,7 @@ return (
 Dots are nice indicators of "steps" inside of a progress bar. They should be contained within labels. They can also be displayed alongside text, but the styling rules described in [the label rules](#labelRules) must be followed.
 
 ```jsx
-import { ProgressBar } from "proton.js";
+import { ProgressBar } from "../proton";
 
 return (
 	<ProgressBar value={50} min={0} max={100} backline>
@@ -333,7 +333,7 @@ The pagination component is a simple yet effective button group for pagination.
 The paginator does not store page data or load it, it simply allows users to change their page number in an intuitive way, that the developer can use to modify the content of their pages.
 
 ```jsx
-import { Pagination } from "proton.js";
+import { Pagination } from "../proton";
 import { useState } from "react";
 
 // An example of a fully functional paginator.
@@ -405,4 +405,84 @@ Instead of the default, the above example will make each page number button disp
 
 ---
 
-### Input
+# JUST RUSHED TO WRITE ALL OF THIS SORRY IF IT SUCKS:
+
+### Card
+
+Cards are a nice way to hold content that pops out of the screen.
+
+```jsx
+import { Card } from "../proton";
+
+return (
+	<Card>
+		<ProgressBar.Label>Hello</ProgressBar.Label>
+		<ProgressBar.Spacer />
+		<ProgressBar.Label>World</ProgressBar.Label>
+	</Card>
+);
+```
+
+| Attribute     | Value          | Description                       |
+| ------------- | -------------- | --------------------------------- |
+| `focusable`   | see above      | see above                         |
+| `disabled`    | see above      | see above                         |
+| `emphasis`    | see above      | see above                         |
+| `color`       | see above      | see above                         |
+| `loading`     | see above      | see above                         |
+| `dropshadow`  | `true`/`false` | Adds a shadow to the background   |
+| `square`      | `true`/`false` | Makes the edges square            |
+| `rounder`     | `true`/`false` | Makes the edges more round.       |
+| `noborder`    | `true`/`false` | Gets rid of the border            |
+| `hovereffect` | `true`/`false` | Creates a shadow effect on hover. |
+
+### Card Image
+
+A nice formatted way of viewing the card content.
+
+```jsx
+<Card>
+	<Card.Image>
+		<img src="loletc" />
+	</Card.Image>
+</Card>
+```
+
+### Card Header
+
+A nice header for the card that you can put heading tags inside of.
+
+```jsx
+<Card>
+	<Card.Header>
+		<h1>Hello World</h1>
+	</Card.Header>
+</Card>
+```
+
+### Card Content
+
+The content of the card
+
+```jsx
+<Card>
+	<Card.Content>Hello World</Card.Content>
+</Card>
+```
+
+| Attribute | Value          | Description                        |
+| --------- | -------------- | ---------------------------------- |
+| `flex`    | `true`/`false` | Makes the content a column flexbox |
+
+### Card Group
+
+A group of cards.
+
+```jsx
+<Card.Group>
+	<Card />
+	<Card />
+	<Card />
+	<Card />
+</Card.Group>
+```
