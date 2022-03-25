@@ -22,12 +22,18 @@
 
 		height: 4rem;
 
-		.logo {
-			max-height: 3rem;
-		}
-
 		button {
 			margin: 0 !important;
+
+			background: $background-light !important;
+
+			z-index: 2;
+
+			svg {
+				&.flipped {
+					transform: rotate(-180deg);
+				}
+			}
 		}
 	}
 
@@ -39,35 +45,62 @@
 		width: min-content;
 		position: relative;
 
+		transition: $transition-fast;
+
 		bottom: 0;
-		left: 0;
+		left: -50vw;
 
 		margin: $margin;
-		padding: calc($padding / 2);
+		padding: $padding;
 
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 
-		gap: 1rem;
+		gap: 2rem;
 
-		div {
+		&.dropped {
+			bottom: 0;
+			left: 0;
+		}
+
+		section {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
 			gap: 0.5rem;
 
 			button {
-				&:first-child {
-					div {
-						padding-top: 0 !important;
-					}
+				border: none;
+				outline: none;
+				background: none;
+
+				color: $text;
+
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 0.5rem;
+				font-size: 1.25rem;
+				padding: calc($padding / 2) $padding;
+
+				transition: $transition-fast;
+
+				&:hover {
+					color: $em-secondary;
 				}
-				&:last-child {
-					div {
-						padding-bottom: 0 !important;
-					}
+
+				&:active {
+					color: darken($em-secondary, 25%);
 				}
-				div {
-					padding-left: 0 !important;
-				}
+
+				// &:first-child {
+				// 	padding-top: calc($padding / 2);
+				// }
+
+				// &:last-child {
+				// 	padding-bottom: calc($padding / 2);
+				// }
 			}
 		}
 	}

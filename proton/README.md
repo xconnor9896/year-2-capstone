@@ -180,12 +180,13 @@ return (
 
 #### Style Modifications
 
-| Attribute  | Value                                                         | Description                                                 |
-| ---------- | ------------------------------------------------------------- | ----------------------------------------------------------- |
-| `color`    | Any value from the [supported list of colors](#colors) above. | Sets the bar's color.                                       |
-| `overlay`  | `true` / `false`                                              | Creates an overlay/transparency effect on the bar.          |
-| `border`   | `true` / `false`                                              | Adds a border to the bar.                                   |
-| `backline` | `true` / `false`                                              | Adds a line across the bar that works with labels and dots. |
+| Attribute  | Value                                                         | Description                                                            |
+| ---------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `color`    | Any value from the [supported list of colors](#colors) above. | Sets the bar's color.                                                  |
+| `emphasis` | `"primary"` / `"secondary"` / `"default"`                     | Sets emphasis using the primary/secondary color-scheme. Default unset. |
+| `overlay`  | `true` / `false`                                              | Creates an overlay/transparency effect on the bar.                     |
+| `border`   | `true` / `false`                                              | Adds a border to the bar.                                              |
+| `backline` | `true` / `false`                                              | Adds a line across the bar that works with labels and dots.            |
 
 ---
 
