@@ -12,17 +12,13 @@ const Dashboard = () => {
         <div className="profile">
           <h1 className="title">Welcome Back!</h1>
           <h2 className="name">{rank} {name}!</h2>
-          <div className="pp">
-            <FaRegUser />
-          </div>
+          <FaRegUser />
           <div className="name2">{rank} {name}</div>
           <button id="newReport"><FaUpload /> Make a new report</button>
           <button id="profile"><FaRegIdBadge /> My Profile</button>
         </div>
         <div className="divider"></div>
-        <div className="cases">
-          
-        </div>
+        <div className="cases"></div>
       </div>
     </>
   )
