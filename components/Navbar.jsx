@@ -9,34 +9,9 @@ import {
 	FaSignOutAlt,
 } from "react-icons/fa";
 import { Button } from "../proton";
-
-const Dropdown = () => {
-	return (
-		<div className={styles.dropdown}>
-			<Button.Group vertical split>
-				<Button hollow noborder color="white">
-					<FaHome />
-					Home
-				</Button>
-				<Button hollow noborder color="white">
-					<FaColumns />
-					Dashboard
-				</Button>
-				<Button hollow noborder color="white">
-					<FaUser />
-					Profile
-				</Button>
-			</Button.Group>
-
-			<Button.Group vertical split>
-				<Button hollow noborder color="white">
-					<FaSignOutAlt />
-					Sign Out
-				</Button>
-			</Button.Group>
-		</div>
-	);
-};
+import Link from "next/link";
+import Image from "next/image";
+import logoImg from "../util/LPS Logo.svg";
 
 const Navbar = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -65,14 +40,36 @@ const Navbar = () => {
 						/>
 					)}
 				</Button>
-				<img
-					className={styles.logo}
-					src="./LPS Logo.svg"
-					alt="LPS Logo"
-				/>
+				<Image alt="LPS Logo" width={48} height={48} src={logoImg} />
 			</nav>
 
-			{dropdownOpen && <Dropdown />}
+			{dropdownOpen && (
+				<div className={styles.dropdown}>
+					<section>
+						<Link href="/dashboard">
+							<button>
+								<FaColumns />
+								Dashboard
+							</button>
+						</Link>
+						<Link href="/profile/1">
+							<button>
+								<FaUser />
+								Profile
+							</button>
+						</Link>
+					</section>
+
+					<section>
+						<Link href="/">
+							<button>
+								<FaSignOutAlt />
+								Sign Out
+							</button>
+						</Link>
+					</section>
+				</div>
+			)}
 		</div>
 	);
 };
