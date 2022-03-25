@@ -30,14 +30,20 @@
 			z-index: 2;
 
 			svg {
+								
+
+				transform: rotate(90deg);
+
 				&.flipped {
-					transform: rotate(-180deg);
+					transform: rotate(-90deg);
 				}
 			}
 		}
 	}
 
 	.dropdown {
+		z-index: -100;
+
 		background: $background-light;
 		border-bottom-right-radius: $border-radius;
 		border-top-left-radius: $border-radius;
@@ -48,7 +54,7 @@
 		transition: $transition-fast;
 
 		bottom: 0;
-		left: -50vw;
+		top: -50vw;
 
 		margin: $margin;
 		padding: $padding;
@@ -61,7 +67,7 @@
 
 		&.dropped {
 			bottom: 0;
-			left: 0;
+			top: 0;
 		}
 
 		section {
