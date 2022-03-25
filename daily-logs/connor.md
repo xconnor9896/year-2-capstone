@@ -7,3 +7,5 @@ i'll format this readme later
 03-23-2022 - Continued work on wireframe, started formatting the SDLC, created folders for certain parts of codebase
 
 03-24-2022 - Claimed workload for models, consolidated group (rip jaxson), made finishing touches to wireframe
+
+03-25-2022 - Began work on models, reportModel.js, suspectModel.js started. Also divvied up work in Trello board

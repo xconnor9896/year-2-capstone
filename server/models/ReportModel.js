@@ -66,7 +66,23 @@ const ReportSchema = new Schema({
   ],
   personInfo: [
     {
-      
+      person: {
+        // possible values are complainant, victim, reportingPerson, finder, witness, suspect
+      },
+      name: [
+        {
+          firstName: {
+            type: String,
+            required: true,
+          },
+          middleInitial: {
+            type: String
+          },
+          lastName: {
+
+          }
+        }
+      ]
     }
   ]
 });
