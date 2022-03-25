@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Navbar.module.scss";
 import {
-	FaAngleDoubleRight,
+	FaAngleDoubleDown,
 	FaColumns,
 	FaUser,
 	FaSignOutAlt,
@@ -74,6 +74,7 @@ const Navbar = () => {
 					</Link>
 				</section>
 			</div>
+
 			<nav className={styles.nav}>
 				<Button
 					onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -82,7 +83,7 @@ const Navbar = () => {
 					noborder
 					emphasis={dropdownOpen ? "secondary" : "primary"}
 				>
-					<FaAngleDoubleRight
+					<FaAngleDoubleDown
 						style={{
 							fontSize: "2rem",
 						}}
