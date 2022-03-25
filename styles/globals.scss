@@ -18,3 +18,16 @@ a {
 body {
 	background: $background-dark;
 }
+
+button {
+	border: none;
+	outline: none;
+	background: none;
+}
+
+#__next {
+	min-height: 100vh;
+
+	display: flex;
+	flex-direction: column;
+}
