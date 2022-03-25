@@ -1,0 +1,44 @@
+@use "../vars.scss" as *;
+
+.loading {
+	width: 100vw;
+	height: 100vh;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 1rem;
+
+	background: $background-dark;
+
+	color: $text;
+
+	.logo {
+		max-width: 25vw;
+		max-height: 25vh;
+		width: 8rem;
+		height: 8rem;
+
+		position: relative;
+
+		animation: spin 1s linear infinite;
+		animation-fill-mode: forwards;
+
+		// perspective: ;
+
+		@keyframes spin {
+			0% {
+				transform: rotateY(0deg);
+			}
+
+			100% {
+				transform: rotateY(360deg);
+			}
+		}
+	}
+}
