@@ -5,9 +5,25 @@ import Loading from "../components/Loading";
 import { Router } from "next/router";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(false);
+
+	const router = useRouter();
+	const canShowNav = () => {
+		let can = true;
+		switch (router.pathname) {
+			case "/":
+				can = false;
+				break;
+			default:
+				break;
+		}
+
+		return can;
+	};
+
 	Router.events.on("routeChangeStart", () => {
 		setLoading(true);
 	});
@@ -21,7 +37,7 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<>
 			<HeadTags />
-			<Navbar />
+			{canShowNav() && <Navbar />}
 			<Component {...pageProps} />
 			{loading && <Loading />}
 		</>

@@ -24,6 +24,16 @@
 
 		button {
 			margin: 0 !important;
+
+			background: $background-light !important;
+
+			z-index: 2;
+
+			svg {
+				&.flipped {
+					transform: rotate(-180deg);
+				}
+			}
 		}
 	}
 
@@ -35,17 +45,24 @@
 		width: min-content;
 		position: relative;
 
+		transition: $transition-fast;
+
 		bottom: 0;
-		left: 0;
+		left: -50vw;
 
 		margin: $margin;
-		padding: calc($padding / 2);
+		padding: $padding;
 
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 
-		gap: 1rem;
+		gap: 2rem;
+
+		&.dropped {
+			bottom: 0;
+			left: 0;
+		}
 
 		section {
 			display: flex;
@@ -64,8 +81,8 @@
 				flex-direction: row;
 				align-items: center;
 				gap: 0.5rem;
-				font-size: 1rem;
-				padding: 0 $padding;
+				font-size: 1.25rem;
+				padding: calc($padding / 2) $padding;
 
 				transition: $transition-fast;
 
@@ -77,13 +94,13 @@
 					color: darken($em-secondary, 25%);
 				}
 
-				&:first-child {
-					padding-top: $padding;
-				}
+				// &:first-child {
+				// 	padding-top: calc($padding / 2);
+				// }
 
-				&:last-child {
-					padding-bottom: $padding;
-				}
+				// &:last-child {
+				// 	padding-bottom: calc($padding / 2);
+				// }
 			}
 		}
 	}
