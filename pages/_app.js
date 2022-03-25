@@ -17,6 +17,12 @@ function MyApp({ Component, pageProps }) {
 			case "/":
 				can = false;
 				break;
+			case "/404":
+				can = false;
+				break;
+			case "/500":
+				can = false;
+				break;
 			default:
 				break;
 		}
