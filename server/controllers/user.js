@@ -49,3 +49,39 @@ const createUser = async (req, res) => {
     console.log(error);
   }
 };
+
+const loginUser = async (req, res) => {
+  const { email, password } = req.body.user;
+
+  if (!isEmail(email)) return res.status(401).send("Invalid Email");
+  if (password.length < 8)
+    return res.status(401).send("Password must be at least 8 characters long");
+
+  try {
+    const user = await UserModel.findOne({
+      email: email.toLowerCase(),
+    }).select("+password");
+
+    if (!user) return res.status(401).send("Invalid Credentials");
+
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (!isPassword) return res.status(401).send("Invalid Credentials");
+
+    const payload = { userId: user._id };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: "1w" },
+      (err, token) => {
+        if (err) throw err;
+        res.status(200).json(token);
+      }
+    );
+  } catch (error) {
+    console.log("error at loginUser controller");
+    console.log(error);
+  }
+};
+
+module.exports = { createUser, loginUser };
