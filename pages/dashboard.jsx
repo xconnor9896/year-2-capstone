@@ -1,9 +1,25 @@
-import styles from "../styles/pages/Dashboard.module.scss";
+import { FaRegUser, FaUpload, FaRegIdBadge } from 'react-icons/fa'
 
-export default function Dashboard() {
-	return (
-		<main className={styles.container}>
-			<article className={styles.main}>DASHBOARD</article>
-		</main>
-	);
+const Dashboard = () => {
+  const name = 'John'
+  const rank = 'Lt.'
+
+  return (
+    <>
+      <div className="dashboard">
+        <div className="profile">
+          <h1 className="title">Welcome Back!</h1>
+          <h2 className="name">{rank} {name}!</h2>
+          <FaRegUser />
+          <div className="name2">{rank} {name}</div>
+          <button id="newReport"><FaUpload /> Make a new report</button>
+          <button id="profile"><FaRegIdBadge /> My Profile</button>
+        </div>
+        <div className="divider"></div>
+        <div className="cases"></div>
+      </div>
+    </>
+  )
 }
+
+export default Dashboard
