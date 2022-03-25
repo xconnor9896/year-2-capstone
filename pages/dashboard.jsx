@@ -1,4 +1,3 @@
-import Navbar from '../components/Navbar'
 import { FaRegUser, FaUpload, FaRegIdBadge } from 'react-icons/fa'
 
 const Dashboard = () => {
@@ -7,7 +6,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <Navbar />
       <div className="dashboard">
         <div className="profile">
           <h1 className="title">Welcome Back!</h1>
