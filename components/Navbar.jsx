@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Navbar.module.scss";
 import {
-	FaAngleDoubleRight,
+	FaAngleDoubleDown,
 	FaColumns,
 	FaUser,
 	FaSignOutAlt,
@@ -44,24 +44,6 @@ const Navbar = () => {
 
 	return (
 		<div className={styles.navParent}>
-			<nav className={styles.nav}>
-				<Button
-					onClick={() => setDropdownOpen(!dropdownOpen)}
-					icon
-					hollow
-					noborder
-					emphasis={dropdownOpen ? "secondary" : "primary"}
-				>
-					<FaAngleDoubleRight
-						style={{
-							fontSize: "2rem",
-						}}
-						className={`${dropdownOpen && styles.flipped}`}
-					/>
-				</Button>
-				<Image alt="LPS Logo" width={48} height={48} src={logoImg} />
-			</nav>
-
 			<div
 				ref={dropdownRef}
 				className={`${styles.dropdown} ${
@@ -92,6 +74,24 @@ const Navbar = () => {
 					</Link>
 				</section>
 			</div>
+
+			<nav className={styles.nav}>
+				<Button
+					onClick={() => setDropdownOpen(!dropdownOpen)}
+					icon
+					hollow
+					noborder
+					emphasis={dropdownOpen ? "secondary" : "primary"}
+				>
+					<FaAngleDoubleDown
+						style={{
+							fontSize: "2rem",
+						}}
+						className={`${dropdownOpen && styles.flipped}`}
+					/>
+				</Button>
+				<Image alt="LPS Logo" width={48} height={48} src={logoImg} />
+			</nav>
 		</div>
 	);
 };
