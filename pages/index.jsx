@@ -9,6 +9,8 @@ import {
 	FaCheckDouble,
 	FaArrowLeft,
 	FaArrowRight,
+	FaRegCircle,
+	FaRegDotCircle,
 } from "react-icons/fa";
 import Input from "../components/Input";
 
@@ -121,94 +123,146 @@ const SignUpPage = ({ setState }) => {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit} step={step}>
-				<h1>SIGN UP</h1>
-				<div className={`${styles.step} ${styles.step1}`}>
-					<Input
-						icon={<FaEnvelope />}
-						type="email"
-						name="email"
-						id="email"
-						placeholder="Email"
-					/>
+			<div className={styles.section}>
+				<form onSubmit={handleSubmit} step={step}>
+					<h1>SIGN UP</h1>
+					<div className={`${styles.step} ${styles.step1}`}>
+						<Input
+							icon={<FaEnvelope />}
+							type="email"
+							name="email"
+							id="email"
+							placeholder="Email"
+						/>
 
-					<Input
-						icon={<FaLock />}
-						type="text"
-						name="password"
-						id="password"
-						placeholder="Password"
-					/>
-					<Input
-						icon={<FaCheckDouble />}
-						type="text"
-						name="password-confirm"
-						id="password-confirm"
-						placeholder="Confirm Password"
-					/>
+						<Input
+							icon={<FaLock />}
+							type="text"
+							name="password"
+							id="password"
+							placeholder="Password"
+						/>
+						<Input
+							icon={<FaCheckDouble />}
+							type="text"
+							name="password-confirm"
+							id="password-confirm"
+							placeholder="Confirm Password"
+						/>
 
-					<Button.Group>
-						<Button
-							type="submit"
-							emphasis="secondary"
-							compact
-							onClick={() => setStep(2)}
-						>
-							<FaArrowRight />
-							Next
+						<Button.Group>
+							<Button
+								type="submit"
+								emphasis="secondary"
+								compact
+								onClick={() => setStep(2)}
+							>
+								<FaArrowRight />
+								Next
+							</Button>
+						</Button.Group>
+					</div>
+
+					<div className={`${styles.step} ${styles.step2}`}>
+						<p>PROFILE PICTURE</p>
+						<p>PREFIX DROPDOWN</p>
+						<p>STUDENT ID (BADGE NUMBER)</p>
+
+						<Button.Group>
+							<Button
+								type="submit"
+								emphasis="primary"
+								compact
+								onClick={() => setStep(1)}
+							>
+								<FaArrowLeft />
+								Back
+							</Button>
+							<Button
+								type="submit"
+								emphasis="secondary"
+								compact
+								onClick={() => setStep(3)}
+							>
+								<FaArrowRight />
+								Next
+							</Button>
+						</Button.Group>
+					</div>
+
+					<div className={`${styles.step} ${styles.step3}`}>
+						<p>SQUAD</p>
+						<p>RANK</p>
+
+						<Button.Group>
+							<Button
+								type="submit"
+								emphasis="secondary"
+								compact
+								onClick={() => setStep(2)}
+							>
+								<FaArrowLeft />
+								Back
+							</Button>
+						</Button.Group>
+
+						<Button type="submit" emphasis="primary">
+							<FaUserPlus />
+							Sign Up
 						</Button>
-					</Button.Group>
-				</div>
+					</div>
+				</form>
 
-				<div className={`${styles.step} ${styles.step2}`}>
-					<p>PROFILE PICTURE</p>
-					<p>PREFIX DROPDOWN</p>
-					<p>STUDENT ID (BADGE NUMBER)</p>
-
-					<Button.Group>
+				<div className={styles.radios}>
+					<Button.Group split>
 						<Button
-							type="submit"
-							emphasis="primary"
-							compact
 							onClick={() => setStep(1)}
+							icon
+							circular
+							hollow
+							noborder
+							color="white"
 						>
-							<FaArrowLeft />
-							Back
+							<div
+								className={`${styles.radio} ${
+									step === 1 && styles.filled
+								}`}
+							></div>
 						</Button>
-						<Button
-							type="submit"
-							emphasis="secondary"
-							compact
-							onClick={() => setStep(3)}
-						>
-							<FaArrowRight />
-							Next
-						</Button>
-					</Button.Group>
-				</div>
 
-				<div className={`${styles.step} ${styles.step3}`}>
-					<p>SQUAD</p>
-					<p>RANK</p>
-
-					<Button.Group>
 						<Button
-							type="submit"
-							emphasis="secondary"
-							compact
 							onClick={() => setStep(2)}
+							icon
+							circular
+							hollow
+							noborder
+							color="white"
 						>
-							<FaArrowLeft />
-							Back
+							<div
+								className={`${styles.radio} ${
+									step === 2 && styles.filled
+								}`}
+							></div>
+						</Button>
+
+						<Button
+							onClick={() => setStep(3)}
+							icon
+							circular
+							hollow
+							noborder
+							color="white"
+						>
+							<div
+								className={`${styles.radio} ${
+									step === 3 && styles.filled
+								}`}
+							></div>
 						</Button>
 					</Button.Group>
-
-					<Button type="submit" emphasis="primary">
-						<FaUserPlus />
-						Sign Up
-					</Button>
 				</div>
-			</form>
+			</div>
+
 			<div className={styles.reRoute}>
 				<p>Already a user?</p>
 				<Button
