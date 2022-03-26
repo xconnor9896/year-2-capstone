@@ -5,7 +5,7 @@ $em-secondary: #f99d1c;
 $em-default: #4c5255;
 
 $warning: #f0b74e;
-$error: #e05071;
+$error: #df3159;
 $success: #90ec90;
 
 $background-light: #4c5255;
@@ -25,7 +25,7 @@ $box-shadow: 0px 8px 4px rgba(0, 0, 0, 0.5);
 // Border
 $border-width: 0.15rem;
 $border-radius: 0.5rem;
-$border-radius-fancy: 0.25rem 0rem 0rem 0.25rem;
+$border-radius-fancy: $border-radius 0rem $border-radius 0rem;
 $border-radius-circular: 1.25rem;
 $border-radius-icon-circular: 50%;
 $border-style: solid;

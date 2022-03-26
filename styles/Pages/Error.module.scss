@@ -9,11 +9,11 @@
 	}
 
 	&.error {
-		background: $error;
+		background: $em-primary;
 	}
 
 	&.warning {
-		background: $warning;
+		background: $em-secondary;
 	}
 
 	width: 100%;
