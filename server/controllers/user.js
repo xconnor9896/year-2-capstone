@@ -14,17 +14,19 @@ const createUser = async (req, res) => {
   const { name, email, badgeNumber, squadNumber, password, rank, username } =
     req.body.user;
 
-  if (!isEmail(email)) return res.status(401).send("Invalid");
-  if (password.length < 8) {
-    return res.status(401).send("Password must be at least 8 characters long");
-  }
-  if (password.length > 100) {
-    return res
-      .status(401)
-      .send("Password must be less than 100 characters long");
-  }
-
   try {
+    if (!isEmail(email)) return res.status(401).send("Invalid");
+    if (password.length < 8) {
+      return res
+        .status(401)
+        .send("Password must be at least 8 characters long");
+    }
+    if (password.length > 100) {
+      return res
+        .status(401)
+        .send("Password must be less than 100 characters long");
+    }
+
     let user;
     user = await UserModel.findOne({ email: email.toLowerCase() });
     if (user) return res.status(401).send("Email already used");
@@ -47,7 +49,7 @@ const createUser = async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: "2d" },
+      { expiresIn: "1w" },
       (err, token) => {
         if (err) throw err;
         res.status(200).json(token);
@@ -68,11 +70,13 @@ req.body { email, password } //? Your email and password
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!isEmail(email)) return res.status(401).send("Invalid Email");
-  if (password.length < 8)
-    return res.status(401).send("Password must be at least 8 characters long");
-
   try {
+    if (!isEmail(email)) return res.status(401).send("Invalid Email");
+    if (password.length < 8)
+      return res
+        .status(401)
+        .send("Password must be at least 8 characters long");
+
     const user = await UserModel.findOne({
       email: email.toLowerCase(),
     }).select("+password");
@@ -134,7 +138,7 @@ const deleteUser = async (req, res) => {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CHANGE USERNAME
-.delete('/:userId') 
+.post('/:userId') 
 req.params {userId} //? Targets Id
 req.body {username} //? New Username
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -154,4 +158,26 @@ const changeUsername = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = { createUser, loginUser, deleteUser, changeUsername };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CHANGE PASSWORD
+.post('/') 
+req.body {email, password} //? email, and new password
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const changePassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = UserModel.findOne({ email: email.toLowerCase() });
+    user.password = bcrypt.hash(password, 10);
+    user = await user.save();
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log("error at changePassword controller");
+    console.log(error);
+  }
+};
+
+module.exports = { createUser, loginUser, deleteUser, changeUsername, changePassword };
