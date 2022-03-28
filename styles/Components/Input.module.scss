@@ -1,0 +1,43 @@
+@use "../vars.scss" as *;
+
+.input {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+
+	background: $background-light;
+	padding: $padding;
+	width: max-content;
+
+	border-radius: $border-radius-fancy;
+
+	svg {
+		fill: $em-secondary;
+		width: 1.25rem;
+		height: 1.25rem;
+		margin: $margin;
+
+		@media (max-width: 800px) {
+			width: 1rem;
+			height: 1rem;
+		}
+	}
+
+	input {
+		outline: none;
+		border: none;
+		background: none;
+
+		font-size: 1.25rem;
+
+		@media (max-width: 800px) {
+			font-size: 1rem;
+		}
+
+		color: $em-secondary;
+
+		&::placeholder {
+			color: $text;
+		}
+	}
+}

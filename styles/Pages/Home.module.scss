@@ -1,0 +1,150 @@
+@use "../vars.scss" as *;
+
+.container {
+	.main {
+		display: flex;
+		flex-direction: row;
+		min-height: max-content;
+		height: 100vh;
+		width: 100vw;
+
+		aside {
+			width: 50vw;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			z-index: 999;
+
+			h1 {
+				text-align: center;
+				text-transform: uppercase;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.5rem;
+
+				user-select: none;
+
+				span {
+					background: transparentize(
+						$color: $background-light,
+						$amount: 0.5
+					);
+					padding: calc($padding / 2);
+
+					b {
+						color: $em-secondary;
+					}
+				}
+
+				font-size: 2rem;
+
+				@media (max-width: 1080px) {
+					font-size: 1.5rem;
+				}
+
+				@media (max-width: 800px) {
+					font-size: 1rem;
+				}
+			}
+
+			background: url("../../util/Handcuffs.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		section {
+			flex-grow: 2;
+
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: $padding;
+
+			min-height: 100vh;
+
+			height: 100%;
+
+			.lpsLogo {
+				width: 100%;
+				display: flex;
+
+				justify-content: flex-end;
+
+				img {
+					width: 72px;
+					height: 72px;
+				}
+
+				@media (max-width: 800px) {
+					img {
+						width: 48px;
+						height: 48px;
+					}
+				}
+			}
+
+			.section {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.reRoute {
+				display: flex;
+				gap: 0.25rem;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				user-select: none;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: space-evenly;
+				gap: 1rem;
+
+				.step {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-evenly;
+					gap: 1rem;
+
+					display: none;
+				}
+
+				&[step="1"] {
+					.step1 {
+						display: flex;
+					}
+				}
+
+				&[step="2"] {
+					.step2 {
+						display: flex;
+					}
+				}
+
+				&[step="3"] {
+					.step3 {
+						display: flex;
+					}
+				}
+			}
+
+			button {
+				border-radius: $border-radius-fancy;
+				padding: 0 calc($padding * 2);
+			}
+		}
+	}
+}

@@ -12,6 +12,7 @@ const ProgressBar = (props) => {
 		min,
 		max,
 		color,
+		emphasis,
 		percentage,
 		overlay,
 		border,
@@ -21,11 +22,11 @@ const ProgressBar = (props) => {
 	const [val, setVal] = useState(value);
 
 	useEffect(() => {
-		let valCheck = value;
-		if (valCheck < min) valCheck = min;
-		if (valCheck > max) valCheck = max;
+		let valCheck = +value;
+		if (valCheck < +min) valCheck = +min;
+		if (valCheck > +max) valCheck = +max;
 
-		valCheck = Math.round((valCheck / max) * 100);
+		valCheck = Math.round((valCheck / +max) * 100);
 
 		setVal(valCheck);
 	}, [value]);
@@ -41,6 +42,7 @@ const ProgressBar = (props) => {
 		delete nProps.min;
 		delete nProps.max;
 		delete nProps.color;
+		delete nProps.emphasis;
 		delete nProps.percentage;
 		delete nProps.overlay;
 		delete nProps.border;
@@ -55,7 +57,8 @@ const ProgressBar = (props) => {
 
 	return (
 		<div
-			color={color ? color : "red"}
+			color={color && color}
+			emphasis={emphasis || "default"}
 			min={min}
 			max={max}
 			value={val}

@@ -1,0 +1,10 @@
+@use "../vars.scss" as *;
+
+.dashboard {
+  display: flex;
+
+  .profile {
+    text-align: center;
+    color: white;
+  }
+}
