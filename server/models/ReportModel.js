@@ -48,16 +48,20 @@ const ReportSchema = new Schema({
       domesticViolence: {
         // type: Radio?
       },
-      dateStart: {
-        type: Date,
-        default: Date.now(),
-        required: true,
-      },
-      dateEnd: {
-        type: Date,
-        default: Date.now(),
-        required: true,
-      },
+      dates: [
+        {
+          dateStart: {
+            type: Date,
+            default: Date.now(),
+            required: true,
+          },
+          dateEnd: {
+            type: Date,
+            default: Date.now(),
+            required: true,
+          },
+        },
+      ],
       comment: {
         type: String,
         default: "Enter any other information",
@@ -76,15 +80,78 @@ const ReportSchema = new Schema({
             required: true,
           },
           middleInitial: {
-            type: String
+            type: String,
           },
           lastName: {
-
-          }
-        }
-      ]
-    }
-  ]
+            type: String,
+            required: true,
+          },
+        },
+      ],
+      dateOfBirth: {
+        type: Date,
+        default: Date.now(),
+        required: true,
+      },
+      age: {
+        type: Number,
+        required: true,
+        // probably make it so if age < 18, mark as juvenile
+      },
+      sex: {
+        // radio for male/female, again idk how to do this
+      },
+      address: [
+        {
+          street: {
+            type: String,
+            required: true,
+          },
+          city: {
+            type: String,
+            required: true,
+          },
+          state: {
+            type: String,
+            required: true,
+          },
+          zipcode: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+      physicalDescription: [
+        {
+          height: {
+            type: Number,
+            required: true,
+          },
+          weight: {
+            type: Number,
+            required: true,
+          },
+          build: {
+            type: String,
+          },
+          hair: [
+            {
+              color: {
+                type: String,
+              },
+              type: {
+                type: String,
+              }
+            },
+            required = true,
+          ],
+          eyes: {
+            type: String,
+          },
+        },
+      ],
+    },
+  ],
 });
 
 module.exports = mongoose.model("Report", ReportSchema);
