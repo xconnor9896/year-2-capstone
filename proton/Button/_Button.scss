@@ -1,508 +1,570 @@
 @use "../styles/vars" as *;
 
 button.proton.button {
-	// Reset
-	border: none;
-	outline: none;
-	background: none;
-	user-select: none;
-	-webkit-user-drag: none;
-
-	// Flexbox
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: $padding;
-
-	// Box
-	// padding: calc($padding) calc($padding * 2);
-	margin: $margin;
-	border: $border-width $border-style $border-color;
-	border-radius: $border-radius;
-
-	// Children
-	div.proton.children {
-		// Flexbox
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		gap: $padding;
-		padding: calc($padding) calc($padding * 2);
-
-		pointer-events: none;
-
-		// Transition
-		transition: $transition-fast;
-
-		// Labels
-		div.proton.button-label {
-			// Flexbox
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: center;
-			gap: $padding;
-
-			// Transition
-			transition: $transition-fast;
-
-			// Box
-			padding: inherit;
-			border-radius: $border-radius-circular;
-			border: $border-width $border-style $border-color;
-
-			// Icon
-			&[icon] {
-				padding: $padding;
-				border-radius: $border-radius-circular;
-			}
-		}
-	}
-
-	// Text
-	font-size: $font-p;
-	font-weight: $font-weight;
-	color: $text-color;
-
-	// States
-	transition: $transition-fast;
-
-	// SVGs
-	svg,
-	* svg,
-	div.proton.button-label svg {
-		transition: $transition-fast;
-	}
-
-	// No Border
-	&[noborder] {
-		border: none !important;
-	}
-
-	// Focusable
-	&[focusable]:focus {
-		outline: $focus;
-	}
-
-	// Circular
-	&[circular] {
-		border-radius: $border-radius-circular;
-	}
-
-	// Icon
-	&[icon] {
-		div.proton.children {
-			padding: $padding;
-		}
-		// min-width: 2.325rem;
-		min-width: calc(1rem + $padding * 2.65);
-
-		font-size: calc($font-p * 1.325);
-
-		// Circular
-		&[circular] {
-			border-radius: $border-radius-icon-circular;
-		}
-	}
-
-	// Compact
-	&[compact] {
-		div.proton.children {
-			padding: calc($padding / 4) calc($padding / 2);
-		}
-		font-size: $font-small;
-		margin: calc($margin/2);
-
-		&[icon] {
-			div.proton.children {
-				padding: calc($padding / 4);
-			}
-
-			min-width: calc($font-small + ($padding * 2.65) / 4);
-
-			font-size: calc($font-small * 1.325);
-
-			// Circular
-			&[circular] {
-				border-radius: $border-radius-icon-circular;
-			}
-		}
-
-		div.proton.button-label[icon] {
-			padding: calc($padding / 4) !important;
-		}
-	}
-
-	// Hollow
-	&[hollow] {
-		background: none;
-
-		// Underline
-		&[underline] {
-			border-top: none;
-			border-left: none;
-			border-right: none;
-			// border-top-color: transparent;
-			// border-left-color: transparent;
-			// border-right-color: transparent;
-
-			border-radius: 0;
-			padding-left: 0;
-			padding-right: 0;
-
-			// div.proton.children {
-			// 	padding-left: 0;
-			// 	padding-right: 0;
-			// }
-		}
-	}
-
-	// Fill
-	&[fill] {
-		width: 100%;
-	}
-
-	// Emphasis
-	@each $key, $value in $emphasis {
-		&[emphasis="#{$key}"] {
-			color: map-get($emphasis, $key + "-text");
-			background: $value;
-			border-color: $value;
-
-			svg {
-				fill: map-get($emphasis, $key + "-text");
-			}
-
-			&[loading] {
-				div.proton.loading {
-					div.proton.dot {
-						background: map-get($emphasis, $key + "-text");
-					}
-				}
-			}
-
-			div.proton.button-label {
-				background: darken($value, 10%);
-				border-color: darken($value, 10%) !important;
-				color: map-get($emphasis, $key + "-text");
-			}
-
-			&[hollow] {
-				background: none;
-				color: $value;
-
-				svg {
-					fill: $value;
-				}
-
-				div.proton.button-label {
-					background: none;
-					color: $value;
-					border-color: $value !important;
-				}
-
-				&[loading] {
-					div.proton.loading {
-						div.proton.dot {
-							background: $value;
-						}
-					}
-				}
-			}
-
-			&:hover {
-				background: darken($value, 10%);
-				border-color: darken($value, 10%);
-
-				div.proton.button-label {
-					background: darken($value, 25%);
-					border-color: darken($value, 25%) !important;
-				}
-
-				&[hollow] {
-					background: none;
-					color: darken($value, 10%);
-
-					svg {
-						fill: darken($value, 10%);
-					}
-
-					div.proton.button-label {
-						background: none;
-						border-color: darken($value, 10%) !important;
-						color: darken($value, 10%);
-					}
-				}
-			}
-
-			&:active,
-			&[sel] {
-				background: darken($value, 25%);
-				border-color: darken($value, 25%);
-
-				div.proton.button-label {
-					background: darken($value, 50%);
-					border-color: darken($value, 50%) !important;
-				}
-
-				&[hollow] {
-					background: none;
-					color: darken($value, 25%);
-
-					div.proton.button-label {
-						background: none;
-						border-color: darken($value, 25%) !important;
-						color: darken($value, 25%);
-					}
-
-					svg {
-						fill: darken($value, 25%);
-					}
-				}
-			}
-		}
-	}
-
-	// Color
-	@each $key, $value in $colors {
-		&[color="#{$key}"] {
-			color: $text-color-alt;
-			background: $value;
-			border-color: $value;
-
-			svg {
-				fill: $text-color-alt;
-			}
-
-			&[loading] {
-				div.proton.loading {
-					div.proton.dot {
-						background: $text-color-alt;
-					}
-				}
-			}
-
-			div.proton.button-label {
-				background: darken($value, 10%);
-				border-color: darken($value, 10%) !important;
-				color: $text-color-alt;
-			}
-
-			&[hollow] {
-				background: none;
-				color: $value;
-
-				svg {
-					fill: $value;
-				}
-
-				div.proton.button-label {
-					background: none;
-					color: $value;
-					border-color: $value !important;
-				}
-
-				&[loading] {
-					div.proton.loading {
-						div.proton.dot {
-							background: $value;
-						}
-					}
-				}
-			}
-
-			&:hover {
-				background: darken($value, 10%);
-				border-color: darken($value, 10%);
-
-				div.proton.button-label {
-					background: darken($value, 25%);
-					border-color: darken($value, 25%) !important;
-				}
-
-				&[hollow] {
-					background: none;
-					color: darken($value, 10%);
-
-					svg {
-						fill: darken($value, 10%);
-					}
-
-					div.proton.button-label {
-						background: none;
-						border-color: darken($value, 10%) !important;
-						color: darken($value, 10%);
-					}
-				}
-			}
-
-			&:active,
-			&[sel] {
-				background: darken($value, 25%);
-				border-color: darken($value, 25%);
-
-				div.proton.button-label {
-					background: darken($value, 50%);
-					border-color: darken($value, 50%) !important;
-				}
-
-				&[hollow] {
-					background: none;
-					color: darken($value, 25%);
-
-					svg {
-						fill: darken($value, 25%);
-					}
-
-					div.proton.button-label {
-						background: none;
-						border-color: darken($value, 25%) !important;
-						color: darken($value, 25%);
-					}
-				}
-			}
-		}
-	}
-
-	// Disabled
-	&[disabled] {
-		opacity: 50%;
-		pointer-events: none;
-	}
-
-	&[loading] {
-		position: relative;
-		pointer-events: none;
-
-		opacity: 100%;
-
-		div.proton.children {
-			opacity: 0;
-		}
-
-		div.proton.loading {
-			// Box
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-
-			max-width: 100px;
-			pointer-events: none;
-
-			// Flexbox
-			display: flex;
-			align-items: center;
-			justify-content: space-evenly;
-
-			visibility: visible;
-
-			@for $i from 1 through 3 {
-				div.proton.dot:nth-child(3n + #{$i}) {
-					animation-delay: (($i - 1) * 0.25s);
-				}
-			}
-
-			div.proton.dot {
-				width: 10%;
-				height: 0;
-				padding-bottom: 10%;
-
-				// @each $name, $value in $colors {
-				// 	&[loadingColor="#{$name}"] {
-				// 		background: $value;
-				// 	}
-				// }
-
-				border-radius: 50%;
-
-				animation: bounce 1s infinite;
-				animation-fill-mode: forwards;
-
-				transform: translateY(-0.25rem);
-
-				@keyframes bounce {
-					0% {
-						transform: translateY(-0.25rem);
-					}
-					50% {
-						transform: translateY(0.25rem);
-					}
-					100% {
-						transform: translateY(-0.25rem);
-					}
-				}
-			}
-		}
-	}
+  // Reset
+  border: none;
+  outline: none;
+  background: none;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  // Flexbox
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: $padding;
+
+  // Box
+  // padding: calc($padding) calc($padding * 2);
+  margin: $margin;
+  border: $border-width $border-style $border-color;
+  border-radius: $border-radius;
+
+  // Children
+  div.proton.children {
+    // Flexbox
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: $padding;
+    padding: calc($padding) calc($padding * 2);
+
+    pointer-events: none;
+
+    // Transition
+    transition: $transition-fast;
+
+    // Labels
+    div.proton.button-label {
+      // Flexbox
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: $padding;
+
+      // Transition
+      transition: $transition-fast;
+
+      // Box
+      padding: inherit;
+      border-radius: $border-radius-circular;
+      border: $border-width $border-style $border-color;
+
+      // Icon
+      &[icon] {
+        padding: $padding;
+        border-radius: $border-radius-circular;
+      }
+    }
+  }
+
+  // Text
+  font-size: $font-p;
+  font-weight: $font-weight;
+  color: $text-color;
+
+  // States
+  transition: $transition-fast;
+
+  // SVGs
+  svg,
+  * svg,
+  div.proton.button-label svg {
+    transition: $transition-fast;
+  }
+
+  // No Border
+  &[noborder] {
+    border: none !important;
+  }
+
+  // Focusable
+  &[focusable]:focus {
+    outline: $focus;
+  }
+
+  // Circular
+  &[circular] {
+    border-radius: $border-radius-circular;
+  }
+
+  // Icon
+  &[icon] {
+    div.proton.children {
+      padding: $padding;
+    }
+    // min-width: 2.325rem;
+    min-width: calc(1rem + $padding * 2.65);
+
+    font-size: calc($font-p * 1.325);
+
+    // Circular
+    &[circular] {
+      border-radius: $border-radius-icon-circular;
+    }
+  }
+
+  // Compact
+  &[compact] {
+    div.proton.children {
+      padding: calc($padding / 4) calc($padding / 2);
+    }
+    font-size: $font-small;
+    margin: calc($margin/2);
+
+    &[icon] {
+      div.proton.children {
+        padding: calc($padding / 4);
+      }
+
+      min-width: calc($font-small + ($padding * 2.65) / 4);
+
+      font-size: calc($font-small * 1.325);
+
+      // Circular
+      &[circular] {
+        border-radius: $border-radius-icon-circular;
+      }
+    }
+
+    div.proton.button-label[icon] {
+      padding: calc($padding / 4) !important;
+    }
+  }
+
+  // Hollow
+  &[hollow] {
+    background: none;
+
+    // Underline
+    &[underline] {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      // border-top-color: transparent;
+      // border-left-color: transparent;
+      // border-right-color: transparent;
+
+      border-radius: 0;
+      padding-left: 0;
+      padding-right: 0;
+
+      // div.proton.children {
+      // 	padding-left: 0;
+      // 	padding-right: 0;
+      // }
+    }
+  }
+
+  // Fill
+  &[fill] {
+    width: 100%;
+  }
+
+  // Emphasis
+  @each $key, $value in $emphasis {
+    &[emphasis="#{$key}"] {
+      color: map-get($emphasis, $key + "-text");
+      background: $value;
+      border-color: $value;
+
+      svg {
+        fill: map-get($emphasis, $key + "-text");
+      }
+
+      &[loading] {
+        div.proton.loading {
+          div.proton.dot {
+            background: map-get($emphasis, $key + "-text");
+          }
+        }
+      }
+
+      div.proton.button-label {
+        background: darken($value, 10%);
+        border-color: darken($value, 10%) !important;
+        color: map-get($emphasis, $key + "-text");
+      }
+
+      &[hollow] {
+        background: none;
+        color: $value;
+
+        svg {
+          fill: $value;
+        }
+
+        .arrTop {
+          margin-bottom: -15px;
+        }
+
+        .arrBottom {
+          margin-bottom: -14px;
+        }
+
+        .box {
+          margin-bottom: 10px;
+        }
+
+        div.proton.button-label {
+          background: none;
+          color: $value;
+          border-color: $value !important;
+        }
+
+        &[loading] {
+          div.proton.loading {
+            div.proton.dot {
+              background: $value;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        background: darken($value, 10%);
+        border-color: darken($value, 10%);
+
+        div.proton.button-label {
+          background: darken($value, 25%);
+          border-color: darken($value, 25%) !important;
+        }
+
+        &[hollow] {
+          background: none;
+          color: darken($value, 10%);
+
+          svg {
+            fill: darken($value, 10%);
+          }
+
+          @keyframes top {
+            0% {
+              margin-bottom: -15px;
+            }
+            10% {
+              margin-bottom: -22px;
+            }
+            20% {
+              margin-bottom: -15px;
+            }
+            30% {
+              margin-bottom: -22px;
+            }
+            40% {
+              margin-bottom: -15px;
+            }
+            100% {
+              margin-bottom: -15px;
+            }
+          }
+
+          @keyframes bottom {
+            0% {
+              margin-bottom: -15px;
+            }
+            15% {
+              margin-bottom: -22px;
+            }
+            25% {
+              margin-bottom: -15px;
+            }
+            35% {
+              margin-bottom: -22px;
+            }
+            45% {
+              margin-bottom: -15px;
+            }
+            100% {
+              margin-bottom: -15px;
+            }
+          }
+
+          .arrTop {
+            animation: top 2s infinite;
+          }
+
+          .arrBottom {
+            animation: bottom 2s infinite;
+          }
+
+          div.proton.button-label {
+            background: none;
+            border-color: darken($value, 10%) !important;
+            color: darken($value, 10%);
+          }
+        }
+      }
+
+      &:active,
+      &[sel] {
+        background: darken($value, 25%);
+        border-color: darken($value, 25%);
+
+        div.proton.button-label {
+          background: darken($value, 50%);
+          border-color: darken($value, 50%) !important;
+        }
+
+        &[hollow] {
+          background: none;
+          color: darken($value, 25%);
+
+          div.proton.button-label {
+            background: none;
+            border-color: darken($value, 25%) !important;
+            color: darken($value, 25%);
+          }
+
+          svg {
+            fill: darken($value, 25%);
+          }
+        }
+      }
+    }
+  }
+
+  // Color
+  @each $key, $value in $colors {
+    &[color="#{$key}"] {
+      color: $text-color-alt;
+      background: $value;
+      border-color: $value;
+
+      svg {
+        fill: $text-color-alt;
+      }
+
+      &[loading] {
+        div.proton.loading {
+          div.proton.dot {
+            background: $text-color-alt;
+          }
+        }
+      }
+
+      div.proton.button-label {
+        background: darken($value, 10%);
+        border-color: darken($value, 10%) !important;
+        color: $text-color-alt;
+      }
+
+      &[hollow] {
+        background: none;
+        color: $value;
+
+        svg {
+          fill: $value;
+        }
+
+        div.proton.button-label {
+          background: none;
+          color: $value;
+          border-color: $value !important;
+        }
+
+        &[loading] {
+          div.proton.loading {
+            div.proton.dot {
+              background: $value;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        background: darken($value, 10%);
+        border-color: darken($value, 10%);
+
+        div.proton.button-label {
+          background: darken($value, 25%);
+          border-color: darken($value, 25%) !important;
+        }
+
+        &[hollow] {
+          background: none;
+          color: darken($value, 10%);
+
+          svg {
+            fill: darken($value, 10%);
+          }
+
+          div.proton.button-label {
+            background: none;
+            border-color: darken($value, 10%) !important;
+            color: darken($value, 10%);
+          }
+        }
+      }
+
+      &:active,
+      &[sel] {
+        background: darken($value, 25%);
+        border-color: darken($value, 25%);
+
+        div.proton.button-label {
+          background: darken($value, 50%);
+          border-color: darken($value, 50%) !important;
+        }
+
+        &[hollow] {
+          background: none;
+          color: darken($value, 25%);
+
+          svg {
+            fill: darken($value, 25%);
+          }
+
+          div.proton.button-label {
+            background: none;
+            border-color: darken($value, 25%) !important;
+            color: darken($value, 25%);
+          }
+        }
+      }
+    }
+  }
+
+  // Disabled
+  &[disabled] {
+    opacity: 50%;
+    pointer-events: none;
+  }
+
+  &[loading] {
+    position: relative;
+    pointer-events: none;
+
+    opacity: 100%;
+
+    div.proton.children {
+      opacity: 0;
+    }
+
+    div.proton.loading {
+      // Box
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      max-width: 100px;
+      pointer-events: none;
+
+      // Flexbox
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+
+      visibility: visible;
+
+      @for $i from 1 through 3 {
+        div.proton.dot:nth-child(3n + #{$i}) {
+          animation-delay: (($i - 1) * 0.25s);
+        }
+      }
+
+      div.proton.dot {
+        width: 10%;
+        height: 0;
+        padding-bottom: 10%;
+
+        // @each $name, $value in $colors {
+        // 	&[loadingColor="#{$name}"] {
+        // 		background: $value;
+        // 	}
+        // }
+
+        border-radius: 50%;
+
+        animation: bounce 1s infinite;
+        animation-fill-mode: forwards;
+
+        transform: translateY(-0.25rem);
+
+        @keyframes bounce {
+          0% {
+            transform: translateY(-0.25rem);
+          }
+          50% {
+            transform: translateY(0.25rem);
+          }
+          100% {
+            transform: translateY(-0.25rem);
+          }
+        }
+      }
+    }
+  }
 }
 
 div.proton.button-group {
-	// Box
-	margin: $margin;
+  // Box
+  margin: $margin;
 
-	// Flexbox
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: flex-start;
+  // Flexbox
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 
-	&[wrap] {
-		flex-wrap: wrap;
-	}
+  &[wrap] {
+    flex-wrap: wrap;
+  }
 
-	&[split] {
-		gap: $padding;
-	}
+  &[split] {
+    gap: $padding;
+  }
 
-	&[vertical] {
-		flex-direction: column;
-		align-items: flex-start;
-	}
+  &[vertical] {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-	button.proton.button {
-		margin: 0;
-	}
+  button.proton.button {
+    margin: 0;
+  }
 
-	&:not([split]) {
-		align-items: stretch;
+  &:not([split]) {
+    align-items: stretch;
 
-		button.proton.button {
-			border-radius: 0;
-		}
+    button.proton.button {
+      border-radius: 0;
+    }
 
-		&:not([vertical]) {
-			button.proton.button {
-				&:first-child:not([underline]) {
-					border-top-left-radius: $border-radius;
-					border-bottom-left-radius: $border-radius;
-				}
+    &:not([vertical]) {
+      button.proton.button {
+        &:first-child:not([underline]) {
+          border-top-left-radius: $border-radius;
+          border-bottom-left-radius: $border-radius;
+        }
 
-				&:last-child:not([underline]) {
-					border-top-right-radius: $border-radius;
-					border-bottom-right-radius: $border-radius;
-				}
-			}
-		}
+        &:last-child:not([underline]) {
+          border-top-right-radius: $border-radius;
+          border-bottom-right-radius: $border-radius;
+        }
+      }
+    }
 
-		&[vertical] {
-			button.proton.button {
-				width: 100%;
+    &[vertical] {
+      button.proton.button {
+        width: 100%;
 
-				&:first-child:not([underline]) {
-					border-top-left-radius: $border-radius;
-					border-top-right-radius: $border-radius;
-				}
+        &:first-child:not([underline]) {
+          border-top-left-radius: $border-radius;
+          border-top-right-radius: $border-radius;
+        }
 
-				&:last-child:not([underline]) {
-					border-bottom-left-radius: $border-radius;
-					border-bottom-right-radius: $border-radius;
-				}
-			}
-		}
-	}
+        &:last-child:not([underline]) {
+          border-bottom-left-radius: $border-radius;
+          border-bottom-right-radius: $border-radius;
+        }
+      }
+    }
+  }
 }
