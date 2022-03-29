@@ -228,6 +228,8 @@ button.proton.button {
         background: darken($value, 10%);
         border-color: darken($value, 10%);
 
+        cursor: pointer;
+
         div.proton.button-label {
           background: darken($value, 25%);
           border-color: darken($value, 25%) !important;
@@ -284,11 +286,11 @@ button.proton.button {
           }
 
           .arrTop {
-            animation: top 2s infinite;
+            animation: top 1.5s infinite;
           }
 
           .arrBottom {
-            animation: bottom 2s infinite;
+            animation: bottom 1.5s infinite;
           }
 
           div.proton.button-label {
