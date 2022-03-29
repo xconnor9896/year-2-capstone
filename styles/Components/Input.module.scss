@@ -23,6 +23,34 @@
 		}
 	}
 
+	.checkbox {
+		width: 1.5rem;
+		height: 1.5rem;
+		background: $background-dark;
+		border-radius: 0.1rem;
+		margin-right: 0.25rem;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			fill: $text;
+			transition: $transition-fast;
+			opacity: 0;
+
+			&.checked {
+				opacity: 1;
+			}
+		}
+
+		transition: $transition-fast;
+
+		&[isChecked="true"] {
+			background: $em-secondary;
+		}
+	}
+
 	input {
 		outline: none;
 		border: none;

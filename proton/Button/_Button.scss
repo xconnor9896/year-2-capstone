@@ -197,6 +197,18 @@ button.proton.button {
 					fill: $value;
 				}
 
+				.arrTop {
+					margin-bottom: -15px;
+				}
+
+				.arrBottom {
+					margin-bottom: -14px;
+				}
+
+				.box {
+					margin-bottom: 10px;
+				}
+
 				div.proton.button-label {
 					background: none;
 					color: $value;
@@ -227,6 +239,56 @@ button.proton.button {
 
 					svg {
 						fill: darken($value, 10%);
+					}
+
+					@keyframes top {
+						0% {
+							margin-bottom: -15px;
+						}
+						10% {
+							margin-bottom: -22px;
+						}
+						20% {
+							margin-bottom: -15px;
+						}
+						30% {
+							margin-bottom: -22px;
+						}
+						40% {
+							margin-bottom: -15px;
+						}
+						100% {
+							margin-bottom: -15px;
+						}
+					}
+
+					@keyframes bottom {
+						0% {
+							margin-bottom: -15px;
+						}
+						15% {
+							margin-bottom: -22px;
+						}
+						25% {
+							margin-bottom: -15px;
+						}
+						35% {
+							margin-bottom: -22px;
+						}
+						45% {
+							margin-bottom: -15px;
+						}
+						100% {
+							margin-bottom: -15px;
+						}
+					}
+
+					.arrTop {
+						animation: top 2s infinite;
+					}
+
+					.arrBottom {
+						animation: bottom 2s infinite;
 					}
 
 					div.proton.button-label {
