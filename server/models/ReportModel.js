@@ -135,6 +135,15 @@ const ReportSchema = new Schema({
             type: String,
           },
           hair: [
+            facial_hair = {
+              color: {
+                type: String,
+              },
+              type: {
+                type: String,
+              },
+              required: true
+            },
             {
               color: {
                 type: String,
