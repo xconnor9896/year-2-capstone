@@ -5,7 +5,7 @@
   height: 4rem;
   width: 100vw;
 
-  box-shadow: $box-shadow;	
+  box-shadow: $box-shadow;
 
   z-index: 100;
 
@@ -26,9 +26,7 @@
     z-index: 1;
 
     button {
-      margin: 0 !important;
-    //   background: $background-light !important;
-      // z-index: 2;
+      margin-left: 0px !important;
 
       div {
         display: flex;
