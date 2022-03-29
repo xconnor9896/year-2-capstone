@@ -317,9 +317,6 @@ const SignUpPage = ({ setState }) => {
 										Select Prefix
 									</option>
 									<option value="captain">Captain</option>
-									<option value="po captain">
-										PO Captain
-									</option>
 									<option value="police officer">
 										Police Officer
 									</option>
@@ -403,6 +400,8 @@ const SignUpPage = ({ setState }) => {
 									placeholder="Teacher Code"
 								/>
 							)}
+
+							IMPLEMENT RECAPTCHA HERE
 
 							<Button.Group>
 								<Button
