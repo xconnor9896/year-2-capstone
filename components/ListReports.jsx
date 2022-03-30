@@ -1,12 +1,100 @@
 import styles from "../styles/components/ListReports.module.scss";
 import { Button, Card, Pagination } from "../proton";
 import Input from "../components/Input";
-import { FaFilter, FaSort } from "react-icons/fa";
+import {
+	FaFilter,
+	FaSort,
+	FaCheckCircle,
+	FaTimesCircle,
+	FaSortUp,
+	FaSortDown,
+	FaCalendar,
+} from "react-icons/fa";
 import ReportTab from "./ReportTab";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-const ListReports = ({ reports, loading, title }) => {
+const randString = () => {
+	let l = "qwertyuiopasdfghjklzxcvbnm1234567890";
+
+	let e = "";
+	for (let i = 0; i < 10; i++) {
+		e += l.split("")[Math.floor(Math.random() * l.length)];
+	}
+
+	return e;
+};
+
+const genExRep = () => {
+	const exRep = {
+		caseId: randString(),
+		reportingOfficer: {
+			name: "Officer John Doe",
+			squad: `Squad #86${Math.ceil(Math.random() * 800) + 100}`,
+		},
+		verified: [true, false][Math.floor(Math.random() * 2)],
+		tag: Math.ceil(Math.random() * 3),
+		createdAt: Date.now(),
+	};
+
+	return exRep;
+};
+
+const exampleReports = [
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+	genExRep(),
+];
+
+const ListReports = ({ userID }) => {
 	const [search, setSearch] = useState("");
 	const [filterType, setFilterType] = useState("none");
 	const [sortType, setSortType] = useState("date");
@@ -15,6 +103,13 @@ const ListReports = ({ reports, loading, title }) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 	const router = useRouter();
+	const [reports, setReports] = useState([]);
+	const [loading, setLoading] = useState(false);
+
+	const [title, setTitle] = useState("Loading");
+
+	const [filterIcon, setFilterIcon] = useState(<FaFilter />);
+	const [sortIcon, setSortIcon] = useState(<FaSort />);
 
 	const handleSearch = (e) => {
 		setSearch(e.target.value);
@@ -25,16 +120,53 @@ const ListReports = ({ reports, loading, title }) => {
 		);
 	};
 
-	const getReports = () => {
+	const pullReportsFromServer = () => {
+		setLoading(true);
+		if (userID) {
+			// PULL FOR SPECIFIC USER
+			setTitle("#USER's Reports");
+			setReports([]);
+		} else {
+			// PULL ALL REPORTS
+			setTitle("All Reports");
+			setReports(exampleReports);
+		}
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		pullReportsFromServer();
+	}, [search]);
+
+	const filterAndSortReports = () => {
 		let reportsGrabbed = [...reports];
 
-		// FILTER AND SORT
+		if (!reportsGrabbed || reportsGrabbed.length < 1) return [];
+
+		// FILTER AND SORT SHOULD BE SERVERSIDE
+		switch (filterType) {
+			case "verified":
+				reportsGrabbed = reportsGrabbed.filter(
+					(report) => report.verified === true
+				);
+				break;
+			case "unverified":
+				reportsGrabbed = reportsGrabbed.filter(
+					(report) => report.verified !== true
+				);
+				break;
+			default:
+				break;
+		}
 
 		return reportsGrabbed;
 	};
 
-	const getReportsOnPage = () => {
-		let reportsGrabbed = [...getReports()];
+	const paginateReports = () => {
+		let reportsGrabbed = [...filterAndSortReports()];
+
+		if (!reportsGrabbed || reportsGrabbed.length < 1) return [];
+
 		reportsGrabbed = reportsGrabbed.slice(
 			currentPage * itemsPerPage,
 			currentPage * itemsPerPage + itemsPerPage
@@ -104,151 +236,209 @@ const ListReports = ({ reports, loading, title }) => {
 		let val = e.target.name;
 		setFilterDropdown(false);
 		setFilterType(val);
-		// console.log(val);
+
+		setCurrentPage(1);
+
+		switch (val) {
+			case "verified":
+				setFilterIcon(<FaCheckCircle />);
+				return;
+			case "unverified":
+				setFilterIcon(<FaTimesCircle />);
+				return;
+			default:
+				setFilterIcon(<FaFilter />);
+				return;
+		}
 	};
 	const sort = (e) => {
 		let val = e.target.name;
 		setSortDropdown(false);
 		setSortType(val);
-		// console.log(val);
+
+		setCurrentPage(1);
+
+		switch (val) {
+			case "urgency":
+				setSortIcon(<FaSortDown />);
+				return;
+			case "nonurgency":
+				setSortIcon(<FaSortUp />);
+				return;
+			// case "date":
+			// 	setSortIcon(<FaCalendar />);
+			// 	return;
+			default:
+				setSortIcon(<FaSort />);
+				return;
+		}
 	};
 
 	return (
 		<div className={styles.container}>
 			<Card dropshadow noborder emphasis="default" loading={loading}>
-				<Card.Header>
-					<h1>{title}</h1>
+				{!loading && (
+					<>
+						<Card.Header>
+							<h1>{title}</h1>
 
-					<div className={styles.inputs}>
-						<Button icon onClick={openSort}>
-							<FaSort />
-						</Button>
-						<Button icon onClick={openFilter}>
-							<FaFilter />
-						</Button>
+							<div className={styles.inputs}>
+								<Button
+									compact
+									emphasis="primary"
+									onClick={openSort}
+								>
+									{sortIcon}
+									Sort
+								</Button>
+								<Button
+									compact
+									emphasis="secondary"
+									onClick={openFilter}
+								>
+									{filterIcon}
+									Filter
+								</Button>
 
-						<Input
-							maxLength={60}
-							value={search}
-							onChange={handleSearch}
-							type="text"
-							placeholder="Search"
-						/>
-					</div>
-				</Card.Header>
-
-				{filterDropdown && (
-					<div ref={filterRef} className={styles.filterDropdown}>
-						<h1>Filter</h1>
-						<Button
-							compact
-							emphasis={
-								filterType === "none" ? "primary" : "none"
-							}
-							hollow
-							outline
-							noborder
-							name="none"
-							onClick={filter}
-						>
-							None
-						</Button>
-						<Button
-							compact
-							emphasis={
-								filterType === "unverified" ? "primary" : "none"
-							}
-							hollow
-							outline
-							noborder
-							name="unverified"
-							onClick={filter}
-						>
-							Unverified
-						</Button>
-						<Button
-							compact
-							emphasis={
-								filterType === "verified" ? "primary" : "none"
-							}
-							hollow
-							outline
-							noborder
-							name="verified"
-							onClick={filter}
-						>
-							Verified
-						</Button>
-					</div>
-				)}
-
-				{sortDropdown && (
-					<div ref={sortRef} className={styles.sortDropdown}>
-						<h1>Sort</h1>
-						<Button
-							compact
-							emphasis={sortType === "date" ? "primary" : "none"}
-							hollow
-							outline
-							noborder
-							name="date"
-							onClick={sort}
-						>
-							Date
-						</Button>
-						<Button
-							compact
-							emphasis={
-								sortType === "urgency" ? "primary" : "none"
-							}
-							hollow
-							outline
-							noborder
-							name="urgency"
-							onClick={sort}
-						>
-							Urgency
-						</Button>
-						<Button
-							compact
-							emphasis={
-								sortType === "nonurgency" ? "primary" : "none"
-							}
-							hollow
-							outline
-							noborder
-							name="nonurgency"
-							onClick={sort}
-						>
-							Nonurgency
-						</Button>
-					</div>
-				)}
-
-				<div className={styles.content}>
-					<div className={styles.reportList}>
-						{getReportsOnPage().map((report) => {
-							return (
-								<ReportTab
-									{...{ report }}
-									showOfficer={true}
-									showExtraInfo={true}
+								<Input
+									maxLength={60}
+									value={search}
+									onChange={handleSearch}
+									type="text"
+									placeholder="Search"
 								/>
-							);
-						})}
-					</div>
-					<Pagination
-						arrows
-						jumpArrows
-						activePage={currentPage}
-						totalPages={Math.floor(
-							getReports().length / itemsPerPage
+							</div>
+						</Card.Header>
+
+						{filterDropdown && (
+							<div
+								ref={filterRef}
+								className={styles.filterDropdown}
+							>
+								<h1>Filter</h1>
+								<Button
+									compact
+									emphasis={
+										filterType === "none"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="none"
+									onClick={filter}
+								>
+									None
+								</Button>
+								<Button
+									compact
+									emphasis={
+										filterType === "verified"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="verified"
+									onClick={filter}
+								>
+									Verified
+								</Button>
+								<Button
+									compact
+									emphasis={
+										filterType === "unverified"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="unverified"
+									onClick={filter}
+								>
+									Unverified
+								</Button>
+							</div>
 						)}
-						onPageChange={(page) => {
-							setCurrentPage(page);
-						}}
-					/>
-				</div>
+
+						{sortDropdown && (
+							<div ref={sortRef} className={styles.sortDropdown}>
+								<h1>Sort</h1>
+								<Button
+									compact
+									emphasis={
+										sortType === "date" ? "primary" : "none"
+									}
+									hollow
+									outline
+									noborder
+									name="date"
+									onClick={sort}
+								>
+									Date
+								</Button>
+								<Button
+									compact
+									emphasis={
+										sortType === "urgency"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="urgency"
+									onClick={sort}
+								>
+									Urgency
+								</Button>
+								<Button
+									compact
+									emphasis={
+										sortType === "nonurgency"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="nonurgency"
+									onClick={sort}
+								>
+									Nonurgency
+								</Button>
+							</div>
+						)}
+
+						<div className={styles.content}>
+							<div className={styles.reportList}>
+								{paginateReports().map((report) => {
+									return (
+										<ReportTab
+											{...{ report }}
+											showOfficer={true}
+											showExtraInfo={true}
+										/>
+									);
+								})}
+							</div>
+							<Pagination
+								arrows
+								jumpArrows
+								activePage={currentPage}
+								totalPages={Math.floor(
+									filterAndSortReports().length / itemsPerPage
+								)}
+								onPageChange={(page) => {
+									setCurrentPage(page);
+								}}
+							/>
+						</div>
+					</>
+				)}
 			</Card>
 		</div>
 	);

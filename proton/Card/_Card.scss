@@ -154,6 +154,7 @@ div.proton.card {
 			display: flex;
 			align-items: center;
 			justify-content: space-evenly;
+			flex-direction: row;
 
 			visibility: visible;
 
@@ -209,7 +210,7 @@ div.proton.card {
 			&[loading] {
 				div.proton.loading {
 					div.proton.dot {
-						background: $value;
+						background: map-get($emphasis, $key + "-text");
 					}
 				}
 			}
