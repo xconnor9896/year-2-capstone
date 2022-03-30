@@ -528,25 +528,26 @@ div.proton.button-group {
 
 	button.proton.button {
 		margin: 0;
+		border-radius: $border-radius !important;
 	}
 
 	&:not([split]) {
 		align-items: stretch;
 
 		button.proton.button {
-			border-radius: 0;
+			border-radius: 0 !important;
 		}
 
 		&:not([vertical]) {
 			button.proton.button {
 				&:first-child:not([underline]) {
-					border-top-left-radius: $border-radius;
-					border-bottom-left-radius: $border-radius;
+					border-top-left-radius: $border-radius !important;
+					border-bottom-left-radius: $border-radius !important;
 				}
 
 				&:last-child:not([underline]) {
-					border-top-right-radius: $border-radius;
-					border-bottom-right-radius: $border-radius;
+					border-top-right-radius: $border-radius !important;
+					border-bottom-right-radius: $border-radius !important;
 				}
 			}
 		}
@@ -556,13 +557,13 @@ div.proton.button-group {
 				width: 100%;
 
 				&:first-child:not([underline]) {
-					border-top-left-radius: $border-radius;
-					border-top-right-radius: $border-radius;
+					border-top-left-radius: $border-radius !important;
+					border-top-right-radius: $border-radius !important;
 				}
 
 				&:last-child:not([underline]) {
-					border-bottom-left-radius: $border-radius;
-					border-bottom-right-radius: $border-radius;
+					border-bottom-left-radius: $border-radius !important;
+					border-bottom-right-radius: $border-radius !important;
 				}
 			}
 		}

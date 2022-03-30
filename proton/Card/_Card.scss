@@ -22,7 +22,7 @@ div.proton.card {
 	color: $text-color;
 
 	// Children
-	div.proton.children {
+	> div.proton.children {
 		// padding: $padding;
 		> :first-child {
 			padding-top: $padding;
@@ -154,6 +154,7 @@ div.proton.card {
 			display: flex;
 			align-items: center;
 			justify-content: space-evenly;
+			flex-direction: row;
 
 			visibility: visible;
 
@@ -200,6 +201,7 @@ div.proton.card {
 	@each $key, $value in $emphasis {
 		&[emphasis="#{$key}"] {
 			border-color: $value;
+			background: $value;
 
 			div.proton.card-header {
 				color: $value;
@@ -208,7 +210,7 @@ div.proton.card {
 			&[loading] {
 				div.proton.loading {
 					div.proton.dot {
-						background: $value;
+						background: map-get($emphasis, $key + "-text");
 					}
 				}
 			}
@@ -219,6 +221,7 @@ div.proton.card {
 	@each $key, $value in $colors {
 		&[color="#{$key}"] {
 			border-color: $value;
+			background: $value;
 
 			div.proton.card-header {
 				color: $value;
