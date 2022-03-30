@@ -24,6 +24,30 @@ button {
 	border: none;
 	outline: none;
 	background: none;
+
+	cursor: pointer;
+
+	&.fancy {
+		border-radius: $border-radius-fancy !important;
+	}
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: darken($background-dark, 15%);
+	// z-index: 999;
+}
+
+::-webkit-scrollbar-thumb {
+	background: lighten($background-light, 25%);
+
+	&:hover {
+		background: $em-primary;
+	}
 }
 
 #__next {

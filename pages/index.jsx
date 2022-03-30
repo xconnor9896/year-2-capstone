@@ -51,7 +51,12 @@ const LoginPage = ({ setState }) => {
 					id="password"
 					placeholder="Password"
 				/>
-				<Button loading={loading} type="submit" emphasis="primary">
+				<Button
+					className="fancy"
+					loading={loading}
+					type="submit"
+					emphasis="primary"
+				>
 					<FaSignInAlt />
 					Login
 				</Button>
@@ -105,7 +110,12 @@ const RecoveryPage = ({ setState }) => {
 					placeholder="Email"
 				/>
 
-				<Button loading={loading} type="submit" emphasis="primary">
+				<Button
+					className="fancy"
+					loading={loading}
+					type="submit"
+					emphasis="primary"
+				>
 					<FaLock />
 					Submit
 				</Button>
@@ -374,7 +384,6 @@ const SignUpPage = ({ setState }) => {
 									<option value="ME">ME</option>
 								</select>
 							</div>
-
 							<Input
 								icon={<FaUserGraduate />}
 								type="checkbox"
@@ -390,7 +399,6 @@ const SignUpPage = ({ setState }) => {
 									</label>
 								}
 							/>
-
 							{isTeacher && (
 								<Input
 									icon={<FaUserLock />}
@@ -400,9 +408,7 @@ const SignUpPage = ({ setState }) => {
 									placeholder="Teacher Code"
 								/>
 							)}
-
 							IMPLEMENT RECAPTCHA HERE
-
 							<Button.Group>
 								<Button
 									emphasis="secondary"
@@ -414,11 +420,11 @@ const SignUpPage = ({ setState }) => {
 									Back
 								</Button>
 							</Button.Group>
-
 							<Button
 								loading={loading}
 								type="submit"
 								emphasis="primary"
+								className="fancy"
 							>
 								<FaUserPlus />
 								Sign Up
