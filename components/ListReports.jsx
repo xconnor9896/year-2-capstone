@@ -97,7 +97,7 @@ const exampleReports = [
 const ListReports = ({ userID }) => {
 	const [search, setSearch] = useState("");
 	const [filterType, setFilterType] = useState("none");
-	const [sortType, setSortType] = useState("date");
+	const [sortType, setSortType] = useState("newest");
 	const [filterDropdown, setFilterDropdown] = useState(false);
 	const [sortDropdown, setSortDropdown] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -257,21 +257,6 @@ const ListReports = ({ userID }) => {
 		setSortType(val);
 
 		setCurrentPage(1);
-
-		switch (val) {
-			case "urgency":
-				setSortIcon(<FaSortDown />);
-				return;
-			case "nonurgency":
-				setSortIcon(<FaSortUp />);
-				return;
-			// case "date":
-			// 	setSortIcon(<FaCalendar />);
-			// 	return;
-			default:
-				setSortIcon(<FaSort />);
-				return;
-		}
 	};
 
 	return (
@@ -370,15 +355,32 @@ const ListReports = ({ userID }) => {
 								<Button
 									compact
 									emphasis={
-										sortType === "date" ? "primary" : "none"
+										sortType === "newest"
+											? "primary"
+											: "none"
 									}
 									hollow
 									outline
 									noborder
-									name="date"
+									name="newest"
 									onClick={sort}
 								>
-									Date
+									Newest
+								</Button>
+								<Button
+									compact
+									emphasis={
+										sortType === "oldest"
+											? "primary"
+											: "none"
+									}
+									hollow
+									outline
+									noborder
+									name="oldest"
+									onClick={sort}
+								>
+									Oldest
 								</Button>
 								<Button
 									compact
