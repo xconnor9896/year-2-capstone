@@ -15,7 +15,7 @@ const createUser = async (req, res) => {
     req.body.user;
 
   try {
-    if (!isEmail(email)) return res.status(401).send("Invalid");
+    if (!isEmail(email)) return res.status(401).send("Invalid Email");
     if (password.length < 8) {
       return res
         .status(401)
@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
       { expiresIn: "1w" },
       (err, token) => {
         if (err) throw err;
-        res.status(200).json(token);
+        res.status(201).json(token);
       }
     );
   } catch (error) {
@@ -119,7 +119,7 @@ const deleteUser = async (req, res) => {
 
     if (user.rank !== "captain") {
       return res
-        .status(401)
+        .status(403)
         .send("Please contact your captain about deleting your account");
     }
 
@@ -137,24 +137,28 @@ const deleteUser = async (req, res) => {
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-CHANGE USERNAME
+UPDATE USER
 .post('/:userId') 
 req.params {userId} //? Targets Id
-req.body {username} //? New Username
+req.body {key, input} //? updates user based off the key and input
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-const changeUsername = async (req, res) => {
-  const { username } = req.body;
+const updateUser = async (req, res) => {
+  const { key, input } = req.body;
   const { userId } = req.params;
 
   try {
-    let user = UserModel.findById(userId);
-    user.username = username;
-    user = await user.save();
+    if (key !== "password" && key !== "email") {
+      let user = UserModel.findById(userId);
+      user[key] = input;
+      user = await user.save();
 
-    return res.status(200).json(user);
+      return res.status(200).json(user);
+    } else {
+      res.status(400).send("You can not update the email or the password");
+    }
   } catch (error) {
-    console.log("error at changeUsername controller");
+    console.log("error at updateUser controller");
     console.log(error);
   }
 };
@@ -180,4 +184,10 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser, deleteUser, changeUsername, changePassword };
+module.exports = {
+  createUser,
+  loginUser,
+  deleteUser,
+  updateUser,
+  changePassword,
+};
