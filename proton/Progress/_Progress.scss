@@ -26,6 +26,27 @@ div.proton.progress-bar {
 	// Color
 	background: map-get($colors, "default");
 	color: $text-color-alt;
+	@each $key, $value in $emphasis {
+		&[emphasis="#{$key}"] {
+			border-color: $value;
+
+			div.proton.fill {
+				background: $value;
+				// border-color: $value;
+			}
+
+			div.proton.spacer {
+				background: $text-color-alt;
+			}
+
+			&[overlay] {
+				div.proton.spacer {
+					background: $value;
+				}
+			}
+		}
+	}
+
 	@each $key, $value in $colors {
 		&[color="#{$key}"] {
 			border-color: $value;

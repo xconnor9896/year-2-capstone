@@ -1,80 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Navbar.module.scss";
-import {
-	FaAngleDoubleDown,
-	FaAngleDoubleUp,
-	FaHome,
-	FaColumns,
-	FaUser,
-	FaSignOutAlt,
-} from "react-icons/fa";
+import { FaAngleDown, FaColumns, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Button } from "../proton";
-
-const Dropdown = () => {
-	return (
-		<div className={styles.dropdown}>
-			<Button.Group vertical split>
-				<Button hollow noborder color="white">
-					<FaHome />
-					Home
-				</Button>
-				<Button hollow noborder color="white">
-					<FaColumns />
-					Dashboard
-				</Button>
-				<Button hollow noborder color="white">
-					<FaUser />
-					Profile
-				</Button>
-			</Button.Group>
-
-			<Button.Group vertical split>
-				<Button hollow noborder color="white">
-					<FaSignOutAlt />
-					Sign Out
-				</Button>
-			</Button.Group>
-		</div>
-	);
-};
+import Link from "next/link";
+import Image from "next/image";
+import logoImg from "../util/LPS Logo.svg";
 
 const Navbar = () => {
-	const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-	return (
-		<div className={styles.navParent}>
-			<nav className={styles.nav}>
-				<Button
-					onClick={() => setDropdownOpen(!dropdownOpen)}
-					icon
-					hollow
-					noborder
-					emphasis={dropdownOpen ? "secondary" : "primary"}
-				>
-					{dropdownOpen ? (
-						<FaAngleDoubleUp
-							style={{
-								fontSize: "2rem",
-							}}
-						/>
-					) : (
-						<FaAngleDoubleDown
-							style={{
-								fontSize: "2rem",
-							}}
-						/>
-					)}
-				</Button>
-				<img
-					className={styles.logo}
-					src="./LPS Logo.svg"
-					alt="LPS Logo"
-				/>
-			</nav>
+  const dropdownRef = useRef();
 
-			{dropdownOpen && <Dropdown />}
-		</div>
-	);
+  const clickHandler = (e) => {
+    if (!dropdownRef.current) {
+      console.warn(
+        "dropdownRef unset. This means clicking outside the dropdown won't close it."
+      );
+      return;
+    }
+
+    if (
+      dropdownOpen &&
+      dropdownRef.current &&
+      dropdownRef.current !== e.target &&
+      !dropdownRef.current.contains(e.target)
+    ) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", clickHandler);
+
+    return () => {
+      window.removeEventListener("click", clickHandler);
+    };
+  }, [dropdownRef, dropdownOpen]);
+
+  return (
+    <div className={styles.navParent}>
+      <div
+        ref={dropdownRef}
+        className={`${styles.dropdown} ${dropdownOpen && styles.dropped}`}
+      >
+        <section>
+          <Link href="/dashboard">
+            <button>
+              <FaColumns />
+              Dashboard
+            </button>
+          </Link>
+          <Link href="/profile/1">
+            <button>
+              <FaUser />
+              Profile
+            </button>
+          </Link>
+        </section>
+
+        <section>
+          <Link href="/">
+            <button>
+              <FaSignOutAlt />
+              Sign Out
+            </button>
+          </Link>
+        </section>
+      </div>
+
+      <nav className={styles.nav}>
+        <Button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          icon
+          hollow
+          noborder
+          emphasis={dropdownOpen ? "secondary" : "primary"}
+        >
+          <div className={`${dropdownOpen && styles.flipped}`}>
+            <span>
+              <FaAngleDown
+                className="arrTop"
+                style={{
+                  fontSize: "2rem",
+                }}
+              />
+            </span>
+            <span>
+              <FaAngleDown
+                className="arrBottom"
+                style={{
+                  fontSize: "2rem",
+                }}
+              />
+            </span>
+            <div className="box"></div>
+          </div>
+        </Button>
+        <Image alt="LPS Logo" width={48} height={48} src={logoImg} />
+      </nav>
+    </div>
+  );
 };
 
 export default Navbar;
