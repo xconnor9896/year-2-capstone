@@ -88,12 +88,12 @@ const Header = (props) => {
 	});
 
 	return (
-		<div
+		<header
 			className={`proton card-header${className ? " " + className : ""}`}
 			{...applyProps()}
 		>
 			{children}
-		</div>
+		</header>
 	);
 };
 
