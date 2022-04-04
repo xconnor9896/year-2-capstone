@@ -1,6 +1,6 @@
 // Colors
-$text-color: black;
-$text-color-alt: white;
+$text-color: white;
+$text-color-alt: black;
 $text-blur: #c7c7c7;
 
 $colors: (
@@ -19,11 +19,13 @@ $colors: (
 
 $emphasis: (
 	"primary": #65aee9,
-	"primary-text": $text-color-alt,
+	"primary-text": $text-color,
 	"secondary": #f99d1c,
-	"secondary-text": $text-color-alt,
+	"secondary-text": $text-color,
 	"default": #4c5255,
-	"default-text": $text-color-alt,
+	"default-text": $text-color,
+	"none": map-get($colors, "white"),
+	"none-text": $text-color-alt,
 );
 
 // Rect

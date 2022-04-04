@@ -1,0 +1,73 @@
+@use "../vars.scss" as *;
+
+.reportTab {
+	background: lighten($background-light, 15%);
+	border-radius: $border-radius;
+	padding: $padding;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.info {
+		display: flex;
+		flex-direction: column;
+
+		span {
+			font-size: 0.75rem;
+			color: darken($text, 25%);
+		}
+	}
+
+	.end {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+
+		.info {
+			align-items: flex-end;
+
+			font-size: 1rem;
+
+			.urgency {
+				color: $text;
+				.tag {
+					color: $text;
+
+					&.tag1 {
+						color: $error;
+					}
+					&.tag2 {
+						color: $em-primary;
+					}
+					&.tag3 {
+						color: $success;
+					}
+				}
+			}
+
+			span {
+				font-size: 0.8rem;
+				display: flex;
+				align-items: center;
+				gap: 0.25rem;
+
+				user-select: none;
+
+				color: lighten($error, 10%);
+
+				svg {
+					fill: lighten($error, 10%);
+				}
+
+				&.verified {
+					color: $success;
+
+					svg {
+						fill: $success;
+					}
+				}
+			}
+		}
+	}
+}
