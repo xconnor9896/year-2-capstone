@@ -7,26 +7,32 @@
 	flex-direction: column;
 	align-items: center;
 
+	overflow: hidden;
+
 	.main {
-		flex-grow: 2;
+		// flex-grow: 2;
 
 		width: 100%;
 
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		padding: $padding;
+
+		overflow: hidden;
+
+		// height: 50vh;
 
 		> div {
 			align-self: center;
 
-			max-height: 500px;
-
-			height: 75vh;
-			
-			max-width: 1200px;
+			max-width: 800px;
 			min-width: 400px;
 			width: 95vw;
+
+			height: 150vh;
+
+			overflow: hidden;
 
 			@media (max-width: 1000px) {
 				max-width: 90vw;
@@ -36,22 +42,20 @@
 				display: flex;
 				flex-direction: column;
 
-				height: 100%;
-
 				position: relative;
 
-				// width: 800px;
-				// height: 400px;
-
-				// min-width: 50vw;
-				// max-width: 95vw;
-				// max-height: 50vh;
+				height: 100%;
+				width: 100%;
 
 				> header {
 					padding: $padding !important;
 					background: lighten($background-light, 10%);
 
 					box-shadow: $light-shadow;
+
+					border-radius: $border-radius;
+					border-bottom-left-radius: 0;
+					border-bottom-right-radius: 0;
 
 					z-index: 2;
 
@@ -85,8 +89,9 @@
 					}
 				}
 
-				> div {
-					padding: 0 !important;
+				form {
+					flex-grow: 2;
+					// height: 50%;
 				}
 			}
 		}
