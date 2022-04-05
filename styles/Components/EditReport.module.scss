@@ -7,24 +7,63 @@
 	display: flex;
 	flex-direction: column;
 
-	gap: 1rem;
+	// gap: 1rem;
 	padding: $padding;
+
+	overflow-y: scroll;
+
+	// flex-grow: 2;
 
 	section {
 		display: flex;
 		flex-direction: column;
 		// gap: 0.5rem;
 
-		// padding: $padding;
+		margin: 0 $margin;
+		border-color: $background-dark !important;
+		// padding-top: calc($padding * 2);
+		border: $border;
+		border-top: none;
+		border-radius: 0;
+		&:first-child {
+			border-top: $border;
+		}
 
-		border-bottom: $border;
+		transition: $transition-fast;
+
+		&[dropped="1"] {
+			border-radius: $border-radius;
+			margin: $margin;
+			border-top: $border;
+
+			~ section {
+				border-top: $border;
+			}
+
+			.sectionContent {
+				height: max-content;
+				display: block;
+			}
+
+			header {
+				button svg {
+					transform: rotate(-180deg);
+				}
+			}
+		}
 
 		header {
 			display: flex;
-			flex-direction: column;
+			// flex-direction: column;
 			align-items: center;
+			justify-content: space-between;
+			padding: 0 $padding;
 
-			margin-bottom: $padding;
+			width: 100%;
+
+			transition: $transition-fast;
+
+			// border-bottom: $border;
 
 			h1 {
 				width: max-content;
@@ -32,30 +71,18 @@
 				color: $em-secondary;
 				font-size: 1.25rem;
 				font-weight: 500;
-				border-bottom: $border-width $border-style $em-secondary;
+				margin-left: $margin;
 			}
 		}
-	}
 
-	.inputSpan {
-		display: flex;
+		.sectionContent {
+			padding: $padding;
+			overflow: hidden;
+			height: 0px;
 
-		// align-items: center;
-		flex-wrap: wrap;
-		flex-wrap: nowrap;
+			display: none;
 
-		border: $border;
-
-		&:last-child {
-			border-bottom: none;
-		}
-
-		div.input {
-			border-right: $border;
-
-			&:last-child {
-				border-right: none;
-			}
+			transition: $transition-fast;
 		}
 	}
 
@@ -71,7 +98,8 @@
 
 		padding: $padding;
 
-		width: max-content;
+		// width: max-content;
+		max-width: 100%;
 
 		label {
 			font-weight: bold;
@@ -83,9 +111,12 @@
 		ul {
 			list-style: none;
 
+			width: 100%;
+
 			display: flex;
 			flex-wrap: wrap;
 			align-items: center;
+			justify-content: flex-start;
 			gap: 0.5rem;
 
 			li {
@@ -99,11 +130,40 @@
 			}
 		}
 
+		textarea {
+			outline: none;
+			border: $border;
+			width: 100%;
+			resize: vertical;
+			background: none;
+			font-size: 1rem;
+			padding: $padding;
+			min-height: 5rem;
+
+			border-color: $text;
+			border-radius: $border-radius;
+
+			transition: $transition-fast;
+			transition-property: color, border;
+
+			&::placeholder {
+				color: $text;
+			}
+
+			&:active,
+			&:focus {
+				border-color: $em-secondary;
+				color: $em-secondary;
+			}
+		}
+
 		input {
 			border: none;
 			outline: none;
 			background: none;
 			font-size: 1rem;
+
+			transition: $transition-fast;
 
 			border-bottom: $border;
 			border-color: $text;
@@ -129,6 +189,17 @@
 				-moz-appearance: textfield;
 				width: 2rem;
 				text-align: center;
+
+				&::placeholder {
+					text-align: center;
+				}
+			}
+
+			&[type="checkbox"] {
+				&:focus {
+					outline: $border;
+					outline-color: $em-secondary;
+				}
 			}
 		}
 	}
