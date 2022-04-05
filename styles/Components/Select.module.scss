@@ -1,0 +1,95 @@
+@use "../vars.scss" as *;
+
+.select {
+	display: flex;
+	flex-direction: column;
+
+	min-width: 150px;
+
+	transition: $transition-fast;
+	position: relative;
+
+	&:focus {
+		outline: $border;
+		outline-color: $em-secondary;
+	}
+
+	&[dropped="1"] {
+		.bar {
+			svg {
+				transform: rotate(-180deg);
+			}
+		}
+
+		.dropdown {
+			top: 100%;
+			opacity: 1;
+			pointer-events: all;
+			display: flex;
+		}
+	}
+
+	.bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		text-transform: capitalize;
+
+		user-select: none;
+
+		padding: $padding;
+
+		background: $background-dark;
+		border-radius: $border-radius;
+
+		svg {
+			transition: $transition-fast;
+		}
+	}
+
+	.dropdown {
+		width: 100%;
+		// overflow: hidden;
+		height: max-content;
+
+		transition: $transition-fast;
+
+		background: $background-dark;
+		border-radius: $border-radius;
+		margin-top: calc($margin / 2);
+
+		position: absolute;
+		top: -100%;
+		opacity: 0;
+		left: 0;
+
+		display: none;
+		flex-direction: column;
+
+		pointer-events: none;
+
+		span {
+			&.selected .option {
+				background: lighten($em-secondary, 10%);
+			}
+
+			.option {
+				border: $border;
+				border-color: transparent;
+				&:focus {
+					outline: none;
+					border: $border;
+					border-color: $em-primary;
+				}
+
+				user-select: none;
+				transition: $transition-fast;
+				padding: calc($padding / 2) $padding;
+				&:hover {
+					background: $em-secondary;
+				}
+			}
+		}
+	}
+}

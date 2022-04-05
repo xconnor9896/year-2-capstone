@@ -145,17 +145,16 @@ export default function Report() {
 							)}
 						</div>
 					</Card.Header>
-					<Card.Content>
-						{!loading && view ? (
-							<ViewReport
-								{...{ report: tempReport, loading, setLoading }}
-							/>
-						) : (
-							<EditReport
-								{...{ report: tempReport, loading, setLoading }}
-							/>
-						)}
-					</Card.Content>
+
+					{!loading && view ? (
+						<ViewReport
+							{...{ report: tempReport, loading, setLoading }}
+						/>
+					) : (
+						<EditReport
+							{...{ report: tempReport, loading, setLoading }}
+						/>
+					)}
 				</Card>
 			</article>
 		</main>
