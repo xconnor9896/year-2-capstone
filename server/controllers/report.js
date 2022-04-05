@@ -30,7 +30,7 @@ const createReport = async (req, res) => {
     location,
     beatOfOffense,
     domesticViolence,
-    incidentOccurredAt: { from, to },
+    incidentOccurredAt,
     relatedComments,
     personalInformation,
   } = req.body;
@@ -38,6 +38,21 @@ const createReport = async (req, res) => {
   try {
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
+
+    report = new ReportModel({
+      responsibleOfficer: { user },
+      incidentType,
+      code,
+      reportType,
+      status,
+      arsSectionNumber,
+      location,
+      beatOfOffense,
+      domesticViolence,
+      incidentOccurredAt,
+      relatedComments,
+      personalInformation,
+    });
   } catch (error) {
     console.log("Error at createReport controller");
     console.log(error);
@@ -192,7 +207,7 @@ const getAllReports = async (req, res) => {
           reports = reports.filter((report) => report.verified === false);
         }
 
-        if (sort === 1  || !sort) {
+        if (sort === 1 || !sort) {
           reports = reports.sort({ createAt: -1 });
         } else if (sort === 2) {
           reports = reports.sort({ createAt: 1 });
@@ -222,3 +237,108 @@ const getAllReports = async (req, res) => {
     console.log(error);
   }
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Verify Report
+.post('/verify/:reportId') 
+req.body {user} 
+//? user - your user object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const verifyReport = async (req, res) => {
+  const {
+    params: { reportId },
+    body: { user },
+  } = req;
+
+  try {
+    if (user.rank === "captain") {
+      let report = ReportModel.findById(reportId);
+      report.verified = !report.verified;
+      report.save();
+      res
+        .status(200)
+        .send(`Report ${report.verified ? "verified" : "unverified"}`);
+    } else {
+      return res
+        .status(403)
+        .send(`You do not have authorization to verify a report`);
+    }
+  } catch (error) {
+    console.log("error at verifyReport controller");
+    console.log(error);
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Importance Report
+.post('/importance/:reportId') 
+req.body {user, importance} 
+//? user - your user object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const importanceReport = async (req, res) => {
+  const {
+    params: { reportId },
+    body: { user, importance },
+  } = req;
+
+  try {
+    let report = ReportModel.findById(reportId);
+    if (user.rank === "captain" || report.createdBy._id === user._id) {
+      switch (importance) {
+        case "normal":
+          report.importance = 3;
+          break;
+        case "important":
+          report.importance = 2;
+          break;
+        case "urgent":
+          report.importance = 1;
+          break;
+        case 3:
+          report.importance = 3;
+          break;
+        case 2:
+          report.importance = 2;
+          break;
+        case 1:
+          report.importance = 1;
+          break;
+        default:
+          report = null;
+      }
+
+      if (report !== null) {
+        report.save();
+        res
+          .status(200)
+          .send(`Report ${report.verified ? "verified" : "unverified"}`);
+      } else {
+        req
+          .status(400)
+          .send(`The level of importance ${importance} does not exist`);
+      }
+    } else {
+      return res
+        .status(403)
+        .send(`You do not have authorization to verify a report`);
+    }
+  } catch (error) {
+    console.log("error at importanceReport controller");
+    console.log(error);
+  }
+};
+
+module.exports = {
+  createReport,
+  deleteReport,
+  updateReport,
+  getReport,
+  getAllReports,
+  verifyReport,
+  importanceReport
+};
+
+
+// test
