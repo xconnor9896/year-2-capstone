@@ -1,57 +1,28 @@
-const isEmail = require("validator/lib/isEmail");
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
 .post('/') 
 req.body {
   user, //? The user creating the report
-  incidentType,
-  code,
-  reportType,
-  status,
-  arsSelectionNumber, //? Not required
-  location,
-  beatOfOffense,
-  domesticViolence, //? boolean
-  incidentOccurredAt,
-  relatedComments,
-  personalInformation
+  createAt //? The time the report was created, leave blank to use current time
 } 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-  const {
-    user,
-    incidentType,
-    code,
-    reportType,
-    status,
-    arsSectionNumber,
-    location,
-    beatOfOffense,
-    domesticViolence,
-    incidentOccurredAt,
-    relatedComments,
-    personalInformation,
-  } = req.body;
+  const { user, createAt } = req.body;
 
   try {
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
 
+    let time = Date.now;
+    if (Number(createAt)) {
+      time = Number(createAt);
+    }
     report = new ReportModel({
       responsibleOfficer: { user },
-      incidentType,
-      code,
-      reportType,
-      status,
-      arsSectionNumber,
-      location,
-      beatOfOffense,
-      domesticViolence,
-      incidentOccurredAt,
-      relatedComments,
-      personalInformation,
+      createAt: time,
+      importance: 3,
+      verified: false,
     });
   } catch (error) {
     console.log("Error at createReport controller");
@@ -105,10 +76,35 @@ const updateReport = async (req, res) => {
     let report = ReportModel.findById(reportId);
 
     if (user.rank === "captain" || report.createdBy === user._id) {
-      report[key] = input;
-      report = await report.save();
-
-      return res.status(200).json(report);
+      let check = true
+      let check2 = true
+      if(typeof(key) !== "string") {
+        check = false
+      }
+      if(typeof(input) !== "string" && key.length === input.length) {
+        check2 = false
+      }
+      if(check && check2) {
+        if (key != "verified" || "responsibleOfficer" || "importance") {
+          report[key] = input;
+          report = await report.save();
+  
+          return res.status(200).json(report);
+        } else {
+          return res.status(418).send("We have different controllers for that");
+        }
+      } else if(check === false && check2 === false) {
+        for (let i = 0; i < key.length; i++) {
+          if (key != "verified" || "responsibleOfficer" || "importance") {
+            report[key[i]] = input[i];
+            report = await report.save();
+          }
+        };
+        return res.status(200).json(report);
+      } else {
+        res.status(400).send("Please make sure the number of keys matches the number of inputs")
+      }
+      
     } else {
       return res
         .status(403)
@@ -337,8 +333,7 @@ module.exports = {
   getReport,
   getAllReports,
   verifyReport,
-  importanceReport
+  importanceReport,
 };
-
 
 // test
