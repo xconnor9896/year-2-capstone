@@ -173,7 +173,7 @@
 					}
 
 					.header {
-						padding: $padding;
+						padding: 0 $padding;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
@@ -223,6 +223,26 @@
 			font-size: 1rem;
 			color: $em-primary;
 			user-select: none;
+
+			&::after {
+				content: "*";
+				color: $error;
+			}
+
+			&[nr="1"] {
+				&::after {
+					content: " (optional)";
+					font-size: 0.5rem;
+					color: $success;
+					vertical-align: top;
+				}
+			}
+
+			&[nr="0"] {
+				&::after {
+					display: none;
+				}
+			}
 		}
 
 		ul {
@@ -245,6 +265,9 @@
 
 				label {
 					color: $text;
+					&::after {
+						display: none;
+					}
 				}
 			}
 		}

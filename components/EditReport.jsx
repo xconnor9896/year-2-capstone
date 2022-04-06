@@ -43,7 +43,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 		email: "",
 		studentID: 0,
 		victimRelationshipToSuspect: "",
-		whoDiscribed: "",
+		whoDescribed: "",
 		willProsecute: false,
 		BAC: false,
 		BACResults: "",
@@ -793,7 +793,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 							</ul>
 						</Input>
 						<Input>
-							<label>Related Reports/Comments</label>
+							<label nr="1">Related Reports/Comments</label>
 
 							<textarea
 								name="relatedComments"
@@ -836,6 +836,10 @@ const EditReport = ({ report, setLoading, loading }) => {
 							const personLoc = activeReport.peopleInfo[index];
 							const path = `peopleInfo id_${index} `;
 
+							const { name } = personLoc;
+							const { firstName, middleName, lastName, aka } =
+								name;
+
 							return (
 								<div
 									key={id}
@@ -850,7 +854,22 @@ const EditReport = ({ report, setLoading, loading }) => {
 										className={styles.header}
 										onClick={() => togglePersonDropdown(id)}
 									>
-										<span>{id}</span>
+										<span>
+											{aka || firstName || lastName ? (
+												<>
+													{`${firstName} ${lastName}`
+														.length < 16
+														? `${firstName} ${lastName}`
+														: `${firstName} ${lastName}`.slice(
+																0,
+																16
+														  ) + "..."}{" "}
+													(<em>{aka}</em>)
+												</>
+											) : (
+												<>Unnamed Person</>
+											)}
+										</span>
 										<Button.Group>
 											<Button
 												type="button"
@@ -902,25 +921,464 @@ const EditReport = ({ report, setLoading, loading }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>Race</label>
+												<label>Race / Ethnicity</label>
 
 												<Select
-													placeholder="Race"
+													placeholder="Race / Ethnicity"
 													path={path + "race"}
 													name="race"
 													id="race"
 													value={personLoc.race}
 													onChange={handleChange}
 												>
-													<Option>Complainant</Option>
-													<Option>Victim</Option>
 													<Option>
-														Reporting Person
+														American Indian / Alaska
+														Native
 													</Option>
-													<Option>Finder</Option>
-													<Option>Witness</Option>
-													<Option>Suspect</Option>
+													<Option>Asian</Option>
+													<Option>
+														Black / African American
+													</Option>
+													<Option>
+														Hispanic / Latino
+													</Option>
+													<Option>
+														Native Hawaiian / Other
+														Pacific Islander
+													</Option>
+													<Option>White</Option>
 												</Select>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>
+													Name (Last, First Middle)
+												</label>
+												<ul>
+													<li>
+														<input
+															type="text"
+															placeholder="Last"
+															value={
+																personLoc.name
+																	.lastName
+															}
+															path={
+																path +
+																"name lastName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<p>,</p>
+													</li>
+													<li>
+														<input
+															type="text"
+															placeholder="First"
+															value={
+																personLoc.name
+																	.firstName
+															}
+															path={
+																path +
+																"name firstName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+													</li>
+													<li>
+														<input
+															type="text"
+															placeholder="Middle"
+															value={
+																personLoc.name
+																	.middleName
+															}
+															path={
+																path +
+																"name middleName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>Age</label>
+												<input
+													type="number"
+													placeholder="Age"
+													maxLength={3}
+													value={personLoc.age}
+													path={path + "age"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Sex</label>
+
+												<Select
+													placeholder="Sex"
+													path={path + "sex"}
+													name="sex"
+													id="sex"
+													value={personLoc.sex}
+													onChange={handleChange}
+												>
+													<Option>Male</Option>
+													<Option>Female</Option>
+												</Select>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">
+													Alias/Nickname
+												</label>
+												<input
+													type="text"
+													placeholder="AKA"
+													value={personLoc.name.aka}
+													path={path + "name aka"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Occupation / For
+													Juvenile-School Attending
+												</label>
+												<input
+													type="text"
+													placeholder="Occupation"
+													value={personLoc.occupation}
+													path={path + "occupation"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">
+													Home Address (City - County
+													- State - Zip)
+												</label>
+												<input
+													type="text"
+													placeholder="Address"
+													value={
+														personLoc.homeAddress
+													}
+													path={path + "homeAddress"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Employer Business Address
+													(City - County - State -
+													Zip)
+												</label>
+												<input
+													type="text"
+													placeholder="Address"
+													value={
+														personLoc.employerAddress
+													}
+													path={
+														path + "employerAddress"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>Main Phone</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.main
+													}
+													path={
+														path +
+														"phoneNumbers main"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Secondary Phone
+												</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.secondary
+													}
+													path={
+														path +
+														"phoneNumbers secondary"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Business Phone
+												</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.business
+													}
+													path={
+														path +
+														"phoneNumbers business"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">Email</label>
+												<input
+													type="email"
+													placeholder="em@il.com"
+													value={personLoc.email}
+													path={path + "email"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">Student ID</label>
+												<input
+													type="number"
+													maxLength={3}
+													placeholder="000"
+													value={personLoc.studentID}
+													path={path + "studentID"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>
+													Victim Relation to Suspect
+												</label>
+												<input
+													type="string"
+													placeholder="Relation"
+													value={
+														personLoc.victimRelationshipToSuspect
+													}
+													path={
+														path +
+														"victimRelationshipToSuspect"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Who Described</label>
+												<input
+													type="string"
+													placeholder="Who Described"
+													value={
+														personLoc.whoDescribed
+													}
+													path={path + "whoDescribed"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Will Prosecute</label>
+												<ul>
+													<li>
+														<input
+															type="checkbox"
+															name="willProsecute"
+															id="willProsecute"
+															checked={
+																personLoc.willProsecute
+															}
+															path={
+																path +
+																"willProsecute"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<label htmlFor="willProsecute">
+															Will Prosecute
+														</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>BAC</label>
+												<ul>
+													<li>
+														<input
+															type="checkbox"
+															name="bac"
+															id="bac"
+															checked={
+																personLoc.BAC
+															}
+															path={path + "BAC"}
+															onChange={
+																handleChange
+															}
+														/>
+														<label htmlFor="bac">
+															BAC
+														</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>BAC Results</label>
+												<input
+													type="string"
+													placeholder="BAC Results"
+													value={personLoc.BACResults}
+													path={path + "BACResults"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>Height</label>
+												<input
+													type="string"
+													placeholder={`0'0"`}
+													value={
+														personLoc
+															.personalDetails
+															.height
+													}
+													path={
+														path +
+														"personalDetails height"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Weight</label>
+
+												<ul>
+													<li>
+														<input
+															type="number"
+															placeholder="0"
+															style={{
+																width: "2.75rem",
+															}}
+															maxLength={4}
+															value={
+																personLoc
+																	.personalDetails
+																	.weight
+															}
+															path={
+																path +
+																"personalDetails weight"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<label>Lbs</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>Build</label>
+												<input
+													type="string"
+													placeholder="Build"
+													value={
+														personLoc
+															.personalDetails
+															.build
+													}
+													path={
+														path +
+														"personalDetails build"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Hair Color</label>
+												<input
+													type="string"
+													placeholder="Hair Color"
+													value={
+														personLoc
+															.personalDetails
+															.hairColor
+													}
+													path={
+														path +
+														"personalDetails hairColor"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Hair Character</label>
+												<input
+													type="string"
+													placeholder="Hair Character"
+													value={
+														personLoc
+															.personalDetails
+															.hairCharacter
+													}
+													path={
+														path +
+														"personalDetails hairCharacter"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Complexion</label>
+												<input
+													type="string"
+													placeholder="Complexion"
+													value={
+														personLoc
+															.personalDetails
+															.complexion
+													}
+													path={
+														path +
+														"personalDetails complexion"
+													}
+													onChange={handleChange}
+												/>
 											</Input>
 										</span>
 									</div>
@@ -978,31 +1436,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 		personalInformation: {
 			// says weather the person is a victim, witness, suspect, or something else
 			
-			name: {
-				firstName: "",
-				middleName: "",
-				lastName: "",
-				aka: "",
-			},
-			DOB: "",
-			age: 0,
-			isJuvenile: false,
-			sex: "",
-			occupation: "",
-			homeAddress: "",
-			employerAddress: "",
-			phoneNumbers: {
-				main: "",
-				secondary: "",
-				business: "",
-			},
-			email: "",
-			studentID: 0,
-			victimRelationshipToSuspect: "",
-			whoDiscribed: "",
-			willProsecute: false,
-			BAC: false,
-			BACResults: "",
+
 			personalDetails: {
 				height: "",
 				weight: 0,
