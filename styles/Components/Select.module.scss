@@ -7,12 +7,21 @@
 	min-width: 150px;
 
 	transition: $transition-fast;
-	position: relative;
 
-	&:focus {
-		outline: $border;
-		outline-color: $em-secondary;
+	&.absolutely {
+		position: relative;
+
+		.dropdown {
+			position: absolute;
+			top: -100%;
+			left: 0;
+		}
 	}
+
+	// &:focus {
+	// 	outline: $border;
+	// 	outline-color: $em-secondary;
+	// }
 
 	&[dropped="1"] {
 		.bar {
@@ -35,6 +44,8 @@
 		justify-content: space-between;
 		width: 100%;
 		text-transform: capitalize;
+
+		gap: 0.25rem;
 
 		user-select: none;
 
@@ -59,10 +70,7 @@
 		border-radius: $border-radius;
 		margin-top: calc($margin / 2);
 
-		position: absolute;
-		top: -100%;
 		opacity: 0;
-		left: 0;
 
 		display: none;
 		flex-direction: column;

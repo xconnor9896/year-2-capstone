@@ -6,7 +6,9 @@ import {
 	FaChevronDown,
 	FaUserPlus,
 	FaUserTimes,
+	FaTrash,
 } from "react-icons/fa";
+const uuid = require("uuid").v4;
 
 import { Select, Option } from "./Select";
 
@@ -17,6 +19,7 @@ const Input = ({ children }) => {
 const EditReport = ({ report, setLoading, loading }) => {
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
+		id: uuid(),
 		personType: "",
 		race: "",
 		name: {
@@ -40,7 +43,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 		email: "",
 		studentID: 0,
 		victimRelationshipToSuspect: "",
-		whoDiscribed: "",
+		whoDescribed: "",
 		willProsecute: false,
 		BAC: false,
 		BACResults: "",
@@ -64,10 +67,19 @@ const EditReport = ({ report, setLoading, loading }) => {
 		people: true, // CHANGE ALL TO FALSE AFTER DEV
 		hosp: false,
 	});
-
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
-		console.log(dropdowns);
+	};
+
+	const [personDropdowns, setPersonDropdowns] = useState({});
+	const togglePersonDropdown = (id) => {
+		let newPersonDropdowns = { ...personDropdowns };
+		newPersonDropdowns[id]
+			? (newPersonDropdowns[id] =
+					newPersonDropdowns[id] === "1" ? "0" : "1")
+			: (newPersonDropdowns[id] = "1");
+
+		setPersonDropdowns({ ...newPersonDropdowns });
 	};
 
 	const [activeReport, setActiveReport] = useState({
@@ -169,7 +181,15 @@ const EditReport = ({ report, setLoading, loading }) => {
 	const addPerson = () => {
 		setActiveReport({
 			...activeReport,
-			peopleInfo: [...activeReport.peopleInfo, person],
+
+			peopleInfo: [
+				...activeReport.peopleInfo,
+
+				{
+					...person,
+					id: uuid(),
+				},
+			],
 		});
 	};
 
@@ -193,6 +213,12 @@ const EditReport = ({ report, setLoading, loading }) => {
 			: e.target.getAttribute("path").split(" ");
 
 		let curRef = newReport;
+
+		for (let i = 0; i < path.length; i++) {
+			if (path[i].includes("id_")) {
+				path[i] = Number(path[i].replace("id_", ""));
+			}
+		}
 
 		for (let i = 0; i < path.length; i++) {
 			if (i === path.length - 1) {
@@ -230,9 +256,9 @@ const EditReport = ({ report, setLoading, loading }) => {
 		// setLoading(false);
 	};
 
-	const blurMe = (e) => {
-		e.target.blur();
-	};
+	// const blurMe = (e) => {
+	// 	e.target.blur();
+	// };
 
 	return (
 		<form className={styles.reportForm} onSubmit={submitForm}>
@@ -240,7 +266,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.basicInfo}
 				dropped={dropdowns.basic ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("basic")}>
 					<h1>Basic Information</h1>
 					<Button
 						type="button"
@@ -248,7 +274,6 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("basic")}
 					>
 						<FaChevronDown />
 					</Button>
@@ -544,6 +569,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 										path="basicInfo incidentReportedAt day"
 										name="day"
 										id="day"
+										absolutely
 										value={
 											activeReport.basicInfo
 												.incidentReportedAt.day
@@ -767,7 +793,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 							</ul>
 						</Input>
 						<Input>
-							<label>Related Reports/Comments</label>
+							<label nr="1">Related Reports/Comments</label>
 
 							<textarea
 								name="relatedComments"
@@ -789,7 +815,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.peopleInfo}
 				dropped={dropdowns.people ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("people")}>
 					<h1>People Involved</h1>
 					<Button
 						type="button"
@@ -797,28 +823,565 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("people")}
 					>
 						<FaChevronDown />
 					</Button>
 				</header>
 				<div className={styles.sectionContent}>
-					<span>
+					<span className={styles.people}>
 						{activeReport.peopleInfo.map((person) => {
-							let key = activeReport.peopleInfo.indexOf(person);
+							const { id } = person;
+							const index =
+								activeReport.peopleInfo.indexOf(person);
+							const personLoc = activeReport.peopleInfo[index];
+							const path = `peopleInfo id_${index} `;
+
+							const { name } = personLoc;
+							const { firstName, middleName, lastName, aka } =
+								name;
 
 							return (
-								<div key={key}>
-									PERSON
-									<Button
-										type="button"
-										onClick={() => removePerson(person)}
-										color="error"
-										hollow
+								<div
+									key={id}
+									dropped={
+										personDropdowns[id]
+											? personDropdowns[id]
+											: "3"
+									}
+									className={styles.person}
+								>
+									<div
+										className={styles.header}
+										onClick={() => togglePersonDropdown(id)}
 									>
-										<FaUserTimes />
-										Remove Person
-									</Button>
+										<span>
+											{aka || firstName || lastName ? (
+												<>
+													{`${firstName} ${lastName}`
+														.length < 16
+														? `${firstName} ${lastName}`
+														: `${firstName} ${lastName}`.slice(
+																0,
+																16
+														  ) + "..."}{" "}
+													(<em>{aka}</em>)
+												</>
+											) : (
+												<>Unnamed Person</>
+											)}
+										</span>
+										<Button.Group>
+											<Button
+												type="button"
+												onClick={() =>
+													removePerson(person)
+												}
+												hollow
+												noborder
+												color="error"
+												icon
+											>
+												<FaTrash />
+											</Button>
+											<Button
+												type="button"
+												icon
+												emphasis="primary"
+												hollow
+												noborder
+												className={
+													styles.dropdownToggle
+												}
+											>
+												<FaChevronDown />
+											</Button>
+										</Button.Group>
+									</div>
+									<div className={styles.content}>
+										<span>
+											<Input>
+												<label>Person Type</label>
+
+												<Select
+													placeholder="Person Type"
+													path={path + "personType"}
+													name="personType"
+													id="personType"
+													value={personLoc.personType}
+													onChange={handleChange}
+												>
+													<Option>Complainant</Option>
+													<Option>Victim</Option>
+													<Option>
+														Reporting Person
+													</Option>
+													<Option>Finder</Option>
+													<Option>Witness</Option>
+													<Option>Suspect</Option>
+												</Select>
+											</Input>
+											<Input>
+												<label>Race / Ethnicity</label>
+
+												<Select
+													placeholder="Race / Ethnicity"
+													path={path + "race"}
+													name="race"
+													id="race"
+													value={personLoc.race}
+													onChange={handleChange}
+												>
+													<Option>
+														American Indian / Alaska
+														Native
+													</Option>
+													<Option>Asian</Option>
+													<Option>
+														Black / African American
+													</Option>
+													<Option>
+														Hispanic / Latino
+													</Option>
+													<Option>
+														Native Hawaiian / Other
+														Pacific Islander
+													</Option>
+													<Option>White</Option>
+												</Select>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>
+													Name (Last, First Middle)
+												</label>
+												<ul>
+													<li>
+														<input
+															type="text"
+															placeholder="Last"
+															value={
+																personLoc.name
+																	.lastName
+															}
+															path={
+																path +
+																"name lastName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<p>,</p>
+													</li>
+													<li>
+														<input
+															type="text"
+															placeholder="First"
+															value={
+																personLoc.name
+																	.firstName
+															}
+															path={
+																path +
+																"name firstName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+													</li>
+													<li>
+														<input
+															type="text"
+															placeholder="Middle"
+															value={
+																personLoc.name
+																	.middleName
+															}
+															path={
+																path +
+																"name middleName"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>Age</label>
+												<input
+													type="number"
+													placeholder="Age"
+													maxLength={3}
+													value={personLoc.age}
+													path={path + "age"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Sex</label>
+
+												<Select
+													placeholder="Sex"
+													path={path + "sex"}
+													name="sex"
+													id="sex"
+													value={personLoc.sex}
+													onChange={handleChange}
+												>
+													<Option>Male</Option>
+													<Option>Female</Option>
+												</Select>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">
+													Alias/Nickname
+												</label>
+												<input
+													type="text"
+													placeholder="AKA"
+													value={personLoc.name.aka}
+													path={path + "name aka"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Occupation / For
+													Juvenile-School Attending
+												</label>
+												<input
+													type="text"
+													placeholder="Occupation"
+													value={personLoc.occupation}
+													path={path + "occupation"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">
+													Home Address (City - County
+													- State - Zip)
+												</label>
+												<input
+													type="text"
+													placeholder="Address"
+													value={
+														personLoc.homeAddress
+													}
+													path={path + "homeAddress"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Employer Business Address
+													(City - County - State -
+													Zip)
+												</label>
+												<input
+													type="text"
+													placeholder="Address"
+													value={
+														personLoc.employerAddress
+													}
+													path={
+														path + "employerAddress"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>Main Phone</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.main
+													}
+													path={
+														path +
+														"phoneNumbers main"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Secondary Phone
+												</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.secondary
+													}
+													path={
+														path +
+														"phoneNumbers secondary"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">
+													Business Phone
+												</label>
+												<input
+													type="tel"
+													maxLength={20}
+													placeholder="000-000-0000"
+													value={
+														personLoc.phoneNumbers
+															.business
+													}
+													path={
+														path +
+														"phoneNumbers business"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label nr="1">Email</label>
+												<input
+													type="email"
+													placeholder="em@il.com"
+													value={personLoc.email}
+													path={path + "email"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label nr="1">Student ID</label>
+												<input
+													type="number"
+													maxLength={3}
+													placeholder="000"
+													value={personLoc.studentID}
+													path={path + "studentID"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>
+													Victim Relation to Suspect
+												</label>
+												<input
+													type="string"
+													placeholder="Relation"
+													value={
+														personLoc.victimRelationshipToSuspect
+													}
+													path={
+														path +
+														"victimRelationshipToSuspect"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Who Described</label>
+												<input
+													type="string"
+													placeholder="Who Described"
+													value={
+														personLoc.whoDescribed
+													}
+													path={path + "whoDescribed"}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Will Prosecute</label>
+												<ul>
+													<li>
+														<input
+															type="checkbox"
+															name="willProsecute"
+															id="willProsecute"
+															checked={
+																personLoc.willProsecute
+															}
+															path={
+																path +
+																"willProsecute"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<label htmlFor="willProsecute">
+															Will Prosecute
+														</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>BAC</label>
+												<ul>
+													<li>
+														<input
+															type="checkbox"
+															name="bac"
+															id="bac"
+															checked={
+																personLoc.BAC
+															}
+															path={path + "BAC"}
+															onChange={
+																handleChange
+															}
+														/>
+														<label htmlFor="bac">
+															BAC
+														</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>BAC Results</label>
+												<input
+													type="string"
+													placeholder="BAC Results"
+													value={personLoc.BACResults}
+													path={path + "BACResults"}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+										<span>
+											<Input>
+												<label>Height</label>
+												<input
+													type="string"
+													placeholder={`0'0"`}
+													value={
+														personLoc
+															.personalDetails
+															.height
+													}
+													path={
+														path +
+														"personalDetails height"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Weight</label>
+
+												<ul>
+													<li>
+														<input
+															type="number"
+															placeholder="0"
+															style={{
+																width: "2.75rem",
+															}}
+															maxLength={4}
+															value={
+																personLoc
+																	.personalDetails
+																	.weight
+															}
+															path={
+																path +
+																"personalDetails weight"
+															}
+															onChange={
+																handleChange
+															}
+														/>
+														<label>Lbs</label>
+													</li>
+												</ul>
+											</Input>
+											<Input>
+												<label>Build</label>
+												<input
+													type="string"
+													placeholder="Build"
+													value={
+														personLoc
+															.personalDetails
+															.build
+													}
+													path={
+														path +
+														"personalDetails build"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Hair Color</label>
+												<input
+													type="string"
+													placeholder="Hair Color"
+													value={
+														personLoc
+															.personalDetails
+															.hairColor
+													}
+													path={
+														path +
+														"personalDetails hairColor"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Hair Character</label>
+												<input
+													type="string"
+													placeholder="Hair Character"
+													value={
+														personLoc
+															.personalDetails
+															.hairCharacter
+													}
+													path={
+														path +
+														"personalDetails hairCharacter"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Complexion</label>
+												<input
+													type="string"
+													placeholder="Complexion"
+													value={
+														personLoc
+															.personalDetails
+															.complexion
+													}
+													path={
+														path +
+														"personalDetails complexion"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+										</span>
+									</div>
 								</div>
 							);
 						})}
@@ -828,8 +1391,8 @@ const EditReport = ({ report, setLoading, loading }) => {
 						onClick={addPerson}
 						type="button"
 						hollow
-						// emphasis="primary"
-						color="success"
+						emphasis="primary"
+						// color="success"
 					>
 						<FaUserPlus />
 						Add Person
@@ -841,7 +1404,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.hospitalInfo}
 				dropped={dropdowns.hosp ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("hosp")}>
 					<h1>Hospital Information</h1>
 					<Button
 						type="button"
@@ -849,7 +1412,6 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("hosp")}
 					>
 						<FaChevronDown />
 					</Button>
@@ -870,46 +1432,11 @@ const EditReport = ({ report, setLoading, loading }) => {
 				</div>
 			</section>
 
-			{`basicInformation: {
-		
-
-			incidentOccurredAt: {
-				from: "",
-				to: "",
-			},
-
-			relatedComments: "",
-		},
-
+			{`
 		personalInformation: {
 			// says weather the person is a victim, witness, suspect, or something else
-			personType: "",
-			race: "",
-			name: {
-				firstName: "",
-				middleName: "",
-				lastName: "",
-				aka: "",
-			},
-			DOB: "",
-			age: 0,
-			isJuvenile: false,
-			sex: "",
-			occupation: "",
-			homeAddress: "",
-			employerAddress: "",
-			phoneNumbers: {
-				main: "",
-				secondary: "",
-				business: "",
-			},
-			email: "",
-			studentID: 0,
-			victimRelationshipToSuspect: "",
-			whoDiscribed: "",
-			willProsecute: false,
-			BAC: false,
-			BACResults: "",
+			
+
 			personalDetails: {
 				height: "",
 				weight: 0,
