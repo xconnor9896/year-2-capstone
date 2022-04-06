@@ -9,6 +9,7 @@
 
 	// gap: 1rem;
 	padding: $padding;
+	padding-top: $padding * 2;
 
 	overflow-y: scroll;
 
@@ -43,9 +44,14 @@
 			.sectionContent {
 				height: max-content;
 				display: block;
+				padding: $padding;
+				padding-top: 0;
 			}
 
 			header {
+				border-radius: $border-radius;
+				border-bottom-left-radius: 0;
+
 				button svg {
 					transform: rotate(-180deg);
 				}
@@ -55,9 +61,18 @@
 		header {
 			display: flex;
 			// flex-direction: column;
+			border-radius: 0;
 			align-items: center;
 			justify-content: space-between;
 			padding: 0 $padding;
+
+			user-select: none;
+
+			cursor: pointer;
+
+			&:hover {
+				background: lighten($background-light, 5%);
+			}
 
 			width: 100%;
 
@@ -76,13 +91,115 @@
 		}
 
 		.sectionContent {
-			padding: $padding;
+			// padding: $padding;
 			overflow: hidden;
 			height: 0px;
 
 			display: none;
 
 			transition: $transition-fast;
+		}
+
+		&.peopleInfo {
+			.sectionContent {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: $padding;
+
+				button {
+					margin: 0;
+				}
+			}
+
+			.people {
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				// gap: $padding;
+				padding-top: $padding;
+
+				.person {
+					width: 100%;
+
+					border: $border;
+					border-top: none;
+
+					&:first-child {
+						border-top: $border;
+					}
+
+					// border-radius: $border-radius;
+
+					background: darken($background-dark, 10%);
+
+					display: flex;
+					flex-direction: column;
+
+					margin: 0;
+
+					&[dropped="1"] {
+						margin: $margin 0;
+						border-top: $border;
+
+						&:first-child {
+							margin-top: 0;
+						}
+
+						&:last-child {
+							margin-bottom: 0;
+						}
+
+						~ .person {
+							border-top: $border;
+						}
+
+						border-radius: $border-radius;
+						.header {
+							border-radius: $border-radius;
+							border-bottom-left-radius: 0;
+							.dropdownToggle svg {
+								transform: rotate(-180deg);
+							}
+						}
+
+						.content {
+							padding: $padding;
+							margin-top: $margin;
+							height: max-content;
+							padding-top: 0;
+						}
+					}
+
+					.header {
+						padding: $padding;
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						justify-content: space-between;
+						transition: $transition-fast;
+						background: darken($background-dark, 10%);
+						// border-radius: $border-radius;
+						cursor: pointer;
+
+						&:hover {
+							background: darken($background-dark, 5%);
+						}
+					}
+
+					.content {
+						padding: 0;
+						height: 0px;
+						overflow: hidden;
+						transition: $transition-fast;
+
+						display: flex;
+						flex-direction: column;
+						gap: $padding;
+					}
+				}
+			}
 		}
 	}
 
@@ -110,6 +227,8 @@
 
 		ul {
 			list-style: none;
+
+			color: $em-primary;
 
 			width: 100%;
 

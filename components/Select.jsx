@@ -9,6 +9,7 @@ export const Select = ({
 	onChange,
 	value,
 	path,
+	absolutely,
 }) => {
 	const [dropped, setDropped] = useState(false);
 	// const [value, setValue] = useState(null);
@@ -47,7 +48,7 @@ export const Select = ({
 
 	return (
 		<div
-			className={styles.select}
+			className={`${styles.select} ${absolutely && styles.absolutely}`}
 			dropped={dropped ? "1" : "0"}
 			value={value}
 			path={path}

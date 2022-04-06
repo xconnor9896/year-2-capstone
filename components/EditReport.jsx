@@ -6,7 +6,9 @@ import {
 	FaChevronDown,
 	FaUserPlus,
 	FaUserTimes,
+	FaTrash,
 } from "react-icons/fa";
+const uuid = require("uuid").v4;
 
 import { Select, Option } from "./Select";
 
@@ -17,6 +19,7 @@ const Input = ({ children }) => {
 const EditReport = ({ report, setLoading, loading }) => {
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
+		id: uuid(),
 		personType: "",
 		race: "",
 		name: {
@@ -64,10 +67,19 @@ const EditReport = ({ report, setLoading, loading }) => {
 		people: true, // CHANGE ALL TO FALSE AFTER DEV
 		hosp: false,
 	});
-
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
-		console.log(dropdowns);
+	};
+
+	const [personDropdowns, setPersonDropdowns] = useState({});
+	const togglePersonDropdown = (id) => {
+		let newPersonDropdowns = { ...personDropdowns };
+		newPersonDropdowns[id]
+			? (newPersonDropdowns[id] =
+					newPersonDropdowns[id] === "1" ? "0" : "1")
+			: (newPersonDropdowns[id] = "1");
+
+		setPersonDropdowns({ ...newPersonDropdowns });
 	};
 
 	const [activeReport, setActiveReport] = useState({
@@ -169,7 +181,15 @@ const EditReport = ({ report, setLoading, loading }) => {
 	const addPerson = () => {
 		setActiveReport({
 			...activeReport,
-			peopleInfo: [...activeReport.peopleInfo, person],
+
+			peopleInfo: [
+				...activeReport.peopleInfo,
+
+				{
+					...person,
+					id: uuid(),
+				},
+			],
 		});
 	};
 
@@ -193,6 +213,12 @@ const EditReport = ({ report, setLoading, loading }) => {
 			: e.target.getAttribute("path").split(" ");
 
 		let curRef = newReport;
+
+		for (let i = 0; i < path.length; i++) {
+			if (path[i].includes("id_")) {
+				path[i] = Number(path[i].replace("id_", ""));
+			}
+		}
 
 		for (let i = 0; i < path.length; i++) {
 			if (i === path.length - 1) {
@@ -230,9 +256,9 @@ const EditReport = ({ report, setLoading, loading }) => {
 		// setLoading(false);
 	};
 
-	const blurMe = (e) => {
-		e.target.blur();
-	};
+	// const blurMe = (e) => {
+	// 	e.target.blur();
+	// };
 
 	return (
 		<form className={styles.reportForm} onSubmit={submitForm}>
@@ -240,7 +266,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.basicInfo}
 				dropped={dropdowns.basic ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("basic")}>
 					<h1>Basic Information</h1>
 					<Button
 						type="button"
@@ -248,7 +274,6 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("basic")}
 					>
 						<FaChevronDown />
 					</Button>
@@ -544,6 +569,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 										path="basicInfo incidentReportedAt day"
 										name="day"
 										id="day"
+										absolutely
 										value={
 											activeReport.basicInfo
 												.incidentReportedAt.day
@@ -789,7 +815,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.peopleInfo}
 				dropped={dropdowns.people ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("people")}>
 					<h1>People Involved</h1>
 					<Button
 						type="button"
@@ -797,28 +823,107 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("people")}
 					>
 						<FaChevronDown />
 					</Button>
 				</header>
 				<div className={styles.sectionContent}>
-					<span>
+					<span className={styles.people}>
 						{activeReport.peopleInfo.map((person) => {
-							let key = activeReport.peopleInfo.indexOf(person);
+							const { id } = person;
+							const index =
+								activeReport.peopleInfo.indexOf(person);
+							const personLoc = activeReport.peopleInfo[index];
+							const path = `peopleInfo id_${index} `;
 
 							return (
-								<div key={key}>
-									PERSON
-									<Button
-										type="button"
-										onClick={() => removePerson(person)}
-										color="error"
-										hollow
+								<div
+									key={id}
+									dropped={
+										personDropdowns[id]
+											? personDropdowns[id]
+											: "3"
+									}
+									className={styles.person}
+								>
+									<div
+										className={styles.header}
+										onClick={() => togglePersonDropdown(id)}
 									>
-										<FaUserTimes />
-										Remove Person
-									</Button>
+										<span>{id}</span>
+										<Button.Group>
+											<Button
+												type="button"
+												onClick={() =>
+													removePerson(person)
+												}
+												hollow
+												noborder
+												color="error"
+												icon
+											>
+												<FaTrash />
+											</Button>
+											<Button
+												type="button"
+												icon
+												emphasis="primary"
+												hollow
+												noborder
+												className={
+													styles.dropdownToggle
+												}
+											>
+												<FaChevronDown />
+											</Button>
+										</Button.Group>
+									</div>
+									<div className={styles.content}>
+										<span>
+											<Input>
+												<label>Person Type</label>
+
+												<Select
+													placeholder="Person Type"
+													path={path + "personType"}
+													name="personType"
+													id="personType"
+													value={personLoc.personType}
+													onChange={handleChange}
+												>
+													<Option>Complainant</Option>
+													<Option>Victim</Option>
+													<Option>
+														Reporting Person
+													</Option>
+													<Option>Finder</Option>
+													<Option>Witness</Option>
+													<Option>Suspect</Option>
+												</Select>
+											</Input>
+											<Input>
+												<label>Race</label>
+
+												<Select
+													placeholder="Race"
+													path={path + "race"}
+													name="race"
+													id="race"
+													value={personLoc.race}
+													onChange={handleChange}
+												>
+													<Option>Complainant</Option>
+													<Option>Victim</Option>
+													<Option>
+														Reporting Person
+													</Option>
+													<Option>Finder</Option>
+													<Option>Witness</Option>
+													<Option>Suspect</Option>
+												</Select>
+											</Input>
+										</span>
+									</div>
 								</div>
 							);
 						})}
@@ -828,8 +933,8 @@ const EditReport = ({ report, setLoading, loading }) => {
 						onClick={addPerson}
 						type="button"
 						hollow
-						// emphasis="primary"
-						color="success"
+						emphasis="primary"
+						// color="success"
 					>
 						<FaUserPlus />
 						Add Person
@@ -841,7 +946,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 				className={styles.hospitalInfo}
 				dropped={dropdowns.hosp ? "1" : "0"}
 			>
-				<header>
+				<header onClick={() => toggleDropdown("hosp")}>
 					<h1>Hospital Information</h1>
 					<Button
 						type="button"
@@ -849,7 +954,6 @@ const EditReport = ({ report, setLoading, loading }) => {
 						noborder
 						icon
 						emphasis="secondary"
-						onClick={() => toggleDropdown("hosp")}
 					>
 						<FaChevronDown />
 					</Button>
@@ -870,21 +974,10 @@ const EditReport = ({ report, setLoading, loading }) => {
 				</div>
 			</section>
 
-			{`basicInformation: {
-		
-
-			incidentOccurredAt: {
-				from: "",
-				to: "",
-			},
-
-			relatedComments: "",
-		},
-
+			{`
 		personalInformation: {
 			// says weather the person is a victim, witness, suspect, or something else
-			personType: "",
-			race: "",
+			
 			name: {
 				firstName: "",
 				middleName: "",
