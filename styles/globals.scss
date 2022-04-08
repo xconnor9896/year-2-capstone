@@ -9,6 +9,7 @@
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
 		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 	color: $text;
+	scroll-behavior: smooth;
 }
 
 a {
@@ -51,10 +52,12 @@ button {
 }
 
 #__next {
-	min-height: 100vh;
+	height: 100vh;
 
 	display: flex;
 	flex-direction: column;
+
+	overflow: hidden;
 }
 
 .custom-input {
