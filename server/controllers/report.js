@@ -65,46 +65,35 @@ const deleteReport = async (req, res) => {
 UPDATE REPORT
 .post('/:reportId') 
 req.params {reportId} //? Targets Id
-req.body {user, key, input} //? updates user based off the key and input
+req.body {user, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-  const { user, key, input } = req.body;
+  const { user, keys, inputs } = req.body;
   const { reportId } = req.params;
 
   try {
     let report = ReportModel.findById(reportId);
+    let notInclude = ['verified','responsibleOfficer', 'importance']
 
     if (user.rank === "captain" || report.createdBy === user._id) {
-      let check = true
-      let check2 = true
-      if(typeof(key) !== "string") {
-        check = false
-      }
-      if(typeof(input) !== "string" && key.length === input.length) {
-        check2 = false
-      }
-      if(check && check2) {
-        if (key != "verified" || "responsibleOfficer" || "importance") {
-          report[key] = input;
-          report = await report.save();
-  
-          return res.status(200).json(report);
-        } else {
-          return res.status(418).send("We have different controllers for that");
-        }
-      } else if(check === false && check2 === false) {
-        for (let i = 0; i < key.length; i++) {
-          if (key != "verified" || "responsibleOfficer" || "importance") {
-            report[key[i]] = input[i];
+      if (keys.length === inputs.length) {
+        for (let i = 0; i < keys.length; i++) {
+          if (
+            !notInclude.contains(keys[i])
+          ) {
+            report[keys[i]] = inputs[i];
             report = await report.save();
           }
-        };
+        }
         return res.status(200).json(report);
       } else {
-        res.status(400).send("Please make sure the number of keys matches the number of inputs")
+        res
+          .status(400)
+          .send(
+            "Please make sure the number of keys matches the number of inputs"
+          );
       }
-      
     } else {
       return res
         .status(403)
