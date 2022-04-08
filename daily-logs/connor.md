@@ -14,4 +14,12 @@ i'll format this readme later
 
 03-27-2022 - WEEKEND DAY
 
-03-28-2022 - Continued work on ReportModel.js,
+03-28-2022 - Continued work on ReportModel.js, almost done
+
+03-29-2022 - Opened MongoDB database and shared link, still need to connect to it in server.js
+
+03-30-2022 - Created own personal ENV with mongo url, still need to connect it
+
+03-31-2022 - Mock interview day, not much work was completed today
+
+04-01-2022 - Finished project. (april fools lol)
