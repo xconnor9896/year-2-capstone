@@ -1,57 +1,28 @@
-const isEmail = require("validator/lib/isEmail");
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
 .post('/') 
 req.body {
   user, //? The user creating the report
-  incidentType,
-  code,
-  reportType,
-  status,
-  arsSelectionNumber, //? Not required
-  location,
-  beatOfOffense,
-  domesticViolence, //? boolean
-  incidentOccurredAt,
-  relatedComments,
-  personalInformation
+  createAt //? The time the report was created, leave blank to use current time
 } 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-  const {
-    user,
-    incidentType,
-    code,
-    reportType,
-    status,
-    arsSectionNumber,
-    location,
-    beatOfOffense,
-    domesticViolence,
-    incidentOccurredAt,
-    relatedComments,
-    personalInformation,
-  } = req.body;
+  const { user, createAt } = req.body;
 
   try {
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
 
+    let time = Date.now;
+    if (Number(createAt)) {
+      time = Number(createAt);
+    }
     report = new ReportModel({
       responsibleOfficer: { user },
-      incidentType,
-      code,
-      reportType,
-      status,
-      arsSectionNumber,
-      location,
-      beatOfOffense,
-      domesticViolence,
-      incidentOccurredAt,
-      relatedComments,
-      personalInformation,
+      createAt: time,
+      importance: 3,
+      verified: false,
     });
   } catch (error) {
     console.log("Error at createReport controller");
@@ -94,21 +65,35 @@ const deleteReport = async (req, res) => {
 UPDATE REPORT
 .post('/:reportId') 
 req.params {reportId} //? Targets Id
-req.body {user, key, input} //? updates user based off the key and input
+req.body {user, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-  const { user, key, input } = req.body;
+  const { user, keys, inputs } = req.body;
   const { reportId } = req.params;
 
   try {
     let report = ReportModel.findById(reportId);
+    let notInclude = ['verified','responsibleOfficer', 'importance']
 
     if (user.rank === "captain" || report.createdBy === user._id) {
-      report[key] = input;
-      report = await report.save();
-
-      return res.status(200).json(report);
+      if (keys.length === inputs.length) {
+        for (let i = 0; i < keys.length; i++) {
+          if (
+            !notInclude.contains(keys[i])
+          ) {
+            report[keys[i]] = inputs[i];
+            report = await report.save();
+          }
+        }
+        return res.status(200).json(report);
+      } else {
+        res
+          .status(400)
+          .send(
+            "Please make sure the number of keys matches the number of inputs"
+          );
+      }
     } else {
       return res
         .status(403)
@@ -337,8 +322,7 @@ module.exports = {
   getReport,
   getAllReports,
   verifyReport,
-  importanceReport
+  importanceReport,
 };
-
 
 // test
