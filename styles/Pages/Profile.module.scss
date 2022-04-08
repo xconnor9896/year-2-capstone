@@ -1,1 +1,31 @@
 @use "../vars.scss" as *;
+
+.container {
+  display: flex;
+  .user {
+    background-color: $background-light;
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    margin: 0 auto;
+    overflow: hidden;
+    .pfp {
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      height: min-content;
+      width: min-content;
+      padding: 40px;
+      border-radius: 50%;
+      background-color: $background-light;
+    }
+    ul {
+      list-style: none;
+      li {
+        margin: 8px;
+        background-color: $background-dark;
+        border-top-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+    }
+  }
+}
