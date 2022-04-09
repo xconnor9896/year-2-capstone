@@ -17,7 +17,7 @@ const Input = ({ children }) => {
 	return <div className={styles.input}>{children}</div>;
 };
 
-const EditReport = ({ report, setLoading, loading }) => {
+const EditReport = ({ report, setLoading, loading, setView }) => {
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
 		id: uuid(),
@@ -274,6 +274,9 @@ const EditReport = ({ report, setLoading, loading }) => {
 		setLoading(true);
 		console.warn("implement submitting of editted report.");
 		setLoading(false);
+
+		// If Success
+		setView(false);
 	};
 
 	// const blurMe = (e) => {
