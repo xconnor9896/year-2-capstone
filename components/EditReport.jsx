@@ -222,6 +222,8 @@ const EditReport = ({ report, setLoading, loading }) => {
 
 	// TOTALLY STATIC
 	const handleChange = (e) => {
+		if (loading) return;
+
 		let newReport = { ...activeReport };
 
 		let path = e.selectTarget
@@ -266,10 +268,12 @@ const EditReport = ({ report, setLoading, loading }) => {
 		setActiveReport({ ...newReport, ...activeReport });
 	};
 
-	const submitForm = () => {
+	const submitForm = (e) => {
+		e.preventDefault();
+
 		setLoading(true);
 		console.warn("implement submitting of editted report.");
-		// setLoading(false);
+		setLoading(false);
 	};
 
 	// const blurMe = (e) => {
