@@ -4,13 +4,12 @@ const User = require('../models/UserModel');
 
 // report model
 
+
+
 const mongoose = require('mongoose');
 
 const ReportSchema = new mongoose.Schema({
-  caseNumber: {
-    type: String,
-    required: true,
-  },
+  // The case number will be the mongoose _id
 
   basicInfo: {
     incidentType: {
@@ -32,8 +31,6 @@ const ReportSchema = new mongoose.Schema({
       required: true,
     },
 
-
-
     status: {
       enum: ['open', "verified"],
       type: String,
@@ -51,7 +48,7 @@ const ReportSchema = new mongoose.Schema({
       required: true,
     },
 
-    location: {
+    locationOfOffense: {
       type: String,
       required: true,
     },
@@ -66,7 +63,7 @@ const ReportSchema = new mongoose.Schema({
       // badgeNumber: "",
       // division: "",
 
-     // use the user model
+      // use the user model
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -174,27 +171,68 @@ const ReportSchema = new mongoose.Schema({
       type: String,
       required: false,
     },
+    synopsis: {
+      type: String,
+      required: false,
+      maxCount: 300,
+    },
+
+    reportNarrative: {
+      type: String,
+      required: false,
+      maxCount: 500,
+    },
   },
 
   peopleInfo: [
     {
-      
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Person',
+      // makes there be at least one person
+      required: true,
+    },
   ],
 
   hospitalInfo: {
-    injured: false,
-    treated: false,
-    hospital: "",
-    transportedBy: "",
-    emsNo: 0,
-    treatmentReasons: "",
-    patientCondition: "",
-    patientDispo: "",
-    attendingPhysician: "",
+    injuryOccurred: {
+      type: Boolean,
+      required: true,
+    },
+    injuryTreated: {
+      type: Boolean,
+      required: true,
+    },
+    hospital: {
+      type: String,
+      required: true,
+    },
+    transportedBy: {
+      type: String,
+      required: true,
+    },
+    emsNumber: {
+      type: Number,
+      required: true,
+    },
+    treatmentReasons: {
+      type: String,
+      required: true,
+    },
+    patientCondition: {
+      type: String,
+      required: true,
+    },
+    patientDispo: {
+      type: String,
+      required: true,
+    },
+    attendingPhysician: {
+      type: String,
+      required: true,
+    },
   },
 
-  synopsis: "",
+
 });
 
 export default mongoose.model('Report', ReportSchema);
