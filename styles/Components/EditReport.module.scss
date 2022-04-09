@@ -17,7 +17,8 @@
 
 	section {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
+		flex-wrap: wrap;
 		// gap: 0.5rem;
 
 		margin: 0 $margin;
@@ -98,6 +99,151 @@
 			display: none;
 
 			transition: $transition-fast;
+
+			span {
+				div.input {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 0.25rem;
+
+					// height: 100%;
+
+					flex-grow: 1;
+
+					padding: $padding;
+
+					// width: max-content;
+					max-width: 100%;
+
+					label {
+						font-weight: bold;
+						font-size: 1rem;
+						color: $em-primary;
+						user-select: none;
+
+						&::after {
+							content: "*";
+							color: $error;
+						}
+
+						&[nr="1"] {
+							&::after {
+								content: " (optional)";
+								font-size: 0.5rem;
+								color: $success;
+								vertical-align: top;
+							}
+						}
+
+						&[nr="0"] {
+							&::after {
+								display: none;
+							}
+						}
+					}
+
+					ul {
+						list-style: none;
+
+						color: $em-primary;
+
+						width: 100%;
+
+						display: flex;
+						flex-wrap: wrap;
+						align-items: center;
+						justify-content: flex-start;
+						gap: 0.5rem;
+
+						li {
+							display: flex;
+							align-items: center;
+							gap: 0.25rem;
+
+							label {
+								color: $text;
+								&::after {
+									display: none;
+								}
+							}
+						}
+					}
+
+					textarea {
+						outline: none;
+						border: $border;
+						width: 100%;
+						resize: vertical;
+						background: none;
+						font-size: 1rem;
+						padding: $padding;
+						min-height: 5rem;
+
+						border-color: $text;
+						border-radius: $border-radius;
+
+						transition: $transition-fast;
+						transition-property: color, border;
+
+						&::placeholder {
+							color: $text;
+						}
+
+						&:active,
+						&:focus {
+							border-color: $em-primary;
+							color: $em-primary;
+						}
+					}
+
+					input {
+						border: none;
+						outline: none;
+						background: none;
+						font-size: 1rem;
+
+						transition: $transition-fast;
+
+						border-bottom: $border;
+						border-color: $text;
+
+						&::placeholder {
+							color: $text;
+						}
+
+						&:active,
+						&:focus {
+							border-color: $em-secondary;
+							color: $em-secondary;
+						}
+
+						&::-webkit-outer-spin-button,
+						&::-webkit-inner-spin-button {
+							-webkit-appearance: none;
+							margin: 0;
+						}
+
+						/* Firefox */
+						&[type="number"] {
+							-moz-appearance: textfield;
+							width: 2rem;
+							text-align: center;
+
+							&::placeholder {
+								text-align: center;
+							}
+						}
+
+						&[type="checkbox"] {
+							&:focus {
+								outline: $border;
+								outline-color: $em-secondary;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		&.peopleInfo {
@@ -198,149 +344,6 @@
 						flex-direction: column;
 						gap: $padding;
 					}
-				}
-			}
-		}
-	}
-
-	div.input {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.25rem;
-
-		// height: 100%;
-
-		flex-grow: 1;
-
-		padding: $padding;
-
-		// width: max-content;
-		max-width: 100%;
-
-		label {
-			font-weight: bold;
-			font-size: 1rem;
-			color: $em-primary;
-			user-select: none;
-
-			&::after {
-				content: "*";
-				color: $error;
-			}
-
-			&[nr="1"] {
-				&::after {
-					content: " (optional)";
-					font-size: 0.5rem;
-					color: $success;
-					vertical-align: top;
-				}
-			}
-
-			&[nr="0"] {
-				&::after {
-					display: none;
-				}
-			}
-		}
-
-		ul {
-			list-style: none;
-
-			color: $em-primary;
-
-			width: 100%;
-
-			display: flex;
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: flex-start;
-			gap: 0.5rem;
-
-			li {
-				display: flex;
-				align-items: center;
-				gap: 0.25rem;
-
-				label {
-					color: $text;
-					&::after {
-						display: none;
-					}
-				}
-			}
-		}
-
-		textarea {
-			outline: none;
-			border: $border;
-			width: 100%;
-			resize: vertical;
-			background: none;
-			font-size: 1rem;
-			padding: $padding;
-			min-height: 5rem;
-
-			border-color: $text;
-			border-radius: $border-radius;
-
-			transition: $transition-fast;
-			transition-property: color, border;
-
-			&::placeholder {
-				color: $text;
-			}
-
-			&:active,
-			&:focus {
-				border-color: $em-secondary;
-				color: $em-secondary;
-			}
-		}
-
-		input {
-			border: none;
-			outline: none;
-			background: none;
-			font-size: 1rem;
-
-			transition: $transition-fast;
-
-			border-bottom: $border;
-			border-color: $text;
-
-			&::placeholder {
-				color: $text;
-			}
-
-			&:active,
-			&:focus {
-				border-color: $em-secondary;
-				color: $em-secondary;
-			}
-
-			&::-webkit-outer-spin-button,
-			&::-webkit-inner-spin-button {
-				-webkit-appearance: none;
-				margin: 0;
-			}
-
-			/* Firefox */
-			&[type="number"] {
-				-moz-appearance: textfield;
-				width: 2rem;
-				text-align: center;
-
-				&::placeholder {
-					text-align: center;
-				}
-			}
-
-			&[type="checkbox"] {
-				&:focus {
-					outline: $border;
-					outline-color: $em-secondary;
 				}
 			}
 		}
