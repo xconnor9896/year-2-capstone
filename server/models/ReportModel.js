@@ -233,6 +233,26 @@ const ReportSchema = new mongoose.Schema({
   },
 
 
+  submittedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+
+  submittedAt: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+
+  ApprovedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false,
+  },
+  
+
+
 });
 
 export default mongoose.model('Report', ReportSchema);
