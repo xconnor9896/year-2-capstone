@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
+import Captcha from "../components/Captcha";
 
 const LoginPage = ({ setState }) => {
 	const handleSubmit = (e) => {
@@ -143,12 +144,20 @@ const SignUpPage = ({ setState }) => {
 	const [filePreview, setFilePreview] = useState(null);
 	const [isTeacher, setIsTeacher] = useState(false);
 
+	const [captchaState, setCaptchaState] = useState(false);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
 		setLoading(true);
 
+		if (!captchaState) {
+			// THE CAPTCHA IS INCOMPLETE
+		}
+
 		console.log("implement handleSubmit for signup page...");
+
+		// setLoading(false);
 	};
 
 	// FILE MENU
@@ -168,8 +177,6 @@ const SignUpPage = ({ setState }) => {
 	const handleInputChange = (e) => {
 		const { files } = e.target;
 
-		console.log(e.target);
-
 		if (files.length) {
 			onFileChange({ files });
 		}
@@ -178,7 +185,7 @@ const SignUpPage = ({ setState }) => {
 		const { files } = e;
 		if (files && files.length) {
 			fileMenu.current.files = files;
-			console.log("uploading a new file.");
+
 			const droppedFile = fileMenu.current.files[0];
 			setFilePreview(URL.createObjectURL(droppedFile));
 		}
@@ -187,12 +194,9 @@ const SignUpPage = ({ setState }) => {
 	const clearFiles = () => {
 		fileMenu.current.value = null;
 		setFilePreview(null);
-
-		console.log(fileMenu.current.files);
 	};
 
 	const next = () => {
-		console.log(form.current);
 		let newStep = step + 1;
 		if (newStep < 1) newStep = 1;
 		if (newStep > 3) newStep = 3;
@@ -200,7 +204,6 @@ const SignUpPage = ({ setState }) => {
 	};
 
 	const back = () => {
-		console.log(form.current);
 		let newStep = step - 1;
 		if (newStep < 1) newStep = 1;
 		if (newStep > 3) newStep = 3;
@@ -389,12 +392,12 @@ const SignUpPage = ({ setState }) => {
 								type="checkbox"
 								name="isTeacher"
 								id="isTeacher"
-								onInput={(e) => {
+								onChange={(e) => {
 									setIsTeacher(!isTeacher);
 								}}
 								checked={isTeacher}
 								label={
-									<label for="isTeacher">
+									<label htmlFor="isTeacher">
 										Are you a teacher?
 									</label>
 								}
@@ -408,7 +411,7 @@ const SignUpPage = ({ setState }) => {
 									placeholder="Teacher Code"
 								/>
 							)}
-							IMPLEMENT RECAPTCHA HERE
+							<Captcha {...{ captchaState, setCaptchaState }} />
 							<Button.Group>
 								<Button
 									emphasis="secondary"

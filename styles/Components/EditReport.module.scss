@@ -47,6 +47,7 @@
 				display: block;
 				padding: $padding;
 				padding-top: 0;
+				margin-top: $margin;
 			}
 
 			header {
@@ -96,20 +97,59 @@
 			overflow: hidden;
 			height: 0px;
 
+			width: 100%;
+
 			display: none;
+
+			display: flex;
+			flex-direction: column;
+			// flex-wrap: wrap;
+			// align-items: center;
 
 			transition: $transition-fast;
 
 			span {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				// align-items: center;
+
+				border-left: 1px solid $background-dark;
+
+				&:first-child {
+					border-top: 1px solid $background-dark;
+					div.input {
+						border-top: none;
+					}
+				}
+
+				&:last-child {
+					border-bottom: 1px solid $background-dark;
+					div.input {
+						border-bottom: none;
+					}
+				}
+
 				div.input {
 					display: flex;
 					flex-direction: column;
 					align-items: flex-start;
 					gap: 0.25rem;
 
+					border: 1px solid $background-dark;
+					border-left: none;
+
+					// &:first-child {
+					// 	   border-left: 1px solid $background-dark;
+					// }
+
+					&:last-child {
+						border-bottom: none;
+					}
+
 					// height: 100%;
 
-					flex-grow: 1;
+					flex-grow: 2;
 
 					padding: $padding;
 
@@ -167,6 +207,10 @@
 									display: none;
 								}
 							}
+
+							input[type="checkbox"] {
+								width: max-content !important;
+							}
 						}
 					}
 
@@ -202,6 +246,10 @@
 						outline: none;
 						background: none;
 						font-size: 1rem;
+
+						&:only-of-type {
+							width: 100%;
+						}
 
 						transition: $transition-fast;
 
@@ -253,9 +301,19 @@
 				align-items: flex-end;
 				gap: $padding;
 
+				margin-top: 0;
+
 				button {
 					margin: 0;
 				}
+			}
+
+			span {
+				border: none !important;
+			}
+
+			div.input {
+				border: none !important;
 			}
 
 			.people {
@@ -265,6 +323,17 @@
 				align-items: center;
 				// gap: $padding;
 				padding-top: $padding;
+
+				h5 {
+					// color: darken($em-primary, 50%);
+					font-style: italic;
+					text-transform: uppercase;
+					font-weight: normal;
+					font-size: 0.75rem;
+					border-radius: $border-radius-fancy;
+					background-color: $background-dark;
+					padding: $padding;
+				}
 
 				.person {
 					width: 100%;
@@ -342,7 +411,40 @@
 
 						display: flex;
 						flex-direction: column;
-						gap: $padding;
+						// gap: $padding;
+
+						span {
+							border-left: 1px solid $background-dark !important;
+							border-bottom: none !important;
+
+							&:first-child {
+								border-top: 1px solid $background-dark !important;
+								div.input {
+									border-top: none !important;
+								}
+							}
+
+							&:last-child {
+								border-bottom: 1px solid $background-dark !important;
+								div.input {
+									border-bottom: none !important;
+								}
+							}
+
+							div.input {
+								border: 1px solid $background-dark !important;
+								border-left: none !important;
+								border-bottom: none !important;
+
+								// &:first-child {
+								// 	   border-left: 1px solid $background-dark;
+								// }
+
+								&:last-child {
+									border-bottom: none !important;
+								}
+							}
+						}
 					}
 				}
 			}

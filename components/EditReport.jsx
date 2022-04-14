@@ -167,7 +167,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 			relatedComments: "",
 		},
 
-		peopleInfo: [person],
+		peopleInfo: [],
 
 		hospitalInfo: {
 			injured: false,
@@ -837,6 +837,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				</header>
 				<div className={styles.sectionContent}>
 					<span className={styles.people}>
+						{activeReport.peopleInfo.length == 0 && (
+							<h5>No People To Display</h5>
+						)}
 						{activeReport.peopleInfo.map((person) => {
 							const { id } = person;
 							const index =
@@ -866,16 +869,21 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 											{aka || firstName || lastName ? (
 												firstName || lastName ? (
 													<>
-														{`${firstName} ${lastName}`
-															.length < 16
-															? `${firstName} ${lastName}`
-															: `${firstName} ${lastName}`.slice(
+														{`${firstName} ${
+															aka && `"${aka}"`
+														} ${lastName}`.length <
+														32
+															? `${firstName} ${
+																	aka &&
+																	`"${aka}"`
+															  } ${lastName}`
+															: `${firstName} ${
+																	aka &&
+																	`"${aka}"`
+															  } ${lastName}`.slice(
 																	0,
-																	16
+																	32
 															  ) + "..."}{" "}
-														{aka && (
-															<em>({aka})</em>
-														)}
 													</>
 												) : (
 													<>{aka && aka}</>
