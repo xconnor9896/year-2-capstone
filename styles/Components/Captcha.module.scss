@@ -1,0 +1,220 @@
+@use "../vars.scss" as *;
+
+.captcha {
+	// background: $background-light;
+	border-radius: $border-radius-fancy;
+	border: 1px solid $em-default;
+
+	display: flex;
+	flex-direction: column;
+
+	position: relative;
+
+	h3 {
+		text-transform: uppercase;
+		color: $em-primary;
+		border-bottom: 1px solid $em-default;
+		padding: $padding;
+		text-align: center;
+	}
+
+	max-width: 300px;
+	width: 100%;
+
+	.title {
+		font-weight: bold;
+	}
+
+	.captchaComplete {
+		position: absolute;
+		top: 50%;
+		transform-origin: bottom;
+		left: 50%;
+		width: 101%;
+		height: 0px;
+		overflow: hidden;
+		transform: translate(-50%, -50%);
+
+		border-radius: $border-radius-fancy;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		background: $em-default;
+
+		transition: $transition-fast;
+
+		&.completed {
+			height: 101%;
+
+			.checkBox {
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+
+				animation: spin 0.3s ease-in-out;
+				animation-delay: 0.05s;
+
+				@keyframes spin {
+					0% {
+						transform: translate(-50%, -50%);
+					}
+
+					100% {
+						transform: translate(-50%, -50%) rotate(360deg);
+					}
+				}
+
+				.checkSmall {
+					width: 1.5rem;
+				}
+				.checkBig {
+					width: 3rem;
+				}
+			}
+		}
+
+		.checkBox {
+			background: $success;
+			padding: $padding;
+
+			border-radius: 50%;
+			width: 5rem;
+			height: 5rem;
+
+			transition: $transition;
+			transition-property: left;
+
+			position: absolute;
+			top: 0;
+			left: -5rem;
+
+			.checkSmall {
+				background-color: $text;
+				width: 0;
+				height: 0.5rem;
+				// border: 1px solid red;
+
+				position: absolute;
+				top: 50%;
+				left: 50%;
+
+				transform-origin: left;
+				transform: translate(-50%, -50%) translateX(-1rem)
+					translateY(0.5rem) rotate(45deg) translateY(-0.25rem);
+
+				transition: width 0.3s ease-in;
+			}
+
+			.checkBig {
+				background-color: $text;
+				width: 0;
+				height: 0.5rem;
+
+				position: absolute;
+				top: 50%;
+				left: 50%;
+
+				transform-origin: left;
+
+				transform: translate(-50%, -50%) translateX(0.9rem)
+					translateY(1.1rem) rotate(-45deg);
+
+				transition: width 0.3s ease-in;
+			}
+		}
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		// align-items: center;
+		gap: 0.5rem;
+		padding: $padding;
+
+		width: 100%;
+
+		.input {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			width: 100%;
+
+			&.failed {
+				animation: shake 0.3s ease-in infinite;
+
+				> div {
+					background: $error;
+					border-color: $error !important;
+				}
+
+				@keyframes shake {
+					25% {
+						transform: translateX(0.5rem);
+					}
+
+					50% {
+						transform: translateX(-0.5rem);
+					}
+
+					75% {
+						transform: translateX(0.5rem);
+					}
+				}
+			}
+
+			> div {
+				background: none;
+				border: 1px solid $em-default;
+				// max-width: 50% !important;
+				flex-grow: 2;
+				max-width: 75% !important;
+				overflow: hidden;
+
+				transition: $transition-fast;
+				&:focus-within,
+				&:active {
+					border-color: $em-secondary;
+				}
+
+				input {
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	.math {
+		.equation {
+			text-align: center;
+			font-weight: 600;
+			font-style: italic;
+		}
+	}
+
+	.string {
+		.string {
+			width: 100%;
+			text-align: center;
+			font-weight: 600;
+			font-size: italic;
+			font-family: "Courier New", Courier, monospace;
+		}
+
+		canvas {
+			width: 100%;
+			height: 3.5rem;
+			// border: 1px solid red;
+		}
+
+		.input {
+			> div {
+				input {
+					font-family: "Courier New", Courier, monospace;
+				}
+			}
+		}
+	}
+}
