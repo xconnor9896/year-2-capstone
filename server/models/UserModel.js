@@ -1,5 +1,3 @@
-
-
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
@@ -7,12 +5,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  badge: {
+  badgeNumber: {
     type: Number,
     required: true,
     unique: true
   },
-  squad: {
+  squadNumber: {
     type: Number,
     required: true,
   },
@@ -26,7 +24,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false
-  },
+  }, 
   username: {
     type: String,
     required: true,
@@ -36,7 +34,7 @@ const UserSchema = new mongoose.Schema({
   profilePicURL: {
     type: String,
   },
-  role: {
+  rank: {
     type: String,
     enum: ["officer", "captain", "teacher", "admin"],
     default: 'officer'
