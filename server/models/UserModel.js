@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ["officer", "captain", "teacher", "admin"],
     default: 'officer'
-  }
+  },
 },
   // {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
