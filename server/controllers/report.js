@@ -1,3 +1,5 @@
+const ReportModel = require("../models/ReportModel")
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
 .post('/') 
@@ -14,13 +16,12 @@ const createReport = async (req, res) => {
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
 
-    let time = Date.now;
     if (Number(createAt)) {
       time = Number(createAt);
+
     }
     report = new ReportModel({
       responsibleOfficer: { user },
-      createAt: time,
       importance: 3,
       verified: false,
     });
