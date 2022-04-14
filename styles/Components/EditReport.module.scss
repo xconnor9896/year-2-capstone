@@ -324,6 +324,17 @@
 				// gap: $padding;
 				padding-top: $padding;
 
+				h5 {
+					// color: darken($em-primary, 50%);
+					font-style: italic;
+					text-transform: uppercase;
+					font-weight: normal;
+					font-size: 0.75rem;
+					border-radius: $border-radius-fancy;
+					background-color: $background-dark;
+					padding: $padding;
+				}
+
 				.person {
 					width: 100%;
 
