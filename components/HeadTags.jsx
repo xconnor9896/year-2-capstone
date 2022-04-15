@@ -8,7 +8,7 @@ const HeadTags = () => {
 				name="description"
 				content="Year 2 Capstone Project for West-MEC Coding 2022"
 			/>
-			<link rel="icon" href="/favicon.ico" />
+			<link rel="icon" href="Favicon(1).png" />
 		</Head>
 	);
 };

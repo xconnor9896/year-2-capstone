@@ -1,5 +1,6 @@
 //express app setup
 const app = require("express")();
+const { connectDB } = require("./server/util/connect");
 const express = require("express");
 require("dotenv").config();
 
@@ -21,6 +22,9 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
+
+//conect to database
+connectDB();
 
 nextApp.prepare().then(() => {
   app.all("*", (req, res) => handler(req, res));

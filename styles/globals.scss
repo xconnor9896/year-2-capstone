@@ -1,13 +1,15 @@
 @use "./vars.scss" as *;
 
-*,
-*::before,
-*::after {
+:not(.proton),
+:not(.proton)::before,
+:not(.proton)::after {
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
 		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	color: $text;
+	scroll-behavior: smooth;
 }
 
 a {
@@ -23,11 +25,87 @@ button {
 	border: none;
 	outline: none;
 	background: none;
+
+	cursor: pointer;
+
+	&.fancy {
+		border-radius: $border-radius-fancy !important;
+	}
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: darken($background-dark, 15%);
+	// z-index: 999;
+}
+
+::-webkit-scrollbar-thumb {
+	background: lighten($background-light, 25%);
+
+	&:hover {
+		background: $em-primary;
+	}
 }
 
 #__next {
-	min-height: 100vh;
+	height: 100vh;
 
 	display: flex;
 	flex-direction: column;
+
+	overflow: hidden;
+}
+
+.custom-input {
+	max-width: 100% !important;
+	width: 300px !important;
+}
+
+// File Drop
+.file-drop {
+	& > .file-drop-target {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		border: 0.5rem dashed $em-default;
+		padding: calc($padding * 2);
+
+		min-height: 8rem;
+		max-width: 15rem;
+
+		span {
+			color: $em-default;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		text-transform: uppercase;
+
+		border-radius: $border-radius;
+
+		transition: $transition-fast;
+
+		svg {
+			fill: $em-default;
+			transition: $transition-fast;
+
+			width: 2rem;
+			height: 2rem;
+		}
+
+		&.file-drop-dragging-over-target {
+			border-color: $em-secondary;
+			span {
+				color: $em-secondary;
+			}
+			svg {
+				fill: $em-secondary;
+			}
+		}
+	}
 }
