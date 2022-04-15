@@ -49,7 +49,7 @@ export default function Report() {
 
 		console.log("Implement Set Urgency");
 
-		// setLoading(false);
+		setLoading(false);
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
@@ -95,6 +95,7 @@ export default function Report() {
 						<h1>New Urgency Level</h1>
 						<p>Change the urgency level for this report.</p>
 						<Select
+							arc={true}
 							placeholder="Select Level"
 							// absolutely
 							value={temporaryUrgency}
@@ -174,7 +175,7 @@ export default function Report() {
 
 						<div className={styles.inputs}>
 							{view && (
-								<Button.Group>
+								<Button.Group wrap>
 									{!isCaptain && !isVerified && isCreator && (
 										<Button
 											onClick={() => {

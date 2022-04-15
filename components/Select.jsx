@@ -10,6 +10,7 @@ export const Select = ({
 	value,
 	path,
 	absolutely,
+	arc,
 }) => {
 	const [dropped, setDropped] = useState(false);
 	// const [value, setValue] = useState(null);
@@ -35,13 +36,12 @@ export const Select = ({
 	};
 
 	useEffect(() => {
-		if (childrenRef) {
+		if (childrenRef && arc === true) {
 			const childs = childrenRef.current.children;
 
 			if (childs) {
 				const vals = [...childs]
 					.filter((child) => {
-						console.log(child);
 						return child.children[0].getAttribute("val") == value;
 					})
 					.map((child) => {
@@ -86,8 +86,10 @@ export const Select = ({
 			tabIndex={0}
 		>
 			<div className={styles.bar}>
-				{lP !== "Select"
+				{arc === true
 					? lP
+						? lP
+						: placeholder
 					: value
 					? value
 					: placeholder

@@ -53,6 +53,12 @@
 						flex-direction: row;
 
 						flex-grow: 2;
+
+						@media (max-width: 710px) {
+							flex-grow: 1;
+						}
+						
+						gap: 0.5rem;
 						align-items: center;
 						justify-content: space-between;
 
@@ -142,7 +148,11 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					// gap: 1rem;
+					gap: 0.5rem;
+
+					@media (max-width: 710px) {
+						// justify-content: flex-star;
+					}
 
 					min-height: 4rem;
 
@@ -156,14 +166,19 @@
 
 						gap: 0.25rem;
 
+						@media (max-width: 710px) {
+							width: min-content;
+						}
+
 						button {
 							border-radius: $border-radius;
 							margin: 0;
 						}
 
 						div {
+							justify-content: flex-end !important;
 							border-radius: $border-radius;
-
+							margin: 0;
 							width: unset !important;
 						}
 					}
