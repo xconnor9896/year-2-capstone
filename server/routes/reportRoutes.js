@@ -8,8 +8,8 @@ const {
   getReport,
   getAllReports,
   verifyReport,
-  importanceReport 
-  } = require(`../controllers/report`);
+  importanceReport
+} = require(`../controllers/report`);
 
 
 router.post('/', createReport);
