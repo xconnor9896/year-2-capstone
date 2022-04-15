@@ -5,8 +5,6 @@ import {
   FaEye,
   FaPrint,
 } from "react-icons/fa";
-import { MdOutlineLocalPolice, MdOutlineGroups } from "react-icons/Md";
-import { AiOutlineStar } from "react-icons/Ai";
 
 import styles from "../../styles/Pages/Profile.module.scss";
 
@@ -25,15 +23,30 @@ export default function Profile() {
           <FaRegUser />
         </div>
         <ul>
-          <li className={styles.name}>{name}</li>
-          <li className={styles.badgeNum}>
-            <MdOutlineLocalPolice />
-            {badgeNum}
+          <li className={styles.row}>
+            <h3>Rank: {rank}</h3>
           </li>
-          <li className={styles.rank}><AiOutlineStar/>{rank}</li>
-          <li className={styles.squadNum}><MdOutlineGroups/>{squadNum}</li>
+          <li className={styles.row}>
+            <h3>Squad: {squadNum}</h3>
+          </li>
+          <li className={styles.row}>
+            <h3>Badge: {badgeNum}</h3>
+          </li>
         </ul>
       </div>
+
+      <div className={styles.contactInfo}>
+        <ul>
+          <li className={styles.phone}>
+            <h3>(623)-251-8175</h3>
+          </li>
+        </ul>
+      </div>
+
+      <div className={styles.cases}>
+        <h3>My Cases</h3>
+      </div>
+      <div className={styles.recents}></div>
     </main>
   );
 }
