@@ -25,6 +25,10 @@ $emphasis: (
 	"default": #4c5255,
 	"default-text": $text-color,
 	"none": map-get($colors, "white"),
+	"error": map-get($colors, "error"),
+	"error-text": map-get($colors, "white"),
+	"success": map-get($colors, "success"),
+	"success-text": map-get($colors, "white"),
 	"none-text": $text-color-alt,
 );
 

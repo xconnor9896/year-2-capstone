@@ -1,0 +1,64 @@
+@use "../vars.scss" as *;
+
+.container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 999;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	backdrop-filter: brightness(25%);
+
+	transition: $transition-fast;
+
+	overflow: hidden;
+
+	.modal {
+		background: $background-light;
+		border-radius: $border-radius-fancy;
+		padding: $padding * 2;
+
+		// transition: $transition-fast;
+		transition: none;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		top: 200vh;
+
+		max-height: 75vh;
+		max-width: 90vw;
+		overflow-y: auto;
+		min-height: 200px;
+
+		gap: 0.5rem;
+
+		align-items: flex-end;
+
+		> div {
+			margin: 0;
+		}
+
+		p,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			width: 100%;
+			text-align: left;
+		}
+	}
+}
