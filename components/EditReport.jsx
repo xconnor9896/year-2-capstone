@@ -276,7 +276,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setLoading(false);
 
 		// If Success
-		setView(false);
+		setView(true);
 	};
 
 	// const blurMe = (e) => {
@@ -480,9 +480,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								}
 								onChange={handleChange}
 							>
-								<Option>Load</Option>
-								<Option>In</Option>
-								<Option>Options</Option>
+								<Option val="Load">Load</Option>
+								<Option val="In">In</Option>
+								<Option val="Options">Options</Option>
 							</Select>
 						</Input>
 					</span> */}
@@ -585,13 +585,15 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 										}
 										onChange={handleChange}
 									>
-										<Option>Sunday</Option>
-										<Option>Monday</Option>
-										<Option>Tuesday</Option>
-										<Option>Wednesday</Option>
-										<Option>Thursday</Option>
-										<Option>Friday</Option>
-										<Option>Saturday</Option>
+										<Option val="Sunday">Sunday</Option>
+										<Option val="Monday">Monday</Option>
+										<Option val="Tuesday">Tuesday</Option>
+										<Option val="Wednesday">
+											Wednesday
+										</Option>
+										<Option val="Thursday">Thursday</Option>
+										<Option val="Friday">Friday</Option>
+										<Option val="Saturday">Saturday</Option>
 									</Select>
 								</li>
 								/
@@ -932,14 +934,24 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													value={personLoc.personType}
 													onChange={handleChange}
 												>
-													<Option>Complainant</Option>
-													<Option>Victim</Option>
+													<Option val="Complainant">
+														Complainant
+													</Option>
+													<Option val="Victim">
+														Victim
+													</Option>
 													<Option>
 														Reporting Person
 													</Option>
-													<Option>Finder</Option>
-													<Option>Witness</Option>
-													<Option>Suspect</Option>
+													<Option val="Finder">
+														Finder
+													</Option>
+													<Option val="Witness">
+														Witness
+													</Option>
+													<Option val="Suspect">
+														Suspect
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -957,7 +969,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														American Indian / Alaska
 														Native
 													</Option>
-													<Option>Asian</Option>
+													<Option val="Asian">
+														Asian
+													</Option>
 													<Option>
 														Black / African American
 													</Option>
@@ -968,7 +982,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														Native Hawaiian / Other
 														Pacific Islander
 													</Option>
-													<Option>White</Option>
+													<Option val="White">
+														White
+													</Option>
 												</Select>
 											</Input>
 										</span>
@@ -1054,8 +1070,12 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													value={personLoc.sex}
 													onChange={handleChange}
 												>
-													<Option>Male</Option>
-													<Option>Female</Option>
+													<Option val="Male">
+														Male
+													</Option>
+													<Option val="Female">
+														Female
+													</Option>
 												</Select>
 											</Input>
 										</span>
@@ -1369,13 +1389,27 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Brown</Option>
-													<Option>Blonde</Option>
-													<Option>Black</Option>
-													<Option>Red</Option>
-													<Option>Gray</Option>
-													<Option>Bald</Option>
-													<Option>Other</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Blonde">
+														Blonde
+													</Option>
+													<Option val="Black">
+														Black
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Bald">
+														Bald
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1446,14 +1480,30 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Amber</Option>
-													<Option>Blue</Option>
-													<Option>Brown</Option>
-													<Option>Gray</Option>
-													<Option>Green</Option>
-													<Option>Hazel</Option>
-													<Option>Red</Option>
-													<Option>Other</Option>
+													<Option val="Amber">
+														Amber
+													</Option>
+													<Option val="Blue">
+														Blue
+													</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Green">
+														Green
+													</Option>
+													<Option val="Hazel">
+														Hazel
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1473,13 +1523,27 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Brown</Option>
-													<Option>Blonde</Option>
-													<Option>Black</Option>
-													<Option>Red</Option>
-													<Option>Gray</Option>
-													<Option>Bald</Option>
-													<Option>Other</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Blonde">
+														Blonde
+													</Option>
+													<Option val="Black">
+														Black
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Bald">
+														Bald
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1993,13 +2057,15 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 										}
 										onChange={handleChange}
 									>
-										<Option>Sunday</Option>
-										<Option>Monday</Option>
-										<Option>Tuesday</Option>
-										<Option>Wednesday</Option>
-										<Option>Thursday</Option>
-										<Option>Friday</Option>
-										<Option>Saturday</Option>
+										<Option val="Sunday">Sunday</Option>
+										<Option val="Monday">Monday</Option>
+										<Option val="Tuesday">Tuesday</Option>
+										<Option val="Wednesday">
+											Wednesday
+										</Option>
+										<Option val="Thursday">Thursday</Option>
+										<Option val="Friday">Friday</Option>
+										<Option val="Saturday">Saturday</Option>
 									</Select>
 								</li>
 								/
@@ -2065,7 +2131,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 						<FaChevronDown />
 					</Button>
 				</header>
-				<div className={styles.sectionContent}>
+				<div
+					className={`${styles.sectionContent} ${styles.synopsisContent}`}
+				>
 					<span>
 						<Input>
 							<textarea
@@ -2085,9 +2153,14 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 					</span>
 				</div>
 			</section>
-			<Button emphasis="primary">
-				<FaSave /> Save Report
-			</Button>
+			<div className={styles.saveButton}>
+				{/* <Button emphasis="primary">
+					<FaSave /> Save Report
+				</Button> */}
+				<Button icon circular emphasis="primary">
+					<FaSave />
+				</Button>
+			</div>
 		</form>
 	);
 };
