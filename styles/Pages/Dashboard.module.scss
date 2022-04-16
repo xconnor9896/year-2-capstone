@@ -411,6 +411,7 @@
 
 								&[dropped="true"] {
 									header {
+										background: $background-dark;
 										svg {
 											transform: rotate(180deg);
 											fill: $em-secondary;
