@@ -80,7 +80,7 @@
 					}
 				}
 
-				.content {
+				> .content {
 					padding: $padding;
 					display: flex;
 					flex-direction: column;
@@ -94,7 +94,7 @@
 					}
 
 					overflow-y: auto;
-					gap: $padding;
+					// gap: $padding;
 
 					button {
 						border-radius: $border-radius-fancy;
@@ -119,7 +119,6 @@
 
 					.groupManagement {
 						width: 100%;
-						max-width: 500px;
 
 						display: flex;
 						flex-direction: column;
@@ -194,25 +193,43 @@
 									padding: 0;
 									overflow: hidden;
 
+									display: flex;
+									flex-direction: column;
+									align-items: center;
+									justify-content: flex-start;
+
 									transition: $transition-fast;
 
-									form {
+									form,
+									.students {
 										width: 100%;
-
-										gap: 1rem;
 
 										display: flex;
 										flex-direction: column;
 										align-items: center;
 
-										padding: $padding;
-
 										background: $background-dark;
-										border-radius: $border-radius;
+										border: $border;
+
+										border-top: none;
+
+										&:first-child {
+											border-top: $border;
+										}
+
+										border-color: lighten(
+											$background-dark,
+											25%
+										) !important;
+										// border-radius: $border-radius;
 
 										transition: $transition-fast;
 
-										border: $border;
+										.content {
+											gap: $padding;
+											padding: $padding;
+											width: 100%;
+										}
 
 										ul {
 											display: flex;
@@ -250,7 +267,7 @@
 
 											transition: $transition-fast;
 
-											background: $background-light;
+											background: $background-dark;
 
 											user-select: none;
 
@@ -269,7 +286,7 @@
 											&:hover {
 												cursor: pointer;
 
-												background: $background-dark;
+												background: $background-light;
 											}
 										}
 
@@ -304,26 +321,12 @@
 									}
 
 									.students {
-										display: flex;
-										flex-direction: column;
-										align-items: center;
-										justify-content: center;
-										padding: $padding;
-										gap: $padding;
-
-										width: 100%;
-
-										.studentsList {
+										.content {
 											width: 100%;
 
 											display: flex;
 											flex-direction: column;
 											gap: $padding;
-
-											h3 {
-												text-align: center;
-												color: $background-dark;
-											}
 
 											.student {
 												width: 100%;
@@ -335,7 +338,7 @@
 
 												padding: $padding;
 
-												background: $background-dark;
+												background: $background-light;
 												border-radius: $border-radius;
 
 												transition: $transition-fast;
@@ -416,6 +419,10 @@
 
 									border-bottom: $border;
 									border-top: $border;
+
+									border-radius: $border-radius;
+
+									overflow: hidden;
 
 									.content {
 										height: max-content;

@@ -191,22 +191,51 @@ const Dashboard = () => {
 														onSubmit={(e) =>
 															updateGroup(e, _id)
 														}
+														dropped={
+															dropdowns.hasOwnProperty(
+																_id +
+																	"_changeGroupName"
+															) &&
+															dropdowns[
+																_id +
+																	"_changeGroupName"
+															] == true
+																? "true"
+																: "false"
+														}
 													>
-														<h3>
-															Change Group Name
-														</h3>
-														<Input
-															type="text"
-															placeholder="Group Name"
-															maxLength={64}
-														/>
-														<Button
-															type="submit"
-															emphasis="primary"
+														<header
+															onClick={() =>
+																toggleDropdown(
+																	_id +
+																		"_changeGroupName"
+																)
+															}
 														>
-															<FaSave />
-															Apply Changes
-														</Button>
+															<h3>
+																Change Group
+																Name
+															</h3>
+															<FaChevronDown />
+														</header>
+														<div
+															className={
+																styles.content
+															}
+														>
+															<Input
+																type="text"
+																placeholder="Group Name"
+																maxLength={64}
+															/>
+															<Button
+																type="submit"
+																emphasis="primary"
+															>
+																<FaSave />
+																Apply Changes
+															</Button>
+														</div>
 													</form>
 
 													<form
@@ -307,20 +336,36 @@ const Dashboard = () => {
 														className={
 															styles.students
 														}
+														dropped={
+															dropdowns.hasOwnProperty(
+																_id +
+																	"_students"
+															) &&
+															dropdowns[
+																_id +
+																	"_students"
+															] == true
+																? "true"
+																: "false"
+														}
 													>
-														<div
-															className={
-																styles.header
+														<header
+															onClick={() =>
+																toggleDropdown(
+																	_id +
+																		"_students"
+																)
 															}
 														>
-															<h4>
-																Students in{" "}
-																{name}
-															</h4>
-														</div>
+															<h3>
+																Students Already
+																in Group
+															</h3>
+															<FaChevronDown />
+														</header>
 														<div
 															className={
-																styles.studentsList
+																styles.content
 															}
 														>
 															{students.length <
