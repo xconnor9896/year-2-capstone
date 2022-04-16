@@ -84,11 +84,21 @@
 					padding: $padding;
 					display: flex;
 					flex-direction: column;
+					align-items: center;
 					height: 100%;
 					width: 100%;
 
+					.noMsg {
+						color: $background-dark;
+						margin-bottom: $margin;
+					}
+
 					overflow-y: auto;
 					gap: $padding;
+
+					button {
+						border-radius: $border-radius-fancy;
+					}
 
 					.message {
 						display: flex;
@@ -107,86 +117,324 @@
 						padding: $padding;
 					}
 
-					.students {
+					.groupManagement {
+						width: 100%;
+						max-width: 500px;
+
 						display: flex;
 						flex-direction: column;
 						align-items: center;
-						justify-content: center;
-						padding: $padding;
-						gap: $padding;
 
-						.header {
-						}
+						gap: 1rem;
 
-						.studentsList {
-							width: 100%;
-
+						.groups {
 							display: flex;
 							flex-direction: column;
-							gap: $padding;
+							align-items: center;
 
-							.student {
+							width: 100%;
+
+							.group {
 								width: 100%;
-
 								display: flex;
-								flex-direction: row;
-								align-items: center;
-								justify-content: space-between;
+								flex-direction: column;
 
-								padding: $padding;
+								border: $border;
+								border-top: none;
+								border-bottom: none;
 
-								background: $background-dark;
-								border-radius: $border-radius;
+								&:first-child {
+									border-top: $border;
+								}
+
+								&:last-child {
+									border-bottom: $border;
+								}
 
 								transition: $transition-fast;
 
-								border: $border;
+								> header {
+									width: 100%;
 
-								&:hover {
-									border-color: darken($background-dark, 25%);
-									border-radius: 0;
-									cursor: pointer;
-								}
+									transition: $transition-fast;
 
-								.info {
+									background: $background-light;
+
+									border-bottom: $border;
+
+									user-select: none;
+
+									position: sticky;
+									top: -$padding;
+									left: 0;
+
+									z-index: 999;
+
 									display: flex;
 									flex-direction: row;
 									align-items: center;
+									justify-content: center;
+									padding: $padding;
 									gap: $padding;
 
-									flex-grow: 2;
-
-									.pfp {
-										width: 2rem;
-										height: 2rem;
-										background-color: red;
-										border-radius: 50%;
-
-										border: $border;
-										border-color: darken(
-											$background-dark,
-											25%
-										);
-
-										background-image: url(../../util//templatepfp.png);
-										background-size: cover;
-										background-position: center;
-										background-size: 125%;
-										background-repeat: no-repeat;
+									svg {
+										fill: $em-primary;
+										transition: $transition-fast;
 									}
 
-									.data {
+									&:hover {
+										cursor: pointer;
+
+										background: $background-dark;
+									}
+								}
+
+								.content {
+									height: 0;
+									padding: 0;
+									overflow: hidden;
+
+									transition: $transition-fast;
+
+									form {
+										width: 100%;
+
+										gap: 1rem;
+
 										display: flex;
 										flex-direction: column;
+										align-items: center;
 
-										span {
-											&:last-child {
-												font-size: 0.75rem;
-												color: darken($text, 25%);
+										padding: $padding;
+
+										background: $background-dark;
+										border-radius: $border-radius;
+
+										transition: $transition-fast;
+
+										border: $border;
+
+										ul {
+											display: flex;
+											flex-direction: column;
+											list-style: none;
+
+											gap: 1rem;
+											width: 100%;
+
+											li {
+												width: 100%;
+
+												> div {
+													width: 100% !important;
+												}
+											}
+										}
+
+										> div {
+											// width: 100% !important;
+											input {
+												width: 100%;
+											}
+										}
+
+										button {
+											align-self: flex-end;
+											margin: 0;
+
+											border-radius: $border-radius-fancy;
+										}
+
+										header {
+											width: 100%;
+
+											transition: $transition-fast;
+
+											background: $background-light;
+
+											user-select: none;
+
+											display: flex;
+											flex-direction: row;
+											align-items: center;
+											justify-content: center;
+											padding: $padding;
+											gap: $padding;
+
+											svg {
+												fill: $em-primary;
+												transition: $transition-fast;
+											}
+
+											&:hover {
+												cursor: pointer;
+
+												background: $background-dark;
+											}
+										}
+
+										&[dropped="false"] {
+											gap: 0;
+											.content {
+												height: 0px;
+												padding: 0;
+												overflow: hidden;
+											}
+
+											svg {
+												transform: rotate(0deg);
+												fill: $em-primary;
+												transition: $transition-fast;
+											}
+										}
+
+										&[dropped="true"] {
+											header {
+												svg {
+													transform: rotate(180deg);
+													fill: $em-secondary;
+												}
+											}
+
+											.content {
+												height: max-content;
+												padding: $padding;
+											}
+										}
+									}
+
+									.students {
+										display: flex;
+										flex-direction: column;
+										align-items: center;
+										justify-content: center;
+										padding: $padding;
+										gap: $padding;
+
+										width: 100%;
+
+										.studentsList {
+											width: 100%;
+
+											display: flex;
+											flex-direction: column;
+											gap: $padding;
+
+											h3 {
+												text-align: center;
+												color: $background-dark;
+											}
+
+											.student {
+												width: 100%;
+
+												display: flex;
+												flex-direction: row;
+												align-items: center;
+												justify-content: space-between;
+
+												padding: $padding;
+
+												background: $background-dark;
+												border-radius: $border-radius;
+
+												transition: $transition-fast;
+
+												border: $border;
+
+												&:hover {
+													border-color: darken(
+														$background-dark,
+														25%
+													);
+													border-radius: 0;
+													cursor: pointer;
+												}
+
+												.info {
+													display: flex;
+													flex-direction: row;
+													align-items: center;
+													gap: $padding;
+
+													flex-grow: 2;
+
+													.pfp {
+														width: 2rem;
+														height: 2rem;
+														background-color: red;
+														border-radius: 50%;
+
+														border: $border;
+														border-color: darken(
+															$background-dark,
+															25%
+														);
+
+														background-image: url(../../util//templatepfp.png);
+														background-size: cover;
+														background-position: center;
+														background-size: 125%;
+														background-repeat: no-repeat;
+													}
+
+													.data {
+														display: flex;
+														flex-direction: column;
+
+														span {
+															&:last-child {
+																font-size: 0.75rem;
+																color: darken(
+																	$text,
+																	25%
+																);
+															}
+														}
+													}
+												}
+
+												> div {
+													width: max-content;
+
+													button {
+														border-radius: $border-radius-fancy !important;
+													}
+												}
 											}
 										}
 									}
 								}
+
+								&[dropped="true"] {
+									header {
+										svg {
+											transform: rotate(180deg);
+											fill: $em-secondary;
+										}
+									}
+
+									border-bottom: $border;
+									border-top: $border;
+
+									.content {
+										height: max-content;
+										padding: $padding;
+									}
+
+									margin: $padding * 2 0;
+
+									~ .group {
+										border-top: $border;
+									}
+								}
+							}
+
+							> button {
+								width: 100%;
+
+								border-radius: 0;
+								margin: 0;
 							}
 						}
 					}
