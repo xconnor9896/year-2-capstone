@@ -200,8 +200,7 @@
 
 									transition: $transition-fast;
 
-									form,
-									.students {
+									.sect {
 										width: 100%;
 
 										display: flex;
@@ -311,6 +310,13 @@
 													transform: rotate(180deg);
 													fill: $em-secondary;
 												}
+											}
+
+											margin: $padding 0;
+											border-top: $border;
+
+											~ .sect {
+												border-top: $border;
 											}
 
 											.content {

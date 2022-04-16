@@ -191,6 +191,7 @@ const Dashboard = () => {
 														onSubmit={(e) =>
 															updateGroup(e, _id)
 														}
+														className={styles.sect}
 														dropped={
 															dropdowns.hasOwnProperty(
 																_id +
@@ -242,9 +243,7 @@ const Dashboard = () => {
 														onSubmit={(e) =>
 															addStudents(e, _id)
 														}
-														className={
-															styles.addStudentForm
-														}
+														className={`${styles.addStudentForm} ${styles.sect}`}
 														dropped={
 															dropdowns.hasOwnProperty(
 																_id +
@@ -333,9 +332,7 @@ const Dashboard = () => {
 													</form>
 
 													<div
-														className={
-															styles.students
-														}
+														className={`${styles.students} ${styles.sect}`}
 														dropped={
 															dropdowns.hasOwnProperty(
 																_id +
