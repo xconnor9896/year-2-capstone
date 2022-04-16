@@ -1597,7 +1597,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 					<Button
 						onClick={addPerson}
 						type="button"
-						hollow
 						emphasis="primary"
 						// color="success"
 					>
