@@ -1,4 +1,4 @@
-import { FaRegUser, FaUpload, FaRegIdBadge, FaEye, FaPrint } from 'react-icons/fa'
+import { FaRegUser, FaUpload, FaRegIdBadge, FaEye, FaPrint, FaSearch } from 'react-icons/fa'
 import styles from '../styles/Pages/Dashboard.module.scss'
 
 const Dashboard = () => {
@@ -33,7 +33,7 @@ const Dashboard = () => {
         <div className={styles.cases}>
           <div className={styles.top}>
             <h1>Recent Cases</h1>
-            <input className={styles.search} type="search" name="case" id="case" />
+            <input className={styles.search} type="search" name="case" id="case" placeholder='Search Case #'/>
           </div>
           <div className={styles.recent}>
             <div className={styles.case}>
