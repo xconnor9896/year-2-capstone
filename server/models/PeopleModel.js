@@ -228,4 +228,4 @@ const PersonSchema = new mongoose.Schema({
 
 
 
-export default mongoose.model('Person', PersonSchema);
+module.exports = mongoose.model('Person', PersonSchema);

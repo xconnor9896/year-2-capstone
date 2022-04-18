@@ -1,4 +1,4 @@
-const defaultProfilePic = require("../util/defaultPic");
+// const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
