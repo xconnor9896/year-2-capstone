@@ -255,4 +255,4 @@ const ReportSchema = new mongoose.Schema({
 
 });
 
-export default mongoose.model('Report', ReportSchema);
+module.exports = mongoose.model('Report', ReportSchema);

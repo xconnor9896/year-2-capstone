@@ -22,8 +22,13 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
+<<<<<<< HEAD
 // const userRoute = require("./server/controllers/user");
 // app.use("/api/v1", userRoute);
+=======
+const userRoute = require("./server/routes/userRoutes");
+app.use("/api/v1", userRoute);
+>>>>>>> d4c33de1bb0b031b25b5b4e29f7444570896448a
 
 //conect to database
 connectDB();
