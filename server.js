@@ -22,6 +22,8 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
+const userRoute = require("./server/controllers/user");
+app.use("/api/v1", userRoute);
 
 //conect to database
 connectDB();
