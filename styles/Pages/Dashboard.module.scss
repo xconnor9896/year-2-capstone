@@ -138,18 +138,6 @@
       .search {
         display: flex;
         height: 60%;
-        background-color: $background-light;
-        // border: none;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        outline: none;
-
-        &::after {
-          content:url('https://img.icons8.com/ios-filled/344/search--v1.png');
-          position: absolute;
-        }
       }
     }
 
@@ -213,18 +201,11 @@
           justify-content: space-around;
 
           .btn {
+            background-color: lighten($color: $background-light, $amount: 40);
             width: 4.5rem;
             height: 1.5rem;
             border-radius: 10px;
             color: white;
-          }
-
-          .view {
-            background-color: $em-primary;
-          }
-
-          .print {
-            background-color: $em-secondary;
           }
         }
       }
