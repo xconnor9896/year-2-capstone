@@ -1,0 +1,14 @@
+@use "../vars.scss" as *;
+
+.tabs {
+  margin: 0 auto;
+  ul {
+    display: flex;
+    .tabItem {
+      .tab {
+        height: 4px;
+        background-color: $em-secondary;
+      }
+    }
+  }
+}
