@@ -30,17 +30,16 @@ const createUser = async (req, res) => {
         .send("Password must be less than 100 characters long");
     }
 
-    let user;
-    user = await UserModel.findOne({ email: email.toLowerCase() });
-    if (user) return res.status(401).send("Email already used");
+    let checkUser;
+    checkUser = await UserModel.findOne({ email: email.toLowerCase() });
+    if (checkUser) return res.status(401).send("Email already used");
 
-    user = new UserModel({
+    let newUser = new UserModel({
       ...user,
-      password: "",
     });
 
-    user.password = bcrypt.hash(password, 10);
-    user = await user.save;
+    newUser.password = bcrypt.hash(password, 10);
+    newUser = await user.save();
 
     const payload = { userID: user._id };
     jwt.sign(
