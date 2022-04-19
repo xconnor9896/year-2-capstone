@@ -8,9 +8,9 @@ const emailVefEmail = {
   to: { userEmail }, // Change to your recipient
   from: "ztaylo273@west-mec.org", // Change to your verified sender
   templateId: "d-d57cf8bc57bd482384462979d6fd0ee6", //* I made two very simple Templates 1 for email Verfication and 1 for PassWord Reset More about this will be in daily-logs/zach.md
-  // Not sure what this does for the emails but Ill leave it here just incase we may want/need it
+  //VVVVVV Not sure what this does for the emails but Ill leave it here just incase we may want/need it VVVVV
   dynamicTemplateData: {
-    subject: "Email Vef",
+    subject: "Email Verification",
     name: "West Mec Law and Public Saftey",
     city: "Surprise",
   },

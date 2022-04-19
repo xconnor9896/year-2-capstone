@@ -22,8 +22,17 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
-const userRoute = require("./server/routes/userRoutes");
-app.use("/api/v1", userRoute);
+const userRoutes = require("./server/routes/userRoutes");
+const reportRoutes = require("./server/routes/reportRoutes");
+const settingsRoutes = require("./server/routes/settingsRoutes");
+
+// routes
+
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/report", reportRoutes);
+app.use("/api/v1/settings", settingsRoutes);
+
+
 
 //conect to database
 connectDB();
