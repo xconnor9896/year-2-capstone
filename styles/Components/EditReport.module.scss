@@ -13,6 +13,15 @@
 
 	overflow-y: scroll;
 
+	.saveButton {
+		margin-left: auto;
+		margin-top: auto;
+
+		button {
+			padding: 0.5rem;
+		}
+	}
+
 	// flex-grow: 2;
 
 	section {
@@ -32,6 +41,20 @@
 		}
 
 		transition: $transition-fast;
+
+		button {
+			border-radius: $border-radius-fancy !important;
+		}
+
+		.synopsisContent {
+			span {
+				border: none !important;
+
+				> div {
+					border: none !important;
+				}
+			}
+		}
 
 		&[dropped="1"] {
 			border-radius: $border-radius;

@@ -78,8 +78,24 @@
 		pointer-events: none;
 
 		span {
+			border: none !important;
+
 			&.selected .option {
 				background: lighten($em-secondary, 10%);
+			}
+
+			&:first-child {
+				.option {
+					border-top-left-radius: $border-radius;
+					border-top-right-radius: $border-radius;
+				}
+			}
+
+			&:last-child {
+				.option {
+					border-bottom-left-radius: $border-radius;
+					border-bottom-right-radius: $border-radius;
+				}
 			}
 
 			.option {
@@ -90,6 +106,8 @@
 					border: $border;
 					border-color: $em-primary;
 				}
+
+				width: 100%;
 
 				user-select: none;
 				transition: $transition-fast;
