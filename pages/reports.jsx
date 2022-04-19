@@ -8,6 +8,9 @@ import { FaChevronLeft } from "react-icons/fa";
 export default function Reports() {
 	const router = useRouter();
 
+	const [groupID, setGroupID] = useState(null);
+	const [title, setTitle] = useState("All Reports");
+
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
 		let isAdmin = true;
@@ -39,7 +42,13 @@ export default function Reports() {
 				>
 					<FaChevronLeft />
 				</Button>
-				<ListReports title="All Reports" userId={"none"} />
+				<ListReports
+					title={title}
+					setTitle={setTitle}
+					groupID={groupID}
+					userID={null}
+					canSwitchGroups={true}
+				/>
 			</article>
 		</main>
 	);

@@ -393,99 +393,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 							/>
 						</Input>
 					</span>
-					{/* <span>
-						<Input>
-							<label>
-								Responsible Officer (Rank Last, First Middle
-								Name)
-							</label>
-							<ul>
-								<li>
-									<input
-										type="text"
-										placeholder="Rank"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.rank
-										}
-										path="basicInfo responsibleOfficer rank"
-										onChange={handleChange}
-									/>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="Last"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.lastName
-										}
-										path="basicInfo responsibleOfficer name lastName"
-										onChange={handleChange}
-									/>{" "}
-									<p>,</p>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="First"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.firstName
-										}
-										path="basicInfo responsibleOfficer name firstName"
-										onChange={handleChange}
-									/>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="Middle"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.middleName
-										}
-										path="basicInfo responsibleOfficer name middleName"
-										onChange={handleChange}
-									/>
-								</li>
-							</ul>
-						</Input>
-						<Input>
-							<label>Badge Number</label>
-							<input
-								type="text"
-								placeholder="Badge Number"
-								value={
-									activeReport.basicInfo.responsibleOfficer
-										.badgeNumber
-								}
-								path="basicInfo responsibleOfficer badgeNumber"
-								onChange={handleChange}
-							/>
-						</Input>
-						<Input>
-							<label>Division</label>
-							<Select
-								placeholder="Division"
-								path="basicInfo responsibleOfficer division"
-								name="status"
-								id="status"
-								value={
-									activeReport.basicInfo.responsibleOfficer
-										.division
-								}
-								onChange={handleChange}
-							>
-								<Option val="Load">Load</Option>
-								<Option val="In">In</Option>
-								<Option val="Options">Options</Option>
-							</Select>
-						</Input>
-					</span> */}
+
 					<span>
 						<Input>
 							<label>Beat of Offense</label>
@@ -1059,6 +967,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													onChange={handleChange}
 												/>
 											</Input>
+
 											<Input>
 												<label>Sex</label>
 
@@ -1430,7 +1339,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Complexion</label>
+												<label nr="1">Complexion</label>
 												<input
 													type="string"
 													placeholder="Complexion"
@@ -1447,7 +1356,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Voice</label>
+												<label nr="1">Voice</label>
 												<input
 													type="string"
 													placeholder="Voice"
