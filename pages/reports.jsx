@@ -2,8 +2,6 @@ import styles from "../styles/pages/Reports.module.scss";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import ListReports from "../components/ListReports";
-import { Button } from "../proton";
-import { FaChevronLeft } from "react-icons/fa";
 
 export default function Reports() {
 	const router = useRouter();
@@ -18,10 +16,6 @@ export default function Reports() {
 		}
 	};
 
-	const route = (path) => {
-		router.push(path);
-	};
-
 	useEffect(() => {
 		authCheck();
 	}, []);
@@ -29,16 +23,6 @@ export default function Reports() {
 	return (
 		<main className={styles.container}>
 			<article className={styles.main}>
-				<Button
-					fab
-					style={{ padding: "0.5rem" }}
-					circular
-					icon
-					emphasis="primary"
-					onClick={() => route("/dashboard")}
-				>
-					<FaChevronLeft />
-				</Button>
 				<ListReports title="All Reports" userId={"none"} />
 			</article>
 		</main>

@@ -53,8 +53,8 @@ export default function Report() {
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
-	const isCaptain = false;
-	const isCreator = true;
+	const isCaptain = true;
+	const isCreator = false;
 	const isVerified = false;
 	const tag = 0;
 
@@ -178,7 +178,6 @@ export default function Report() {
 								<Button.Group wrap>
 									{!isCaptain && !isVerified && isCreator && (
 										<Button
-											compact
 											onClick={() => {
 												if (view) {
 													setView(false);
@@ -192,7 +191,6 @@ export default function Report() {
 									)}
 									{!isVerified && (isCreator || isCaptain) && (
 										<Button
-											compact
 											onClick={() =>
 												!deleteModal &&
 												setDeleteModal(true)
@@ -205,7 +203,6 @@ export default function Report() {
 									{isCaptain && (
 										<>
 											<Button
-												compact
 												onClick={toggleVerified}
 												emphasis={
 													isVerified
@@ -225,7 +222,6 @@ export default function Report() {
 												)}
 											</Button>
 											<Button
-												compact
 												onClick={() =>
 													!urgencyModal &&
 													setUrgencyModal(true)
