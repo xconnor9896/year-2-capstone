@@ -1,0 +1,42 @@
+@use "../vars.scss" as *;
+
+.container {
+  display: flex;
+  margin: 40px;
+  justify-content: space-between;
+  .user {
+    overflow: hidden;
+    width: 40%;
+    .pfp {
+      margin: 0 auto;
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      height: min-content;
+      width: min-content;
+      padding: 40px;
+      border-radius: 50%;
+      background-color: $background-light;
+    }
+    .miniNav {
+      .title {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+    ul {
+      list-style: none;
+      li {
+        margin: 8px;
+        background-color: $background-dark;
+        border-top-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+    }
+  }
+  .display {
+    height: 400px;
+    width: 400px;
+    background-color: blue;
+  }
+}
