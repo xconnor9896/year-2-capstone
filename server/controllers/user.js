@@ -1,4 +1,4 @@
-// const defaultProfilePic = require("../util/defaultPic");
+const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -14,7 +14,7 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user: { email, password },
+    user: { email, password, profilePicURL },
   } = req.body;
 
   try {
@@ -36,7 +36,7 @@ const createUser = async (req, res) => {
 
     user = new UserModel({
       ...user,
-      password: "",
+      profilePicURL: profilePicURL || defaultProfilePic,
     });
 
     user.password = bcrypt.hash(password, 10);
