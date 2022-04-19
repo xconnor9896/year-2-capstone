@@ -249,10 +249,15 @@ const ReportSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: false,
+
+    // make it so that only captains can approve
+    
+
+
   },
   
 
 
 });
 
-export default mongoose.model('Report', ReportSchema);
+module.exports = mongoose.model('Report', ReportSchema);
