@@ -15,7 +15,6 @@ import {
   FaRegIdCard,
   FaUserGraduate,
   FaUserLock,
-  FaUserAlt
 } from "react-icons/fa";
 import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
@@ -352,15 +351,6 @@ const SignUpPage = ({ setState }) => {
                   </div>
                 )}
               </div>
-
-              <Input
-                className={styles.name}
-                icon={<FaUserAlt />}
-                type="text"
-                name="name"
-                id="name"
-                placeholder="first last (ex. John Doe)"
-              />
 
               <div className={styles.prefix}>
                 <FaUserShield />
