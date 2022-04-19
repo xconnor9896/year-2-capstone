@@ -1,5 +1,5 @@
 const UserModel = require('../models/UserModel'); // Just copyed and pasted from the social media project 
-const FollowerModel = require('../models/FollowerModel');
+// const FollowerModel = require('../models/FollowerModel');
 // const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
 // const isEmail = require('validator/lib/isEmail');
