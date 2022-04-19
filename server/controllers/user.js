@@ -1,8 +1,10 @@
-const defaultProfilePic = require("../util/defaultPic");
+// const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
+
+const UserModel = require("../models/UserModel")
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE USER
@@ -11,8 +13,9 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-  const { name, email, badgeNumber, squadNumber, password, rank, username } =
-    req.body.user;
+  const {
+    user: { email, password },
+  } = req.body;
 
   try {
     if (!isEmail(email)) return res.status(401).send("Invalid Email");
@@ -32,14 +35,8 @@ const createUser = async (req, res) => {
     if (user) return res.status(401).send("Email already used");
 
     user = new UserModel({
-      name,
-      email: email.toLowerCase(),
+      ...user,
       password: "",
-      profilePic: rec.body.profilePic || defaultProfilePic,
-      badgeNumber,
-      squadNumber: squadNumber || 0,
-      rank,
-      username,
     });
 
     user.password = bcrypt.hash(password, 10);
