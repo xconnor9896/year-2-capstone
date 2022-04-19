@@ -77,7 +77,7 @@ const updateReport = async (req, res) => {
 
   try {
     let report = ReportModel.findById(reportId);
-    let notInclude = ['verified','responsibleOfficer', 'importance']
+    const notInclude = ['verified','responsibleOfficer', 'importance']
 
     if (report.createdBy === user._id) {
       if (keys.length === inputs.length) {
