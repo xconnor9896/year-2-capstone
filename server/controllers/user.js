@@ -14,7 +14,7 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user: { email, password },
+    user: { email, password, },
   } = req.body;
 
   try {
@@ -31,16 +31,18 @@ const createUser = async (req, res) => {
     }
 
     let user;
+
     user = await UserModel.findOne({ email: email.toLowerCase() });
     if (user) return res.status(401).send("Email already used");
 
     user = new UserModel({
-      ...user,
-      password: "",
+      email,
+      password,
     });
 
-    user.password = bcrypt.hash(password, 10);
-    user = await user.save;
+    const salt = bcrypt.genSalt()
+    user.password = bcrypt.hash(password, salt);
+    user = await user.save();
 
     const payload = { userID: user._id };
     jwt.sign(
