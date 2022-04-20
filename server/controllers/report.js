@@ -43,18 +43,20 @@ const deleteReport = async (req, res) => {
   const { user } = req.body;
 
   try {
-    if (user.rank !== "captain") {
-      return res
-        .status(403)
-        .send("Please contact your captain about deleting your report");
-    }
 
-    const deleted = ReportModel.deleteOne({ reportId });
+    const report = ReportModel.findById(reportId)
+    if (user.rank === "captain" || (user._id === report.responsibleOfficer._id && !report.verified)) {
+      const deleted = ReportModel.deleteOne({ reportId });
 
-    if (deleted) {
-      return res.status(200).send("Report Deleted");
+      if (deleted) {
+        return res.status(200).send("Report Deleted");
+      } else {
+        return res.status(404).send("Report Not Found");
+      }
     } else {
-      return res.status(404).send("Report Not Found");
+      return res
+      .status(403)
+      .send("Please contact your captain about deleting your report");
     }
   } catch (error) {
     console.log("Error at deleteReport");
@@ -75,9 +77,9 @@ const updateReport = async (req, res) => {
 
   try {
     let report = ReportModel.findById(reportId);
-    let notInclude = ['verified','responsibleOfficer', 'importance']
+    const notInclude = ['verified','responsibleOfficer', 'importance']
 
-    if (user.rank === "captain" || report.createdBy === user._id) {
+    if (report.createdBy === user._id) {
       if (keys.length === inputs.length) {
         for (let i = 0; i < keys.length; i++) {
           if (
