@@ -17,7 +17,6 @@ const Button = (props) => {
 		selected,
 		className,
 		noborder,
-		fab,
 	} = props;
 
 	const [extraAttributes, setExtraAttributes] = useState({});
@@ -40,7 +39,6 @@ const Button = (props) => {
 		delete nProps.selected;
 		delete nProps.className;
 		delete nProps.noborder;
-		delete nProps.fab;
 
 		setExtraAttributes(nProps);
 	}, [props]);
@@ -56,7 +54,6 @@ const Button = (props) => {
 			loading={loading && +loading ? "1" : undefined}
 			icon={icon && +icon ? "1" : undefined}
 			hollow={hollow && +hollow ? "1" : undefined}
-			fab={fab && +fab ? "1" : undefined}
 			fill={fill && +fill ? "1" : undefined}
 			circular={circular && +circular ? "1" : undefined}
 			noborder={noborder && +noborder ? "1" : undefined}
