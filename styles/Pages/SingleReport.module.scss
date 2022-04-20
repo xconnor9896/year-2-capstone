@@ -26,9 +26,11 @@
 		> div {
 			align-self: center;
 
-			max-width: 800px;
+			// max-width: 800px;
 			min-width: 400px;
 			width: 95vw;
+
+			max-width: 11in;
 
 			height: 150vh;
 
@@ -57,7 +59,7 @@
 						@media (max-width: 710px) {
 							flex-grow: 1;
 						}
-						
+
 						gap: 0.5rem;
 						align-items: center;
 						justify-content: space-between;
@@ -134,10 +136,10 @@
 						}
 					}
 
+					box-shadow: $light-shadow;
+
 					padding: $padding !important;
 					background: lighten($background-light, 10%);
-
-					box-shadow: $light-shadow;
 
 					border-radius: $border-radius;
 					border-bottom-left-radius: 0;
