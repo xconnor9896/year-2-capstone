@@ -4,11 +4,33 @@
   margin: 0 auto;
   ul {
     display: flex;
-    .tabItem {
-      .tab {
+    justify-content: center;
+    list-style: none;
+    display: flex;
+    user-select: none;
+    li {
+      margin: 8px;
+      border-top-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .activated {
+      cursor: pointer;
+      div {
         height: 4px;
         background-color: $em-secondary;
       }
+    }
+    .hide {
+      cursor: pointer;
+      div {
+        height: 4px;
+        background-color: $background-light;
+      }
+    }
+  }
+  ul {
+    .hidden {
+      display: none;
     }
   }
 }

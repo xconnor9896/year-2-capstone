@@ -21,7 +21,7 @@ export default function Profile() {
         </div>
         <Tabs />
       </div>
-      <div className={styles.display}></div>
+      <div className={styles.display}><h1>the box of imagination :) (WIP... still imagining...)</h1></div>
     </main>
   );
 }
