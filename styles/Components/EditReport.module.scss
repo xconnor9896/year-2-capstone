@@ -61,7 +61,7 @@
 			margin: $margin;
 			border-top: $border;
 
-			~ section {
+			+ section {
 				border-top: $border;
 			}
 
@@ -389,7 +389,7 @@
 							margin-bottom: 0;
 						}
 
-						~ .person {
+						+ .person {
 							border-top: $border;
 						}
 

@@ -88,6 +88,13 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 	const [activeReport, setActiveReport] = useState({
 		caseNumber: "oi214joai3h523897",
 
+		approvedBy: {
+			name: {
+				firstName: "Tim",
+				lastName: "P",
+			},
+		},
+
 		basicInfo: {
 			incidentType: "",
 
@@ -97,8 +104,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				keyRpt: false,
 				fu: false,
 			},
-
-			status: "open",
 
 			disposition: "",
 
@@ -185,7 +190,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				indust: false,
 				uncon: false,
 				resisted: false,
-				ressistedArrest: false,
+
 				other: false,
 			},
 			patientCondition: "",
@@ -427,111 +432,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								</li>
 							</ul>
 						</Input>
-						<Input>
-							<label>Date / Day / Time Reported</label>
-							<ul>
-								<li>
-									<ul style={{ gap: "0.15rem" }}>
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.day
-												}
-												path="basicInfo incidentReportedAt date day"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="DD"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.month
-												}
-												path="basicInfo incidentReportedAt date month"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="MM"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.year
-												}
-												path="basicInfo incidentReportedAt date year"
-												onChange={handleChange}
-												type="number"
-												style={{ width: "2.5rem" }}
-												maxLength={4}
-												placeholder="YYYY"
-											/>
-										</li>
-									</ul>
-								</li>
-								/
-								<li>
-									<Select
-										placeholder="Day"
-										path="basicInfo incidentReportedAt day"
-										name="day"
-										id="day"
-										absolutely
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.day
-										}
-										onChange={handleChange}
-									>
-										<Option val="Sunday">Sunday</Option>
-										<Option val="Monday">Monday</Option>
-										<Option val="Tuesday">Tuesday</Option>
-										<Option val="Wednesday">
-											Wednesday
-										</Option>
-										<Option val="Thursday">Thursday</Option>
-										<Option val="Friday">Friday</Option>
-										<Option val="Saturday">Saturday</Option>
-									</Select>
-								</li>
-								/
-								<li>
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.hour
-										}
-										path="basicInfo incidentReportedAt time hour"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="HH"
-									/>
-									:
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.minute
-										}
-										path="basicInfo incidentReportedAt time minute"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="MM"
-									/>
-								</li>
-							</ul>
-						</Input>
+
 						<Input>
 							<label>Date / Time Occured</label>
 							<ul>
@@ -1722,16 +1623,16 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								<li>
 									<input
 										type="checkbox"
-										name="resistedArrest"
-										id="resistedArrest"
+										name="resisted"
+										id="resisted"
 										checked={
 											activeReport.hospitalInfo
-												.treatmentReasons.resistedArrest
+												.treatmentReasons.resisted
 										}
-										path="hospitalInfo treatmentReasons resistedArrest"
+										path="hospitalInfo treatmentReasons resisted"
 										onChange={handleChange}
 									/>
-									<label htmlFor="resistedArrest">
+									<label htmlFor="resisted">
 										Resisted Arrest
 									</label>
 								</li>
@@ -1898,111 +1799,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								path="basicInfo location"
 								onChange={handleChange}
 							/>
-						</Input>
-						<Input>
-							<label>Date / Day / Time Reported</label>
-							<ul>
-								<li>
-									<ul style={{ gap: "0.15rem" }}>
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.day
-												}
-												path="basicInfo incidentReportedAt date day"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="DD"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.month
-												}
-												path="basicInfo incidentReportedAt date month"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="MM"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.year
-												}
-												path="basicInfo incidentReportedAt date year"
-												onChange={handleChange}
-												type="number"
-												style={{ width: "2.5rem" }}
-												maxLength={4}
-												placeholder="YYYY"
-											/>
-										</li>
-									</ul>
-								</li>
-								/
-								<li>
-									<Select
-										placeholder="Day"
-										path="basicInfo incidentReportedAt day"
-										name="day"
-										id="day"
-										absolutely
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.day
-										}
-										onChange={handleChange}
-									>
-										<Option val="Sunday">Sunday</Option>
-										<Option val="Monday">Monday</Option>
-										<Option val="Tuesday">Tuesday</Option>
-										<Option val="Wednesday">
-											Wednesday
-										</Option>
-										<Option val="Thursday">Thursday</Option>
-										<Option val="Friday">Friday</Option>
-										<Option val="Saturday">Saturday</Option>
-									</Select>
-								</li>
-								/
-								<li>
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.hour
-										}
-										path="basicInfo incidentReportedAt time hour"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="HH"
-									/>
-									:
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.minute
-										}
-										path="basicInfo incidentReportedAt time minute"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="MM"
-									/>
-								</li>
-							</ul>
 						</Input>
 					</span>
 					<span>

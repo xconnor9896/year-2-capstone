@@ -17,3 +17,4 @@
 | `4/14` | Finalized front-end for edit report page. Tons of work on single report header and content. Began on view report and made the dashboard look like the figma. |
 | `4/15` | Heavy work on dashboard. Minor changes everywhere else.                                                                                                      |
 | `4/18` | Began on view report component.                                                                                                                              |
+| `4/19` | Finished view report component.                                                                                                                              |
