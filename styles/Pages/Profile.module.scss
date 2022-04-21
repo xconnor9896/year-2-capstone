@@ -1,9 +1,8 @@
 @use "../vars.scss" as *;
 
 .container {
-  display: flex;
   margin: 40px;
-  justify-content: space-between;
+  display: flex;
   .user {
     overflow: hidden;
     width: 40%;
@@ -16,13 +15,14 @@
       width: min-content;
       padding: 40px;
       border-radius: 50%;
-      background-color: $background-light;
+      background-color: $background-dark;
     }
+    background-color: $background-light;
   }
   .display {
     margin: 0 auto;
     height: 400px;
     width: 400px;
-    background-color: blue;
+    background-color: $background-light;
   }
 }

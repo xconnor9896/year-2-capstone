@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Tabs.module.scss";
+import {
+  FaNetworkWired,
+  FaUserFriends,
+  FaPen,
+  FaInfoCircle,
+} from "react-icons/fa";
 
 const Tabs = () => {
   const [tabOpen, setTabOpen] = useState(1);
@@ -16,22 +22,25 @@ const Tabs = () => {
           onClick={() => setTabOpen(1)}
           className={tabOpen === 1 ? styles.activated : styles.hide}
         >
-          <h3>Info</h3>
-          <div></div>
+          <div>
+            <FaInfoCircle />
+          </div>
         </li>
         <li
           onClick={() => setTabOpen(2)}
           className={tabOpen === 2 ? styles.activated : styles.hide}
         >
-          <h3>Cases</h3>
-          <div></div>
+          <div>
+            <FaNetworkWired />
+          </div>
         </li>
         <li
           onClick={() => setTabOpen(3)}
           className={tabOpen === 3 ? styles.activated : styles.hide}
         >
-          <h3>Contacts</h3>
-          <div></div>
+          <div>
+            <FaUserFriends />
+          </div>
         </li>
       </ul>
       <ul>
