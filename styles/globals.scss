@@ -109,3 +109,10 @@ button {
 		}
 	}
 }
+
+@media print {
+	html, body {
+		height: initial;
+		overflow: initial;
+	}
+}
