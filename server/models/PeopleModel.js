@@ -38,25 +38,25 @@ const PersonSchema = new mongoose.Schema({
     ],
   },
 
-  // DOB: {
-  //   type: Date,
-  //   required: true,
-  // },
+  DOB: {
+    type: Date,
+    required: true,
+  },
 
   age: {
     type: Number,
     required: true,
 
     // let age equal the difference between the current date and the date of birth
-    // get: function () {
-    //   return new Date().getFullYear() - this.DOB.getFullYear();
-    // },
+    get: function () {
+      return new Date().getFullYear() - this.DOB.getFullYear();
+    },
   },
 
-  // juvenile: {
-  //   type: Boolean,
-  //   required: true,
-  // },
+  juvenile: {
+    type: Boolean,
+    required: true,
+  },
 
   sex: {
     type: String,
@@ -171,7 +171,7 @@ const PersonSchema = new mongoose.Schema({
     },
     results: {
       type: Number,
-      required: false,
+      required: true,
     },
   },
 

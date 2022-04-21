@@ -2,11 +2,12 @@ import styles from "../styles/pages/Reports.module.scss";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import ListReports from "../components/ListReports";
-import { Button } from "../proton";
-import { FaChevronLeft } from "react-icons/fa";
 
 export default function Reports() {
 	const router = useRouter();
+
+	const [groupID, setGroupID] = useState(null);
+	const [title, setTitle] = useState("All Reports");
 
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
@@ -16,10 +17,6 @@ export default function Reports() {
 			// Re-route if they aren't.
 			router.route("/dashboard");
 		}
-	};
-
-	const route = (path) => {
-		router.push(path);
 	};
 
 	useEffect(() => {
@@ -39,7 +36,13 @@ export default function Reports() {
 				>
 					<FaChevronLeft />
 				</Button>
-				<ListReports title="All Reports" userId={"none"} />
+				<ListReports
+					title={title}
+					setTitle={setTitle}
+					groupID={groupID}
+					userID={null}
+					canSwitchGroups={true}
+				/>
 			</article>
 		</main>
 	);

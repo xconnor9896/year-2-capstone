@@ -1,4 +1,4 @@
-// const defaultProfilePic = require("../util/defaultPic");
+const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -14,7 +14,8 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user: { email, password },
+    user, 
+    user: { email, password, profilePicURL },
   } = req.body;
 
   try {
@@ -30,17 +31,17 @@ const createUser = async (req, res) => {
         .send("Password must be less than 100 characters long");
     }
 
-    let user;
-    user = await UserModel.findOne({ email: email.toLowerCase() });
-    if (user) return res.status(401).send("Email already used");
+    let checkUser;
+    checkUser = await UserModel.findOne({ email: email.toLowerCase() });
+    if (checkUser) return res.status(401).send("Email already used");
 
-    user = new UserModel({
+    let newUser = new UserModel({
       ...user,
-      password: "",
+      profilePicURL: profilePicURL || defaultProfilePic,
     });
 
-    user.password = bcrypt.hash(password, 10);
-    user = await user.save;
+    newUser.password = await bcrypt.hash(password, 10);
+    newUser = await newUser.save();
 
     const payload = { userID: user._id };
     jwt.sign(

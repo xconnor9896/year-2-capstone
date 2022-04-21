@@ -15,7 +15,6 @@ import {
   FaRegIdCard,
   FaUserGraduate,
   FaUserLock,
-  FaUserAlt
 } from "react-icons/fa";
 import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
@@ -174,30 +173,66 @@ const SignUpPage = ({ setState }) => {
     const form = e.target;
     const data = new FormData(form);
 
-    // console.log the form data individually
-    for (let [key, value] of data.entries()) {
-    	console.log(`${key}: ${value}`);
-    }
+    // get the email and password
 
     if (!captchaState) {
       // THE CAPTCHA IS INCOMPLETE
+      // show an error message to the user
+      console.log("captcha is incomplete");
+      setLoading(false);
     }
+    const firstName = data.get("firstName");
+    const lastName = data.get("lastName");
+    // breaks the name into first and last within an object
+    const nameObject = {
+      firstName: firstName,
+      lastName: lastName,
+    };
 
-    const signupResponse = axios
-      .post("http://localhost:3000/api/v1/user/signup", data)
-      .then((res) => {
-        console.log(res);
-        setLoading(false);
-        // setState(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    // check if the user password is the same as the confirm password
+    if (data.get("password") !== data.get("password-confirm")) {
+      // passwords do not match
+      // show an error message to the user
+      console.log("passwords do not match");
+      setLoading(false);
+    } else {
+      // passwords match
+      // send the data to the server
 
-    // console.log("implement handleSubmit for signup page...");
+      // since the password and confirm password match, we can remove the confirm password from the data
+      data.delete("password-confirm");
 
-    // setLoading(false);
+      // remove the prefix from the data
+      data.delete("prefix");
+
+      // replace name with name in  the data
+      data.set("name", nameObject);
+
+      // console.log the form data individually
+      for (let [key, value] of data.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      // the only thing we need to send to the server is the email, password, name, badgeNumber, and rank
+
+
+      // send the data to the server
+      const response = axios
+        .post("http://localhost:3000/api/v1/user/signup", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+          // setState(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          // setLoading(false);
+        });
+    }
   };
 
   // FILE MENU
@@ -354,8 +389,8 @@ const SignUpPage = ({ setState }) => {
               </div>
 
               <Input
-                className={styles.name}
-                icon={<FaUserAlt />}
+                className={styles.badgeNumber}
+                icon={<FaRegIdCard />}
                 type="text"
                 name="name"
                 id="name"
@@ -364,16 +399,12 @@ const SignUpPage = ({ setState }) => {
 
               <div className={styles.prefix}>
                 <FaUserShield />
-                <select
-                  id="prefix"
-                  className={styles.prefixSelect}
-                  name="prefix"
-                >
+                <select id="rank" className={styles.prefixSelect} name="rank">
                   <option selected disabled>
-                    Select Prefix
+                    Select Rank
                   </option>
                   <option value="captain">Captain</option>
-                  <option value="police officer">Police Officer</option>
+                  <option value="officer">Police Officer</option>
                 </select>
               </div>
 

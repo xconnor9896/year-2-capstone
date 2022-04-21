@@ -22,6 +22,7 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
+
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
@@ -32,10 +33,14 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
 
-
-
 //conect to database
 connectDB();
+
+//Testing sendgrid email
+const {sendVefEmail} = require("./server/controllers/emailCon")
+
+sendVefEmail
+
 
 nextApp.prepare().then(() => {
   app.all("*", (req, res) => handler(req, res));

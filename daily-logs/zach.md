@@ -12,3 +12,6 @@ Added to figuma and learning send grid
 
 3/23/22
 Figured out how to use sendgrid to send emails 
+
+4/19/22
+Looked at the controllers, Talked to Peck, Learning that i need to figure out how to encyrpt a url and how to vefication a email
