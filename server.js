@@ -36,6 +36,12 @@ app.use("/api/v1/settings", settingsRoutes);
 //conect to database
 connectDB();
 
+//Testing sendgrid email
+const {sendVefEmail} = require("./server/controllers/emailCon")
+
+sendVefEmail
+
+
 nextApp.prepare().then(() => {
   app.all("*", (req, res) => handler(req, res));
   app.listen(PORT, (err) => {
