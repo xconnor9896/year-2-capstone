@@ -59,7 +59,7 @@ export default function Report() {
 	const tag = 0;
 
 	return (
-		<main className={styles.container}>
+		<main className={styles.container} shadow={"true"}>
 			{deleteModal && (
 				<Modal closeModal={() => setDeleteModal(false)}>
 					<span>

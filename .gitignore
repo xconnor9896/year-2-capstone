@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+/styles/pagesTimsDashboard.module.scss
+/pages/tims_dashboard.jsx
+
 # dependencies
 /node_modules
 /.pnp
