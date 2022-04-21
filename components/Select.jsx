@@ -21,10 +21,14 @@ export const Select = ({
 	const thisRef = useRef(null);
 
 	const childClick = (e) => {
-		const opt = e.target.getAttribute("val");
+		const opt =
+			e.target.getAttribute("val") ||
+			e.target.getAttribute("value") ||
+			e.target.innerText;
 		const place = e.target.innerText;
 		// setOption({ disp: opt, value: opt.toLowerCase() });
 		// setValue(opt.toLowerCase());
+		setLP(place);
 		onChange({
 			selectTarget: {
 				path,

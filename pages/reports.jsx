@@ -6,6 +6,9 @@ import ListReports from "../components/ListReports";
 export default function Reports() {
 	const router = useRouter();
 
+	const [groupID, setGroupID] = useState(null);
+	const [title, setTitle] = useState("All Reports");
+
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
 		let isAdmin = true;
@@ -23,7 +26,23 @@ export default function Reports() {
 	return (
 		<main className={styles.container}>
 			<article className={styles.main}>
-				<ListReports title="All Reports" userId={"none"} />
+				<Button
+					fab
+					style={{ padding: "0.5rem" }}
+					circular
+					icon
+					emphasis="primary"
+					onClick={() => route("/dashboard")}
+				>
+					<FaChevronLeft />
+				</Button>
+				<ListReports
+					title={title}
+					setTitle={setTitle}
+					groupID={groupID}
+					userID={null}
+					canSwitchGroups={true}
+				/>
 			</article>
 		</main>
 	);

@@ -14,6 +14,8 @@ import ReportTab from "./ReportTab";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
+import { Select, Option } from "./Select";
+
 const randString = () => {
 	let l = "qwertyuiopasdfghjklzxcvbnm1234567890";
 
@@ -94,7 +96,7 @@ const exampleReports = [
 	genExRep(),
 ];
 
-const ListReports = ({ userID }) => {
+const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 	const [search, setSearch] = useState("");
 	const [filterType, setFilterType] = useState("none");
 	const [sortType, setSortType] = useState("newest");
@@ -105,8 +107,6 @@ const ListReports = ({ userID }) => {
 	const router = useRouter();
 	const [reports, setReports] = useState([]);
 	const [loading, setLoading] = useState(false);
-
-	const [title, setTitle] = useState("Loading");
 
 	const [filterIcon, setFilterIcon] = useState(<FaFilter />);
 	const [sortIcon, setSortIcon] = useState(<FaSort />);
@@ -122,9 +122,13 @@ const ListReports = ({ userID }) => {
 
 	const pullReportsFromServer = () => {
 		setLoading(true);
-		if (userID) {
+		if (userID && userID !== null) {
 			// PULL FOR SPECIFIC USER
 			setTitle("#USER's Reports");
+			setReports([]);
+		} else if (groupID && groupID !== null) {
+			// PULL FOR SPECIFIC GROUP
+			setTitle("#GROUP's Reports");
 			setReports([]);
 		} else {
 			// PULL ALL REPORTS
@@ -265,7 +269,25 @@ const ListReports = ({ userID }) => {
 				{!loading && (
 					<>
 						<Card.Header>
-							<h1>{title}</h1>
+							{canSwitchGroups ? (
+								<>
+									<Select
+										absolutely
+										placeholder="Select Group"
+										value={title}
+										onChange={(e) => {
+											setTitle(e.selectTarget.value);
+										}}
+									>
+										<Option value={"1"}>All Reports</Option>
+										<Option value={"2"}>HOOK</Option>
+										<Option value={"3"}>ME</Option>
+										<Option value={"4"}>UP</Option>
+									</Select>
+								</>
+							) : (
+								<h1>{title}</h1>
+							)}
 
 							<div className={styles.inputs}>
 								<Button
