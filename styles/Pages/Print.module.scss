@@ -1,9 +1,0 @@
-@use "../vars.scss" as *;
-
-.print {
-	overflow-y: auto;
-
-	> div {
-		padding: 0.75in;
-	}
-}
