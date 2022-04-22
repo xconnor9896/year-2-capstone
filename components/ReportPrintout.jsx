@@ -94,8 +94,7 @@ const ReportPrintout = ({ id }) => {
 
 			location: "Peoria, Arizona, United States of America",
 
-			synopsis:
-				"Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			synopsis: "aaaaa",
 			reportNarration:
 				"Things happened stuff and things it really do be happenin",
 
@@ -161,7 +160,7 @@ const ReportPrintout = ({ id }) => {
 		peopleInfo: [
 			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
+			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
@@ -582,7 +581,6 @@ const ReportPrintout = ({ id }) => {
 							</article>
 							{/* <div className={styles.pageBreak}></div> */}
 						</div>
-						
 					);
 				})}
 
