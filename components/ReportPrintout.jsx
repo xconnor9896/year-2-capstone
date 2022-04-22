@@ -97,7 +97,7 @@ const ReportPrintout = ({ id }) => {
 			synopsis:
 				"Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 			reportNarration:
-				"Things happened stuff and things it really do be happenin",
+				"Things happened stuff and things it really do be happenin judshdhuygyuydyuwqgydyuqgyudyguwqygudwqgudgyuwqgyudgyuqwgyudgquydgwqyudq d hhdqgdg what is the day. somepeople be under the ground. Wait did you hear that, i didn't. Wait maybe i was just thinking",
 
 			responsibleOfficer: {
 				name: {
@@ -161,7 +161,7 @@ const ReportPrintout = ({ id }) => {
 		peopleInfo: [
 			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
+			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
 			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
@@ -582,7 +582,6 @@ const ReportPrintout = ({ id }) => {
 							</article>
 							{/* <div className={styles.pageBreak}></div> */}
 						</div>
-						
 					);
 				})}
 
@@ -682,7 +681,7 @@ const ReportPrintout = ({ id }) => {
 
 			<div className={styles.pageBreak}></div>
 
-			<div className={styles.page}>
+			<div className={`${styles.page} ${styles.continuationPage}`}>
 				<h4>Continuation Page</h4>
 
 				<article>
@@ -769,9 +768,13 @@ const ReportPrintout = ({ id }) => {
 					<header>Narrative</header>
 					<section>{basicInfo.reportNarration}</section>
 				</article>
+
+
+				
+
 			</div>
 
-			<footer>
+			<footer className={styles.footer}>
 				<section>
 					<div>
 						Submitted By:
@@ -837,6 +840,8 @@ const ReportPrintout = ({ id }) => {
 					<p></p>
 				</section>
 			</footer>
+
+			
 		</div>
 	);
 };
