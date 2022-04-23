@@ -11,6 +11,9 @@ const {
   importanceReport
 } = require(`../controllers/report`);
 
+const {authMiddleware} = require(`../middleware/authMiddleware`);
+
+
 
 router.post('/', createReport);
 router.get('/', getAllReports);
