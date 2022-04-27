@@ -17,7 +17,7 @@ const Tabs = () => {
 
   return (
     <div className={styles.tabs}>
-      <ul>
+      <ul className={styles.selection}>
         <li
           onClick={() => setTabOpen(1)}
           className={tabOpen === 1 ? styles.activated : styles.hide}
@@ -43,7 +43,7 @@ const Tabs = () => {
           </div>
         </li>
       </ul>
-      <ul>
+      <ul className={styles.info}>
         <li className={tabOpen === 1 ? styles.active : styles.hidden}>
           <h2>
             {prefix}.{name}

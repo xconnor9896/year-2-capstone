@@ -19,9 +19,15 @@ export default function Profile() {
         <div className={styles.pfp}>
           <FaRegUser />
         </div>
+        <div className={styles.banner}>
+          <img />
+        </div>
         <Tabs />
       </div>
-      <div className={styles.display}><h1>the box of imagination :) (WIP... still imagining...)</h1></div>
+
+      <div className={styles.display}>
+        <div className={styles.classmate}></div>
+      </div>
     </main>
   );
 }

@@ -1,28 +1,38 @@
 @use "../vars.scss" as *;
 
 .container {
-  margin: 40px;
+  margin: 30px;
+  height: 100%;
   display: flex;
+  justify-content: space-between;
   .user {
-    overflow: hidden;
-    width: 40%;
+    height: 100%;
+    width: 45%;
     .pfp {
-      margin: 0 auto;
+      display: hidden;
+      position: absolute;
+      margin: 3.5rem 0 0 0.8rem;
       font-size: 4rem;
       display: flex;
       align-items: center;
       height: min-content;
       width: min-content;
       padding: 40px;
+      padding: 1rem;
       border-radius: 50%;
       background-color: $background-dark;
+    }
+    .banner {
+      width: 100%;
+      // height: 120px;
+      height: 20%;
+      background-color: $warning;
     }
     background-color: $background-light;
   }
   .display {
-    margin: 0 auto;
-    height: 400px;
-    width: 400px;
+    height: 100%;
+    width: 45%;
     background-color: $background-light;
   }
 }
