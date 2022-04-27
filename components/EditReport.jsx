@@ -7,6 +7,7 @@ import {
 	FaUserPlus,
 	FaUserTimes,
 	FaTrash,
+	FaSave,
 } from "react-icons/fa";
 const uuid = require("uuid").v4;
 
@@ -16,7 +17,7 @@ const Input = ({ children }) => {
 	return <div className={styles.input}>{children}</div>;
 };
 
-const EditReport = ({ report, setLoading, loading }) => {
+const EditReport = ({ report, setLoading, loading, setView }) => {
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
 		id: uuid(),
@@ -64,8 +65,10 @@ const EditReport = ({ report, setLoading, loading }) => {
 
 	const [dropdowns, setDropdowns] = useState({
 		basic: false,
-		people: true, // CHANGE ALL TO FALSE AFTER DEV
+		people: false,
 		hosp: false,
+		syno: false,
+		cont: false,
 	});
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
@@ -102,6 +105,9 @@ const EditReport = ({ report, setLoading, loading }) => {
 			arsSectionNumber: "",
 
 			location: "",
+
+			synopsis: "",
+			reportNarration: "",
 
 			responsibleOfficer: {
 				name: {
@@ -161,7 +167,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 			relatedComments: "",
 		},
 
-		peopleInfo: [person],
+		peopleInfo: [],
 
 		hospitalInfo: {
 			injured: false,
@@ -169,13 +175,23 @@ const EditReport = ({ report, setLoading, loading }) => {
 			hospital: "",
 			transportedBy: "",
 			emsNo: 0,
-			treatmentReasons: "",
+			treatmentReasons: {
+				mental: false,
+				suicide: false,
+				icf: false,
+				scf: false,
+				intox: false,
+				drugs: false,
+				indust: false,
+				uncon: false,
+				resisted: false,
+				ressistedArrest: false,
+				other: false,
+			},
 			patientCondition: "",
 			patientDispo: "",
 			attendingPhysician: "",
 		},
-
-		synopsis: "",
 	});
 
 	const addPerson = () => {
@@ -206,6 +222,8 @@ const EditReport = ({ report, setLoading, loading }) => {
 
 	// TOTALLY STATIC
 	const handleChange = (e) => {
+		if (loading) return;
+
 		let newReport = { ...activeReport };
 
 		let path = e.selectTarget
@@ -250,10 +268,15 @@ const EditReport = ({ report, setLoading, loading }) => {
 		setActiveReport({ ...newReport, ...activeReport });
 	};
 
-	const submitForm = () => {
+	const submitForm = (e) => {
+		e.preventDefault();
+
 		setLoading(true);
 		console.warn("implement submitting of editted report.");
-		// setLoading(false);
+		setLoading(false);
+
+		// If Success
+		setView(false);
 	};
 
 	// const blurMe = (e) => {
@@ -334,21 +357,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 								</li>
 							</ul>
 						</Input>
-						<Input>
-							<label>Status</label>
-							<Select
-								placeholder="Status"
-								path="basicInfo status"
-								name="status"
-								id="status"
-								value={activeReport.basicInfo.status}
-								onChange={handleChange}
-							>
-								<Option>Open</Option>
-								<Option>Closed</Option>
-								<Option>Verified</Option>
-							</Select>
-						</Input>
+
 						<Input>
 							<label>Disposition</label>
 							<input
@@ -384,7 +393,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 							/>
 						</Input>
 					</span>
-					<span>
+					{/* <span>
 						<Input>
 							<label>
 								Responsible Officer (Rank Last, First Middle
@@ -476,7 +485,7 @@ const EditReport = ({ report, setLoading, loading }) => {
 								<Option>Options</Option>
 							</Select>
 						</Input>
-					</span>
+					</span> */}
 					<span>
 						<Input>
 							<label>Beat of Offense</label>
@@ -810,7 +819,6 @@ const EditReport = ({ report, setLoading, loading }) => {
 					</span>
 				</div>
 			</section>
-
 			<section
 				className={styles.peopleInfo}
 				dropped={dropdowns.people ? "1" : "0"}
@@ -829,6 +837,9 @@ const EditReport = ({ report, setLoading, loading }) => {
 				</header>
 				<div className={styles.sectionContent}>
 					<span className={styles.people}>
+						{activeReport.peopleInfo.length == 0 && (
+							<h5>No People To Display</h5>
+						)}
 						{activeReport.peopleInfo.map((person) => {
 							const { id } = person;
 							const index =
@@ -856,16 +867,27 @@ const EditReport = ({ report, setLoading, loading }) => {
 									>
 										<span>
 											{aka || firstName || lastName ? (
-												<>
-													{`${firstName} ${lastName}`
-														.length < 16
-														? `${firstName} ${lastName}`
-														: `${firstName} ${lastName}`.slice(
-																0,
-																16
-														  ) + "..."}{" "}
-													(<em>{aka}</em>)
-												</>
+												firstName || lastName ? (
+													<>
+														{`${firstName} ${
+															aka && `"${aka}"`
+														} ${lastName}`.length <
+														32
+															? `${firstName} ${
+																	aka &&
+																	`"${aka}"`
+															  } ${lastName}`
+															: `${firstName} ${
+																	aka &&
+																	`"${aka}"`
+															  } ${lastName}`.slice(
+																	0,
+																	32
+															  ) + "..."}{" "}
+													</>
+												) : (
+													<>{aka && aka}</>
+												)
 											) : (
 												<>Unnamed Person</>
 											)}
@@ -1331,20 +1353,30 @@ const EditReport = ({ report, setLoading, loading }) => {
 											</Input>
 											<Input>
 												<label>Hair Color</label>
-												<input
-													type="string"
+
+												<Select
 													placeholder="Hair Color"
+													path={
+														path +
+														"personalDetails hairColor"
+													}
+													name="hairColor"
+													id="hairColor"
 													value={
 														personLoc
 															.personalDetails
 															.hairColor
 													}
-													path={
-														path +
-														"personalDetails hairColor"
-													}
 													onChange={handleChange}
-												/>
+												>
+													<Option>Brown</Option>
+													<Option>Blonde</Option>
+													<Option>Black</Option>
+													<Option>Red</Option>
+													<Option>Gray</Option>
+													<Option>Bald</Option>
+													<Option>Other</Option>
+												</Select>
 											</Input>
 											<Input>
 												<label>Hair Character</label>
@@ -1380,6 +1412,117 @@ const EditReport = ({ report, setLoading, loading }) => {
 													onChange={handleChange}
 												/>
 											</Input>
+											<Input>
+												<label>Voice</label>
+												<input
+													type="string"
+													placeholder="Voice"
+													value={
+														personLoc
+															.personalDetails
+															.voice
+													}
+													path={
+														path +
+														"personalDetails voice"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Eye Color</label>
+												<Select
+													placeholder="Eye Color"
+													path={
+														path +
+														"personalDetails eyeColor"
+													}
+													name="eyeColor"
+													id="eyeColor"
+													value={
+														personLoc
+															.personalDetails
+															.eyeColor
+													}
+													onChange={handleChange}
+												>
+													<Option>Amber</Option>
+													<Option>Blue</Option>
+													<Option>Brown</Option>
+													<Option>Gray</Option>
+													<Option>Green</Option>
+													<Option>Hazel</Option>
+													<Option>Red</Option>
+													<Option>Other</Option>
+												</Select>
+											</Input>
+											<Input>
+												<label>Facial Hair Color</label>
+												<Select
+													placeholder="Facial Hair Color"
+													path={
+														path +
+														"personalDetails facialHairColor"
+													}
+													name="facialHairColor"
+													id="facialHairColor"
+													value={
+														personLoc
+															.personalDetails
+															.facialHairColor
+													}
+													onChange={handleChange}
+												>
+													<Option>Brown</Option>
+													<Option>Blonde</Option>
+													<Option>Black</Option>
+													<Option>Red</Option>
+													<Option>Gray</Option>
+													<Option>Bald</Option>
+													<Option>Other</Option>
+												</Select>
+											</Input>
+											<Input>
+												<label>
+													Facial Hair Character
+												</label>
+												<input
+													type="string"
+													placeholder="Facial Hair Character"
+													value={
+														personLoc
+															.personalDetails
+															.facialHairChar
+													}
+													path={
+														path +
+														"personalDetails facialHairChar"
+													}
+													onChange={handleChange}
+												/>
+											</Input>
+											<Input>
+												<label>Clothing</label>
+
+												<textarea
+													name="relatedComments"
+													id="relatedComments"
+													cols="50"
+													rows="5"
+													value={
+														personLoc
+															.personalDetails
+															.clothing
+													}
+													path={
+														path +
+														"personalDetails clothing"
+													}
+													onChange={handleChange}
+													type="text"
+													placeholder="Describe the clothing they had on..."
+												></textarea>
+											</Input>
 										</span>
 									</div>
 								</div>
@@ -1399,13 +1542,290 @@ const EditReport = ({ report, setLoading, loading }) => {
 					</Button>
 				</div>
 			</section>
-
 			<section
 				className={styles.hospitalInfo}
 				dropped={dropdowns.hosp ? "1" : "0"}
 			>
 				<header onClick={() => toggleDropdown("hosp")}>
 					<h1>Hospital Information</h1>
+					<Button
+						type="button"
+						hollow
+						noborder
+						icon
+						emphasis="secondary"
+					>
+						<FaChevronDown />
+					</Button>
+				</header>
+				<div className={styles.sectionContent}>
+					<span>
+						<Input>
+							<label>Injured?</label>
+							<ul>
+								<li>
+									<input
+										type="checkbox"
+										name="injured"
+										id="injured"
+										checked={
+											activeReport.hospitalInfo.injured
+										}
+										path="hospitalInfo injured"
+										onChange={handleChange}
+									/>
+									<label htmlFor="injured">
+										There was an injury during this
+										incident.
+									</label>
+								</li>
+							</ul>
+						</Input>
+						<Input>
+							<label>Treated?</label>
+							<ul>
+								<li>
+									<input
+										type="checkbox"
+										name="treated"
+										id="treated"
+										checked={
+											activeReport.hospitalInfo.treated
+										}
+										path="hospitalInfo treated"
+										onChange={handleChange}
+									/>
+									<label htmlFor="treated">
+										The injured party was treated.
+									</label>
+								</li>
+							</ul>
+						</Input>
+						<Input>
+							<label>Hospital</label>
+							<input
+								value={activeReport.hospitalInfo.hospital}
+								path="hospitalInfo hospital"
+								onChange={handleChange}
+								type="text"
+								placeholder="Hospital"
+							/>
+						</Input>
+						<Input>
+							<label>Transported By</label>
+							<input
+								value={activeReport.hospitalInfo.transportedBy}
+								path="hospitalInfo transportedBy"
+								onChange={handleChange}
+								type="text"
+								placeholder="Transported By"
+							/>
+						</Input>
+						<Input>
+							<label>EMS Number</label>
+							<input
+								value={activeReport.hospitalInfo.emsNo}
+								path="hospitalInfo emsNo"
+								onChange={handleChange}
+								type="number"
+								maxLength={3}
+								placeholder="000"
+							/>
+						</Input>
+						<Input>
+							<label>Treatment Reasons</label>
+							<ul>
+								<li>
+									<input
+										type="checkbox"
+										name="mental"
+										id="mental"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.mental
+										}
+										path="hospitalInfo treatmentReasons mental"
+										onChange={handleChange}
+									/>
+									<label htmlFor="mental">Mental</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="suicide"
+										id="suicide"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.suicide
+										}
+										path="hospitalInfo treatmentReasons suicide"
+										onChange={handleChange}
+									/>
+									<label htmlFor="suicide">Suicide</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="icf"
+										id="icf"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.icf
+										}
+										path="hospitalInfo treatmentReasons icf"
+										onChange={handleChange}
+									/>
+									<label htmlFor="icf">I.C.F</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="scf"
+										id="scf"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.scf
+										}
+										path="hospitalInfo treatmentReasons scf"
+										onChange={handleChange}
+									/>
+									<label htmlFor="scf">S.C.F</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="intox"
+										id="intox"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.intox
+										}
+										path="hospitalInfo treatmentReasons intox"
+										onChange={handleChange}
+									/>
+									<label htmlFor="intox">Intox</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="drugs"
+										id="drugs"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.drugs
+										}
+										path="hospitalInfo treatmentReasons drugs"
+										onChange={handleChange}
+									/>
+									<label htmlFor="drugs">Drugs</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="indust"
+										id="indust"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.indust
+										}
+										path="hospitalInfo treatmentReasons indust"
+										onChange={handleChange}
+									/>
+									<label htmlFor="indust">Indust</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="uncon"
+										id="uncon"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.uncon
+										}
+										path="hospitalInfo treatmentReasons uncon"
+										onChange={handleChange}
+									/>
+									<label htmlFor="uncon">Uncon</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="resistedArrest"
+										id="resistedArrest"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.resistedArrest
+										}
+										path="hospitalInfo treatmentReasons resistedArrest"
+										onChange={handleChange}
+									/>
+									<label htmlFor="resistedArrest">
+										Resisted Arrest
+									</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										name="other"
+										id="other"
+										checked={
+											activeReport.hospitalInfo
+												.treatmentReasons.other
+										}
+										path="hospitalInfo treatmentReasons other"
+										onChange={handleChange}
+									/>
+									<label htmlFor="other">Other</label>
+								</li>
+							</ul>
+						</Input>
+					</span>
+					<span>
+						<Input>
+							<label>Patient Condition</label>
+							<input
+								value={
+									activeReport.hospitalInfo.patientCondition
+								}
+								path="hospitalInfo patientCondition"
+								onChange={handleChange}
+								type="text"
+								placeholder="Patient Condition"
+							/>
+						</Input>
+
+						<Input>
+							<label>Patient Disposition</label>
+							<input
+								value={activeReport.hospitalInfo.patientDispo}
+								path="hospitalInfo patientDispo"
+								onChange={handleChange}
+								type="text"
+								placeholder="Patient Disposition"
+							/>
+						</Input>
+
+						<Input>
+							<label>Attending Physician</label>
+							<input
+								value={
+									activeReport.hospitalInfo.attendingPhysician
+								}
+								path="hospitalInfo attendingPhysician"
+								onChange={handleChange}
+								type="text"
+								placeholder="Attending Physician"
+							/>
+						</Input>
+					</span>
+				</div>
+			</section>
+			<section
+				className={styles.synopsis}
+				dropped={dropdowns.cont ? "1" : "0"}
+			>
+				<header onClick={() => toggleDropdown("cont")}>
+					<h1>Continued</h1>
 					<Button
 						type="button"
 						hollow
@@ -1428,43 +1848,246 @@ const EditReport = ({ report, setLoading, loading }) => {
 								placeholder="Incident Type"
 							/>
 						</Input>
+						<Input>
+							<label>Code</label>
+							<input
+								type="number"
+								placeholder="000"
+								maxLength={3}
+								value={activeReport.basicInfo.code}
+								path="basicInfo code"
+								onChange={handleChange}
+							/>
+						</Input>
+						<Input>
+							<label>Report Type</label>
+							<ul>
+								<li>
+									<input
+										type="checkbox"
+										name="keyRpt"
+										id="keyRpt"
+										checked={
+											activeReport.basicInfo.reportType
+												.keyRpt
+										}
+										path="basicInfo reportType keyRpt"
+										onChange={handleChange}
+									/>
+									<label htmlFor="keyRpt">Key Rpt</label>
+								</li>
+
+								<li>
+									<input
+										type="checkbox"
+										name="fu"
+										id="fu"
+										checked={
+											activeReport.basicInfo.reportType.fu
+										}
+										path="basicInfo reportType fu"
+										onChange={handleChange}
+									/>
+									<label htmlFor="fu">F/U</label>
+								</li>
+							</ul>
+						</Input>
+
+						<Input>
+							<label>Disposition</label>
+							<input
+								type="number"
+								placeholder="000"
+								maxLength={3}
+								value={activeReport.basicInfo.disposition}
+								path="basicInfo disposition"
+								onChange={handleChange}
+							/>
+						</Input>
+						<Input>
+							<label>A.R.S Section Number</label>
+							<input
+								type="text"
+								placeholder="00-000"
+								maxLength={7}
+								value={activeReport.basicInfo.arsSectionNumber}
+								path="basicInfo arsSectionNumber"
+								onChange={handleChange}
+							/>
+						</Input>
+					</span>
+					<span>
+						<Input>
+							<label>Location of Offense</label>
+							<input
+								type="text"
+								placeholder="Location"
+								value={activeReport.basicInfo.location}
+								path="basicInfo location"
+								onChange={handleChange}
+							/>
+						</Input>
+						<Input>
+							<label>Date / Day / Time Reported</label>
+							<ul>
+								<li>
+									<ul style={{ gap: "0.15rem" }}>
+										<li>
+											<input
+												value={
+													activeReport.basicInfo
+														.incidentReportedAt.date
+														.day
+												}
+												path="basicInfo incidentReportedAt date day"
+												onChange={handleChange}
+												type="number"
+												maxLength={2}
+												placeholder="DD"
+											/>
+										</li>
+										-
+										<li>
+											<input
+												value={
+													activeReport.basicInfo
+														.incidentReportedAt.date
+														.month
+												}
+												path="basicInfo incidentReportedAt date month"
+												onChange={handleChange}
+												type="number"
+												maxLength={2}
+												placeholder="MM"
+											/>
+										</li>
+										-
+										<li>
+											<input
+												value={
+													activeReport.basicInfo
+														.incidentReportedAt.date
+														.year
+												}
+												path="basicInfo incidentReportedAt date year"
+												onChange={handleChange}
+												type="number"
+												style={{ width: "2.5rem" }}
+												maxLength={4}
+												placeholder="YYYY"
+											/>
+										</li>
+									</ul>
+								</li>
+								/
+								<li>
+									<Select
+										placeholder="Day"
+										path="basicInfo incidentReportedAt day"
+										name="day"
+										id="day"
+										absolutely
+										value={
+											activeReport.basicInfo
+												.incidentReportedAt.day
+										}
+										onChange={handleChange}
+									>
+										<Option>Sunday</Option>
+										<Option>Monday</Option>
+										<Option>Tuesday</Option>
+										<Option>Wednesday</Option>
+										<Option>Thursday</Option>
+										<Option>Friday</Option>
+										<Option>Saturday</Option>
+									</Select>
+								</li>
+								/
+								<li>
+									<input
+										value={
+											activeReport.basicInfo
+												.incidentReportedAt.time.hour
+										}
+										path="basicInfo incidentReportedAt time hour"
+										onChange={handleChange}
+										type="number"
+										maxLength={2}
+										placeholder="HH"
+									/>
+									:
+									<input
+										value={
+											activeReport.basicInfo
+												.incidentReportedAt.time.minute
+										}
+										path="basicInfo incidentReportedAt time minute"
+										onChange={handleChange}
+										type="number"
+										maxLength={2}
+										placeholder="MM"
+									/>
+								</li>
+							</ul>
+						</Input>
+					</span>
+					<span>
+						<Input>
+							<textarea
+								name="reportNarration"
+								id="reportNarration"
+								cols="50"
+								rows="5"
+								value={activeReport.basicInfo.reportNarration}
+								path="basicInfo reportNarration"
+								onChange={handleChange}
+								type="text"
+								style={{ width: "100%" }}
+								placeholder="Type your report narrative here."
+							></textarea>
+						</Input>
 					</span>
 				</div>
 			</section>
-
-			{`
-		personalInformation: {
-			// says weather the person is a victim, witness, suspect, or something else
-			
-
-			personalDetails: {
-				height: "",
-				weight: 0,
-				build: "",
-				hairColor: "",
-				hairCharacter: "",
-				complexion: "",
-				voice: "",
-				eyeColor: "",
-				facialHairColor: "",
-				facialHairChar: "",
-				clothing: "",
-			},
-		},
-
-		hospitalInformation: {
-			injured: false,
-			treated: false,
-			hospital: "",
-			transportedBy: "",
-			emsNo: 0,
-			treatmentReasons: "",
-			patientCondition: "",
-			patientDispo: "",
-			attendingPhysician: "",
-		},
-
-		synopsis: "",`}
+			<section
+				className={styles.synopsis}
+				dropped={dropdowns.syno ? "1" : "0"}
+			>
+				<header onClick={() => toggleDropdown("syno")}>
+					<h1>Synopsis</h1>
+					<Button
+						type="button"
+						hollow
+						noborder
+						icon
+						emphasis="secondary"
+					>
+						<FaChevronDown />
+					</Button>
+				</header>
+				<div className={styles.sectionContent}>
+					<span>
+						<Input>
+							<textarea
+								name="synopsis"
+								id="synopsis"
+								cols="50"
+								rows="5"
+								value={activeReport.basicInfo.synopsis}
+								path="basicInfo synopsis"
+								onChange={handleChange}
+								type="text"
+								maxLength={350}
+								style={{ width: "100%" }}
+								placeholder="Synopsis"
+							></textarea>
+						</Input>
+					</span>
+				</div>
+			</section>
+			<Button emphasis="primary">
+				<FaSave /> Save Report
+			</Button>
 		</form>
 	);
 };

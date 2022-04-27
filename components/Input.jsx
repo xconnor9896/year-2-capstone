@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { FaCheck } from "react-icons/fa";
 
 const Input = (props) => {
-	const { icon, label, type, checked, onInput } = props;
+	const { icon, label, type, checked, onChange } = props;
 	const inputRef = useRef(null);
 
 	return (
@@ -11,8 +11,8 @@ const Input = (props) => {
 			{icon && icon}
 			{type === "checkbox" && (
 				<div
-					onClick={onInput}
-					isChecked={checked ? "true" : "false"}
+					onClick={onChange}
+					ischecked={checked ? "true" : "false"}
 					className={styles.checkbox}
 				>
 					<FaCheck className={`${checked && styles.checked}`} />

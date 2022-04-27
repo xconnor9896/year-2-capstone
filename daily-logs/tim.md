@@ -12,3 +12,5 @@
 | `3/30` | Created view/edit single report page.                                                                                      |
 | `4/4`  | More work on edit report page. Finished basic info section and began on people section.                                    |
 | `4/4`  | Extensive work on people section. Made it possible to add unlimited people and so far, edit most of their characteristics. |
+| `4/8`  | Finished edit report page and began work on hooking it up to back-end.                                                     |
+| `4/13` | Finished and added captcha component to sign up page. More work on edit report page.                                       |
