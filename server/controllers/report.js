@@ -1,4 +1,5 @@
 const ReportModel = require("../models/ReportModel")
+const UserModel = require('../models/UserModel')
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
@@ -10,9 +11,11 @@ req.body {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-  const { user, createAt } = req.body;
+  const { userId, createAt } = req.body;
 
   try {
+    const user = UserModel.findById(userId)
+    
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
 
