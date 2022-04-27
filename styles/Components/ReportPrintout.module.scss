@@ -1,7 +1,7 @@
 @use "../vars.scss" as *;
 
 /*
-"David fixed the react to print stuff, he is a lame coder"
+"David fixed the react to print stuff, he is a cool coder"
  - Tim P
 */
 
@@ -36,111 +36,68 @@
     padding: 0.5in 0;
   }
 
-	.report-info {
-		// make everything in the report-info section on the same page
-		page-break-before: always;
-		
-	}
-
-	// make peopleStyles on their own page
-	.peopleStyles {
-		page-break-before: always;
-	}
-	
-
-  // always make the things in the content between the header and footer
-  .personInfo {//.content > .page 
-    position: relative;
-    top: 0;
-    left: 0;
-  }
-
-	.synopsis {
-
-		position: absolute;
-		// make top alway adjust based on where .hosp is, so its always under it
-		// top: auto;
-		top: 6.35in;
-		// top: 7in;
-		left: 0;
-		// make the width of the synopsis the same as everything else
-		width: 7in;
-		}
-
-	.hosp {
-		margin-top: .1in;
-		position: absolute;
-
-	}
-
-
-
-
-
-  // make each .personStyles in personWrapper on its own page
-  .personWrapper {
-    margin-top: 0.5in;
-
-    page-break-inside: avoid;
-  }
-
-
-
-	// old styling, not messing with it yet because don't want to break anything
-
-  .personStyles {
-    page-break-inside: auto;
+  .report-info {
+    // make everything in the report-info section on the same page
     page-break-before: always;
-    page-break-after: auto;
   }
+
+  .page .peoplewrapper {
+    // make the people section start on a new page
+    page-break-before: always;
+  }
+
+  .personInfo {
+    margin-top: 0.5in;
+    article {
+      break-before: always;
+    }
+  }
+
+
+
+  .synopsis {
+    position: absolute;
+    // make top alway adjust based on where .hosp is, so its always under it
+    // top: auto;
+    top: 6.35in;
+    // top: 7in;
+    left: 0;
+    // make the width of the synopsis the same as everything else
+    width: 7in;
+  }
+
+  .hosp {
+    margin-top: 0.1in;
+    position: absolute;
+  }
+
   .pageBreak {
     margin-top: 5rem; // 50rem
     // display: block;
-    page-break-before: auto;
+    page-break-before: always;
   }
 
   .reportPrintout {
     padding: 0.75in !important;
   }
 
-  // every two .pagebreak will get this styling
-
-  .personWrapper {
-    &:nth-child(2) {
-      margin-bottom: 5rem;
-    }
-  }
+  // .peopleWrapper {
+  //   page-break-before: always;
+    
+  // }
 
   .continuationPage {
-    // height: 100vh;
-    display: flex;
-    justify-content: space-evenly;
+    page-break-before: always;
 
-    // margin-top: 2rem;
-    // margin-bottom: auto;
-    display: flex;
-    justify-content: space-evenly;
+    margin-top: 2rem;
+
+    // display: block;
+    // margin-top: 0.5in !important;
+
+    // add margin to the top of the page
+    // margin-top: 0.5in;
   }
 
-  // make the footer stick to the bottom of the last page
-  // .ReportPrintout_reportPrintout__JgR2r footer {
-
-  // 	// make the footer on the bottom of the page
-  // 	// position: absolute;
-  // 	// top: 300rem;
-  // 	// left: 0;
-  // 	margin-top: 10rem !important;
-  // 	// width: 100%;
-  // 	// display: flex;
-  // 	// justify-content: space-evenly;
-
-  // 	// height: 3rem;
-
-  // }
-
-  // .reportPrintout {
-  // 	display: table;
-  // }
 }
 
 @page {
@@ -190,8 +147,9 @@
   }
 
   .page {
-    display: flex;
-    flex-direction: column;
+    float: none !important;
+    display: block !important;
+    // flex-direction: column;
     gap: $padding * 2;
 
     &:last-child {
@@ -203,7 +161,7 @@
     }
 
     article {
-      break-before: always;
+      // break-before: always;
       display: flex;
       flex-direction: row;
       align-items: stretch;
@@ -419,6 +377,11 @@
           text-align: center;
         }
       }
+    }
+
+    .legal {
+      // make the width of the legal section equal to the width of the page
+      width: 50% !important;
     }
   }
 }

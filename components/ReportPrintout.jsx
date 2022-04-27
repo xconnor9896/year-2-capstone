@@ -159,8 +159,8 @@ const ReportPrintout = ({ id }) => {
 
     peopleInfo: [
       { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-      { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-      { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
+      // { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
+      // { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
       // { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
       // { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
       // { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
@@ -173,7 +173,8 @@ const ReportPrintout = ({ id }) => {
       injured: true,
       treated: false,
       hospital: "St. Bill's Hospital",
-      transportedBy: "Joe's Party Bus, Food Truck, and Emergency Services, just testing my styling skills",
+      transportedBy:
+        "Joe's Party Bus, Food Truck, and Emergency Services, just testing my styling skills",
       emsNo: 3,
       treatmentReasons: {
         mental: true,
@@ -227,7 +228,7 @@ const ReportPrintout = ({ id }) => {
 
       <section className={styles.content}>
         <div className={styles.page}>
-          <div>
+          
             <div className="report-info">
               <article className={styles.basicInfo}>
                 <section>
@@ -433,12 +434,13 @@ const ReportPrintout = ({ id }) => {
                 </section>
               </article>
             </div>
-          </div>
 
+            <div className={styles.pageBreak}>
+              </div>
+          
 
-
-					<div className={styles.peopleWrapper}>
-					{peopleInfo.map((person) => {
+          <div className={styles.peopleWrapper}>
+            {peopleInfo.map((person) => {
               const key = peopleInfo.indexOf(person);
 
               const onlyPerson = peopleInfo.length === 1;
@@ -635,14 +637,16 @@ const ReportPrintout = ({ id }) => {
                 </div>
               );
             })}
-					</div>
+          </div>
 
           {/* <div>
             
           </div> */}
         </div>
 
-        <div className={`${styles.page} ${styles.continuationPage}`}>
+        <div className={styles.pageBreak}></div>
+
+        <div className={` ${styles.page} ${styles.continuationPage}`}>
           <h4>Continuation Page</h4>
 
           <article>
@@ -708,6 +712,7 @@ const ReportPrintout = ({ id }) => {
               </div>
             </section>
           </article>
+
           <article className={styles.narrative}>
             <header>Narrative</header>
             <section>{basicInfo.reportNarration}</section>
@@ -770,7 +775,7 @@ const ReportPrintout = ({ id }) => {
         </section>
         <section>
           <p>MDC-WMPD-192 Rev. Dec. 2022</p>
-          <p>
+          <p className={`${styles.legal}`}>
             This report was prepared, signed, reviewed, submitted, and filed
             electronically via secure portal developed by West-MEC Central
             Campus Coding Department
