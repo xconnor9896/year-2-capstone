@@ -1,9 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true,
+    firstName: {
+      type: String,
+      required: true,
+    },
+    middleName: {
+      type: String,
+      required: false,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
   },
   badgeNumber: {
     type: Number,
@@ -12,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   },
   squadNumber: {
     type: Number,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
@@ -27,20 +37,22 @@ const UserSchema = new mongoose.Schema({
   }, 
   username: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
     trim: true
   },
   profilePicURL: {
     type: String,
+    required: false,
   },
   rank: {
     type: String,
     enum: ["officer", "captain", "teacher", "admin"],
-    default: 'officer'
+    default: 'officer',
+    required: true,
   },
 },
   // {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
 
-export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

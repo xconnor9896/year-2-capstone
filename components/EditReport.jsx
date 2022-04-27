@@ -88,6 +88,13 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 	const [activeReport, setActiveReport] = useState({
 		caseNumber: "oi214joai3h523897",
 
+		approvedBy: {
+			name: {
+				firstName: "Tim",
+				lastName: "P",
+			},
+		},
+
 		basicInfo: {
 			incidentType: "",
 
@@ -97,8 +104,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				keyRpt: false,
 				fu: false,
 			},
-
-			status: "open",
 
 			disposition: "",
 
@@ -185,7 +190,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				indust: false,
 				uncon: false,
 				resisted: false,
-				ressistedArrest: false,
+
 				other: false,
 			},
 			patientCondition: "",
@@ -276,7 +281,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setLoading(false);
 
 		// If Success
-		setView(false);
+		setView(true);
 	};
 
 	// const blurMe = (e) => {
@@ -393,99 +398,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 							/>
 						</Input>
 					</span>
-					{/* <span>
-						<Input>
-							<label>
-								Responsible Officer (Rank Last, First Middle
-								Name)
-							</label>
-							<ul>
-								<li>
-									<input
-										type="text"
-										placeholder="Rank"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.rank
-										}
-										path="basicInfo responsibleOfficer rank"
-										onChange={handleChange}
-									/>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="Last"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.lastName
-										}
-										path="basicInfo responsibleOfficer name lastName"
-										onChange={handleChange}
-									/>{" "}
-									<p>,</p>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="First"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.firstName
-										}
-										path="basicInfo responsibleOfficer name firstName"
-										onChange={handleChange}
-									/>
-								</li>
-								<li>
-									<input
-										type="text"
-										placeholder="Middle"
-										value={
-											activeReport.basicInfo
-												.responsibleOfficer.name
-												.middleName
-										}
-										path="basicInfo responsibleOfficer name middleName"
-										onChange={handleChange}
-									/>
-								</li>
-							</ul>
-						</Input>
-						<Input>
-							<label>Badge Number</label>
-							<input
-								type="text"
-								placeholder="Badge Number"
-								value={
-									activeReport.basicInfo.responsibleOfficer
-										.badgeNumber
-								}
-								path="basicInfo responsibleOfficer badgeNumber"
-								onChange={handleChange}
-							/>
-						</Input>
-						<Input>
-							<label>Division</label>
-							<Select
-								placeholder="Division"
-								path="basicInfo responsibleOfficer division"
-								name="status"
-								id="status"
-								value={
-									activeReport.basicInfo.responsibleOfficer
-										.division
-								}
-								onChange={handleChange}
-							>
-								<Option>Load</Option>
-								<Option>In</Option>
-								<Option>Options</Option>
-							</Select>
-						</Input>
-					</span> */}
+
 					<span>
 						<Input>
 							<label>Beat of Offense</label>
@@ -519,109 +432,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								</li>
 							</ul>
 						</Input>
-						<Input>
-							<label>Date / Day / Time Reported</label>
-							<ul>
-								<li>
-									<ul style={{ gap: "0.15rem" }}>
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.day
-												}
-												path="basicInfo incidentReportedAt date day"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="DD"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.month
-												}
-												path="basicInfo incidentReportedAt date month"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="MM"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.year
-												}
-												path="basicInfo incidentReportedAt date year"
-												onChange={handleChange}
-												type="number"
-												style={{ width: "2.5rem" }}
-												maxLength={4}
-												placeholder="YYYY"
-											/>
-										</li>
-									</ul>
-								</li>
-								/
-								<li>
-									<Select
-										placeholder="Day"
-										path="basicInfo incidentReportedAt day"
-										name="day"
-										id="day"
-										absolutely
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.day
-										}
-										onChange={handleChange}
-									>
-										<Option>Sunday</Option>
-										<Option>Monday</Option>
-										<Option>Tuesday</Option>
-										<Option>Wednesday</Option>
-										<Option>Thursday</Option>
-										<Option>Friday</Option>
-										<Option>Saturday</Option>
-									</Select>
-								</li>
-								/
-								<li>
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.hour
-										}
-										path="basicInfo incidentReportedAt time hour"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="HH"
-									/>
-									:
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.minute
-										}
-										path="basicInfo incidentReportedAt time minute"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="MM"
-									/>
-								</li>
-							</ul>
-						</Input>
+
 						<Input>
 							<label>Date / Time Occured</label>
 							<ul>
@@ -932,14 +743,24 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													value={personLoc.personType}
 													onChange={handleChange}
 												>
-													<Option>Complainant</Option>
-													<Option>Victim</Option>
+													<Option val="Complainant">
+														Complainant
+													</Option>
+													<Option val="Victim">
+														Victim
+													</Option>
 													<Option>
 														Reporting Person
 													</Option>
-													<Option>Finder</Option>
-													<Option>Witness</Option>
-													<Option>Suspect</Option>
+													<Option val="Finder">
+														Finder
+													</Option>
+													<Option val="Witness">
+														Witness
+													</Option>
+													<Option val="Suspect">
+														Suspect
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -957,7 +778,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														American Indian / Alaska
 														Native
 													</Option>
-													<Option>Asian</Option>
+													<Option val="Asian">
+														Asian
+													</Option>
 													<Option>
 														Black / African American
 													</Option>
@@ -968,7 +791,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														Native Hawaiian / Other
 														Pacific Islander
 													</Option>
-													<Option>White</Option>
+													<Option val="White">
+														White
+													</Option>
 												</Select>
 											</Input>
 										</span>
@@ -1043,6 +868,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													onChange={handleChange}
 												/>
 											</Input>
+
 											<Input>
 												<label>Sex</label>
 
@@ -1054,8 +880,12 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													value={personLoc.sex}
 													onChange={handleChange}
 												>
-													<Option>Male</Option>
-													<Option>Female</Option>
+													<Option val="Male">
+														Male
+													</Option>
+													<Option val="Female">
+														Female
+													</Option>
 												</Select>
 											</Input>
 										</span>
@@ -1369,13 +1199,27 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Brown</Option>
-													<Option>Blonde</Option>
-													<Option>Black</Option>
-													<Option>Red</Option>
-													<Option>Gray</Option>
-													<Option>Bald</Option>
-													<Option>Other</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Blonde">
+														Blonde
+													</Option>
+													<Option val="Black">
+														Black
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Bald">
+														Bald
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1396,7 +1240,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Complexion</label>
+												<label nr="1">Complexion</label>
 												<input
 													type="string"
 													placeholder="Complexion"
@@ -1413,7 +1257,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Voice</label>
+												<label nr="1">Voice</label>
 												<input
 													type="string"
 													placeholder="Voice"
@@ -1446,14 +1290,30 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Amber</Option>
-													<Option>Blue</Option>
-													<Option>Brown</Option>
-													<Option>Gray</Option>
-													<Option>Green</Option>
-													<Option>Hazel</Option>
-													<Option>Red</Option>
-													<Option>Other</Option>
+													<Option val="Amber">
+														Amber
+													</Option>
+													<Option val="Blue">
+														Blue
+													</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Green">
+														Green
+													</Option>
+													<Option val="Hazel">
+														Hazel
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1473,13 +1333,27 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 													}
 													onChange={handleChange}
 												>
-													<Option>Brown</Option>
-													<Option>Blonde</Option>
-													<Option>Black</Option>
-													<Option>Red</Option>
-													<Option>Gray</Option>
-													<Option>Bald</Option>
-													<Option>Other</Option>
+													<Option val="Brown">
+														Brown
+													</Option>
+													<Option val="Blonde">
+														Blonde
+													</Option>
+													<Option val="Black">
+														Black
+													</Option>
+													<Option val="Red">
+														Red
+													</Option>
+													<Option val="Gray">
+														Gray
+													</Option>
+													<Option val="Bald">
+														Bald
+													</Option>
+													<Option val="Other">
+														Other
+													</Option>
 												</Select>
 											</Input>
 											<Input>
@@ -1750,16 +1624,16 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								<li>
 									<input
 										type="checkbox"
-										name="resistedArrest"
-										id="resistedArrest"
+										name="resisted"
+										id="resisted"
 										checked={
 											activeReport.hospitalInfo
-												.treatmentReasons.resistedArrest
+												.treatmentReasons.resisted
 										}
-										path="hospitalInfo treatmentReasons resistedArrest"
+										path="hospitalInfo treatmentReasons resisted"
 										onChange={handleChange}
 									/>
-									<label htmlFor="resistedArrest">
+									<label htmlFor="resisted">
 										Resisted Arrest
 									</label>
 								</li>
@@ -1927,109 +1801,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 								onChange={handleChange}
 							/>
 						</Input>
-						<Input>
-							<label>Date / Day / Time Reported</label>
-							<ul>
-								<li>
-									<ul style={{ gap: "0.15rem" }}>
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.day
-												}
-												path="basicInfo incidentReportedAt date day"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="DD"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.month
-												}
-												path="basicInfo incidentReportedAt date month"
-												onChange={handleChange}
-												type="number"
-												maxLength={2}
-												placeholder="MM"
-											/>
-										</li>
-										-
-										<li>
-											<input
-												value={
-													activeReport.basicInfo
-														.incidentReportedAt.date
-														.year
-												}
-												path="basicInfo incidentReportedAt date year"
-												onChange={handleChange}
-												type="number"
-												style={{ width: "2.5rem" }}
-												maxLength={4}
-												placeholder="YYYY"
-											/>
-										</li>
-									</ul>
-								</li>
-								/
-								<li>
-									<Select
-										placeholder="Day"
-										path="basicInfo incidentReportedAt day"
-										name="day"
-										id="day"
-										absolutely
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.day
-										}
-										onChange={handleChange}
-									>
-										<Option>Sunday</Option>
-										<Option>Monday</Option>
-										<Option>Tuesday</Option>
-										<Option>Wednesday</Option>
-										<Option>Thursday</Option>
-										<Option>Friday</Option>
-										<Option>Saturday</Option>
-									</Select>
-								</li>
-								/
-								<li>
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.hour
-										}
-										path="basicInfo incidentReportedAt time hour"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="HH"
-									/>
-									:
-									<input
-										value={
-											activeReport.basicInfo
-												.incidentReportedAt.time.minute
-										}
-										path="basicInfo incidentReportedAt time minute"
-										onChange={handleChange}
-										type="number"
-										maxLength={2}
-										placeholder="MM"
-									/>
-								</li>
-							</ul>
-						</Input>
 					</span>
 					<span>
 						<Input>
@@ -2065,7 +1836,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 						<FaChevronDown />
 					</Button>
 				</header>
-				<div className={styles.sectionContent}>
+				<div
+					className={`${styles.sectionContent} ${styles.synopsisContent}`}
+				>
 					<span>
 						<Input>
 							<textarea
@@ -2085,9 +1858,14 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 					</span>
 				</div>
 			</section>
-			<Button emphasis="primary">
-				<FaSave /> Save Report
-			</Button>
+			<div className={styles.saveButton}>
+				{/* <Button emphasis="primary">
+					<FaSave /> Save Report
+				</Button> */}
+				<Button icon circular emphasis="primary">
+					<FaSave />
+				</Button>
+			</div>
 		</form>
 	);
 };

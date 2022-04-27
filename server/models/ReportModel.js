@@ -215,8 +215,46 @@ const ReportSchema = new mongoose.Schema({
       required: true,
     },
     treatmentReasons: {
-      type: String,
-      required: true,
+      mental: {
+        type: Boolean,
+        required: true,
+      },
+      suicide: {
+        type: Boolean,
+        required: true,
+      },
+      icf: {
+        type: Boolean,
+        required: true,
+      },
+      scf: {
+        type: Boolean,
+        required: true,
+      },
+      intox: {
+        type: Boolean,
+        required: true,
+      },
+      drugs: {
+        type: Boolean,
+        required: true,
+      },
+      indust: {
+        type: Boolean,
+        required: true,
+      },
+      uncon: {
+        type: Boolean,
+        required: true,
+      },
+      resisted: {
+        type: Boolean,
+        required: true,
+      },
+      other: {
+        type: Boolean,
+        required: true,
+      },
     },
     patientCondition: {
       type: String,
@@ -249,10 +287,39 @@ const ReportSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: false,
+
+    // make it so that only captains can approve
   },
-  
+
+  ApprovedAt: {
+    date: {
+      month: {
+        type: String,
+        required: true,
+      },
+      day: {
+        type: String,
+        required: true,
+      },
+      year: {
+        type: String,
+        required: true,
+      },
+    },
+    time: {
+      hour: {
+        type: String,
+        required: true,
+      },
+      minute: {
+        type: String,
+        required: true,
+      },
+    },
+  }
+
 
 
 });
 
-export default mongoose.model('Report', ReportSchema);
+module.exports = mongoose.model('Report', ReportSchema);
