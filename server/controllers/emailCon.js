@@ -1,18 +1,24 @@
-require("dotenv").config();
+// require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
+const { getMaxListeners } = require("../models/UserModel");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-userEmail = "";
+console.log(process.env.SENDGRID_API_KEY)
+userEmail = "zrtsurprise@gmail.com";
+// console.log(sgMail)
 
 const emailVefEmail = {
   to: { userEmail }, // Change to your recipient
   from: "ztaylo273@west-mec.org", // Change to your verified sender
-  templateId: "d-d57cf8bc57bd482384462979d6fd0ee6", //* I made two very simple Templates 1 for email Verfication and 1 for PassWord Reset More about this will be in daily-logs/zach.md
-  // Not sure what this does for the emails but Ill leave it here just incase we may want/need it
+  //VVVVVV Not sure what this does for the emails but Ill leave it here just incase we may want/need it VVVVV
+  
   dynamicTemplateData: {
     subject: "Email Vef",
     name: "West Mec Law and Public Saftey",
     city: "Surprise",
+    text:"testing",
+    html:`<div style:{background:black}>
+        <h1>Testing</h1>
+    </div>`
   },
 };
 
@@ -27,6 +33,7 @@ const sendVerfEmail = () => {
     });
 };
 
+// sendVerfEmail()
 
 
 const passwordResetEmail = {
@@ -52,4 +59,4 @@ const sendPassResetEmail = () => {
     });
 };
 
-export default { sendVerfEmail, sendPassResetEmail}
+module.exports = { sendVerfEmail, sendPassResetEmail}

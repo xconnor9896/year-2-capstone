@@ -14,7 +14,8 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user: { email, password },
+    user, 
+    user: { email, password, profilePicURL },
   } = req.body;
 
   try {
@@ -39,8 +40,8 @@ const createUser = async (req, res) => {
       password: "",
     });
 
-    user.password = bcrypt.hash(password, 10);
-    user = await user.save;
+    newUser.password = await bcrypt.hash(password, 10);
+    newUser = await newUser.save();
 
     const payload = { userID: user._id };
     jwt.sign(
