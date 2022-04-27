@@ -11,7 +11,7 @@
     .pfp {
       display: hidden;
       position: absolute;
-      margin: 3.5rem 0 0 0.8rem;
+      margin: 4.5rem 0rem 0rem 2rem;
       font-size: 4rem;
       display: flex;
       align-items: center;
@@ -26,13 +26,51 @@
       width: 100%;
       // height: 120px;
       height: 20%;
-      background-color: $warning;
+      background-color: $em-secondary;
     }
     background-color: $background-light;
   }
   .display {
-    height: 100%;
+    padding: 0;
     width: 45%;
     background-color: $background-light;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: auto;
+    .classmate {
+      height: 25%;
+      width: 50%;
+      transition: 0.2s ease-in-out;
+      background-color: $em-secondary;
+      &:hover {
+        background-color: $em-primary;
+        cursor: pointer;
+      }
+    }
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $background-light;
+      width: 20px;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: darken($color: $background-dark, $amount: 0);
+      border-radius: 10px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: darken($color: $background-dark, $amount: 10);
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
   }
 }

@@ -26,7 +26,23 @@ export default function Profile() {
       </div>
 
       <div className={styles.display}>
-        <div className={styles.classmate}></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
+        <div className={styles.classmate}><h1>Tammy</h1></div>
       </div>
     </main>
   );
