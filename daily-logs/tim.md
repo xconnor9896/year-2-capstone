@@ -18,3 +18,4 @@
 | `4/15` | Heavy work on dashboard. Minor changes everywhere else.                                                                                                      |
 | `4/18` | Began on view report component.                                                                                                                              |
 | `4/19` | Finished view report component.                                                                                                                              |
+| `4/28` | Hooked up signin page.                                                                                                                                       |
