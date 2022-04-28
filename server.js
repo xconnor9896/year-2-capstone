@@ -21,10 +21,6 @@ const handler = nextApp.getRequestHandler();
 //middlewares
 app.use(express.json());
 
-//routerss
-const userRoute = require("./server/controllers/user");
-app.use("/api/v1", userRoute);
-
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
@@ -39,18 +35,17 @@ app.use("/api/v1/settings", settingsRoutes);
 connectDB();
 
 //Testing sendgrid email
-const {sendVefEmail} = require("./server/controllers/emailCon")
+const { sendVefEmail } = require("./server/controllers/emailCon");
 
-sendVefEmail
-
+sendVefEmail;
 
 nextApp.prepare().then(() => {
-  app.all("*", (req, res) => handler(req, res));
-  app.listen(PORT, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`server listining on ${PORT}`);
-    }
-  });
+	app.all("*", (req, res) => handler(req, res));
+	app.listen(PORT, (err) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(`server listining on ${PORT}`);
+		}
+	});
 });

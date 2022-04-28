@@ -15,25 +15,62 @@ import {
 	FaRegIdCard,
 	FaUserGraduate,
 	FaUserLock,
+	FaExclamationTriangle,
 } from "react-icons/fa";
 import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
 import Captcha from "../components/Captcha";
+import axios from "axios";
+import { setToken } from "./util/authUser";
+import { useRouter } from "next/router";
 
 const LoginPage = ({ setState }) => {
-	const handleSubmit = (e) => {
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	const router = useRouter();
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		setLoading(true);
+		setErrorMessage("");
 
-		console.log("implement handleSubmit for login page...");
+		try {
+			const formElems = document.getElementById("loginForm").elements;
+
+			const email = formElems[0].value;
+			const password = formElems[1].value;
+
+			if (!email || !password) throw "Email + Password must be provided.";
+
+			// send the data to the server
+			const response = await axios
+				.post("http://localhost:3000/api/v1/user/login", {
+					email,
+					password,
+				})
+				.then((res) => {
+					setToken(res.data);
+					router.push("/dashboard");
+					setLoading(false);
+					// setState(res.data);
+				})
+				.catch((err) => {
+					throw err;
+					// setLoading(false);
+				});
+		} catch (err) {
+			console.error(err);
+			setErrorMessage(err);
+		}
+
+		setLoading(false);
 	};
-
-	const [loading, setLoading] = useState(false);
 
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} id="loginForm">
 				<h1>LOGIN</h1>
 				<Input
 					required
@@ -61,6 +98,12 @@ const LoginPage = ({ setState }) => {
 					<FaSignInAlt />
 					Login
 				</Button>
+
+				{errorMessage && (
+					<p className={styles.errorMessage}>
+						<FaExclamationTriangle /> {errorMessage}
+					</p>
+				)}
 			</form>
 
 			<div className={styles.section}>
@@ -151,71 +194,96 @@ const SignUpPage = ({ setState }) => {
 
 		setLoading(true);
 
+		// gets the form data
+		const form = e.target;
+		const data = new FormData(form);
+
+		// get the email and password
+
 		if (!captchaState) {
 			// THE CAPTCHA IS INCOMPLETE
+			// show an error message to the user
+			console.log("captcha is incomplete");
+			setLoading(false);
 		}
+		const firstName = data.get("firstName");
+		const lastName = data.get("lastName");
+		// breaks the name into first and last within an object
+		const nameObject = {
+			firstName: firstName,
+			lastName: lastName,
+		};
 
-    // get the email and password
+		// check if the user password is the same as the confirm password
+		if (data.get("password") !== data.get("password-confirm")) {
+			// passwords do not match
+			// show an error message to the user
+			console.log("passwords do not match");
+			setLoading(false);
+		} else {
+			// passwords match
+			// send the data to the server
 
-    if (!captchaState) {
-      // THE CAPTCHA IS INCOMPLETE
-      // show an error message to the user
-      console.log("captcha is incomplete");
-      setLoading(false);
-    }
-    const firstName = data.get("firstName");
-    const lastName = data.get("lastName");
-    // breaks the name into first and last within an object
-    const nameObject = {
-      firstName: firstName,
-      lastName: lastName,
-    };
+			// since the password and confirm password match, we can remove the confirm password from the data
+			data.delete("password-confirm");
 
-    // check if the user password is the same as the confirm password
-    if (data.get("password") !== data.get("password-confirm")) {
-      // passwords do not match
-      // show an error message to the user
-      console.log("passwords do not match");
-      setLoading(false);
-    } else {
-      // passwords match
-      // send the data to the server
+			// remove the prefix from the data
+			data.delete("prefix");
 
-      // since the password and confirm password match, we can remove the confirm password from the data
-      data.delete("password-confirm");
+			// replace name with name in  the data
+			data.set("name", nameObject);
 
-      // remove the prefix from the data
-      data.delete("prefix");
+			// console.log the form data individually
+			for (let [key, value] of data.entries()) {
+				console.log(`${key}: ${value}`);
+			}
 
-      // replace name with name in  the data
-      data.set("name", nameObject);
+			// the only thing we need to send to the server is the email, password, name, badgeNumber, and rank
 
-      // console.log the form data individually
-      for (let [key, value] of data.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+			// send the data to the server
+			const response = axios
+				.post("http://localhost:3000/api/v1/user/signup", data, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				})
+				.then((res) => {
+					console.log(res);
+					setLoading(false);
+					// setState(res.data);
+				})
+				.catch((err) => {
+					console.log(err);
+					// setLoading(false);
+				});
+		}
+	};
 
-      // the only thing we need to send to the server is the email, password, name, badgeNumber, and rank
+	// FILE MENU
+	const triggerFileMenu = (e) => {
+		fileMenu.current.click();
+	};
+	const onFrameDragEnter = (e) => {};
+	const onFrameDragLeave = (e) => {};
+	const onFrameDrop = (e) => {};
+	const onDragOver = (e) => {};
+	const onDragLeave = (e) => {};
+	const onDrop = (files, e) => {
+		e.preventDefault();
 
+		onFileChange({ files });
+	};
+	const handleInputChange = (e) => {
+		const { files } = e.target;
 
-      // send the data to the server
-      const response = axios
-        .post("http://localhost:3000/api/v1/user/signup", data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          setLoading(false);
-          // setState(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          // setLoading(false);
-        });
-    }
-  };
+		if (files.length) {
+			onFileChange({ files });
+		}
+	};
+	const onFileChange = (e) => {
+		const { files } = e;
+		if (files && files.length) {
+			fileMenu.current.files = files;
 
 			const droppedFile = fileMenu.current.files[0];
 			setFilePreview(URL.createObjectURL(droppedFile));
@@ -398,25 +466,21 @@ const SignUpPage = ({ setState }) => {
 							</Button.Group>
 						</div>
 
-              <Input
-                className={styles.badgeNumber}
-                icon={<FaRegIdCard />}
-                type="text"
-                name="name"
-                id="name"
-                placeholder="first last (ex. John Doe)"
-              />
-
-              <div className={styles.prefix}>
-                <FaUserShield />
-                <select id="rank" className={styles.prefixSelect} name="rank">
-                  <option selected disabled>
-                    Select Rank
-                  </option>
-                  <option value="captain">Captain</option>
-                  <option value="officer">Police Officer</option>
-                </select>
-              </div>
+						<div
+							className={`${styles.step} ${
+								step === 3 ? styles.active : styles.inactive
+							} ${styles.step3}`}
+						>
+							<div className={styles.prefix}>
+								<FaUserShield />
+								<select
+									id="prefix"
+									className={styles.prefixSelect}
+									name="prefix"
+								>
+									<option selected disabled>
+										Select Squad
+									</option>
 
 									<option value="IMPLEMENT">IMPLEMENT</option>
 									<option value="ME">ME</option>

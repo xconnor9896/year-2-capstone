@@ -5,101 +5,103 @@ import { Button } from "../proton";
 import Link from "next/link";
 import Image from "next/image";
 import logoImg from "../util/LPS Logo.svg";
+import { logoutUser } from "../pages/util/authUser";
+import { Router } from "next/router";
 
 const Navbar = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const dropdownRef = useRef();
+	const dropdownRef = useRef();
 
-  const clickHandler = (e) => {
-    if (!dropdownRef.current) {
-      console.warn(
-        "dropdownRef unset. This means clicking outside the dropdown won't close it."
-      );
-      return;
-    }
+	const clickHandler = (e) => {
+		if (!dropdownRef.current) {
+			console.warn(
+				"dropdownRef unset. This means clicking outside the dropdown won't close it."
+			);
+			return;
+		}
 
-    if (
-      dropdownOpen &&
-      dropdownRef.current &&
-      dropdownRef.current !== e.target &&
-      !dropdownRef.current.contains(e.target)
-    ) {
-      setDropdownOpen(false);
-    }
-  };
+		if (
+			dropdownOpen &&
+			dropdownRef.current &&
+			dropdownRef.current !== e.target &&
+			!dropdownRef.current.contains(e.target)
+		) {
+			setDropdownOpen(false);
+		}
+	};
 
-  useEffect(() => {
-    window.addEventListener("click", clickHandler);
+	useEffect(() => {
+		window.addEventListener("click", clickHandler);
 
-    return () => {
-      window.removeEventListener("click", clickHandler);
-    };
-  }, [dropdownRef, dropdownOpen]);
+		return () => {
+			window.removeEventListener("click", clickHandler);
+		};
+	}, [dropdownRef, dropdownOpen]);
 
-  return (
-    <div className={styles.navParent}>
-      <div
-        ref={dropdownRef}
-        className={`${styles.dropdown} ${dropdownOpen && styles.dropped}`}
-      >
-        <section>
-          <Link href="/dashboard">
-            <button>
-              <FaColumns />
-              Dashboard
-            </button>
-          </Link>
-          <Link href="/profile/1">
-            <button>
-              <FaUser />
-              Profile
-            </button>
-          </Link>
-        </section>
+	return (
+		<div className={styles.navParent}>
+			<div
+				ref={dropdownRef}
+				className={`${styles.dropdown} ${
+					dropdownOpen && styles.dropped
+				}`}
+			>
+				<section>
+					<Link href="/dashboard">
+						<button>
+							<FaColumns />
+							Dashboard
+						</button>
+					</Link>
+					<Link href="/profile/1">
+						<button>
+							<FaUser />
+							Profile
+						</button>
+					</Link>
+				</section>
 
-        <section>
-          <Link href="/">
-            <button>
-              <FaSignOutAlt />
-              Sign Out
-            </button>
-          </Link>
-        </section>
-      </div>
+				<section>
+					<button onClick={() => logoutUser()}>
+						<FaSignOutAlt />
+						Sign Out
+					</button>
+				</section>
+			</div>
 
-      <nav className={styles.nav}>
-        <Button
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          icon
-          hollow
-          noborder
-          emphasis={dropdownOpen ? "secondary" : "primary"}
-        >
-          <div className={`${dropdownOpen && styles.flipped}`}>
-            <span>
-              <FaAngleDown
-                className="arrTop"
-                style={{
-                  fontSize: "2rem",
-                }}
-              />
-            </span>
-            <span>
-              <FaAngleDown
-                className="arrBottom"
-                style={{
-                  fontSize: "2rem",
-                }}
-              />
-            </span>
-            <div className="box"></div>
-          </div>
-        </Button>
-        <Image alt="LPS Logo" width={48} height={48} src={logoImg} />
-      </nav>
-    </div>
-  );
+			<nav className={styles.nav}>
+				<Button
+					onClick={() => setDropdownOpen(!dropdownOpen)}
+					icon
+					hollow
+					noborder
+					emphasis={dropdownOpen ? "secondary" : "primary"}
+				>
+					<div className={`${dropdownOpen && styles.flipped}`}>
+						<span>
+							<FaAngleDown
+								className="arrTop"
+								style={{
+									fontSize: "2rem",
+								}}
+							/>
+						</span>
+						<span>
+							<FaAngleDown
+								className="arrBottom"
+								style={{
+									fontSize: "2rem",
+								}}
+							/>
+						</span>
+						<div className="box"></div>
+					</div>
+				</Button>
+				<Image alt="LPS Logo" width={48} height={48} src={logoImg} />
+			</nav>
+		</div>
+	);
 };
 
 export default Navbar;
