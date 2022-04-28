@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
 
-const UserModel = require("../models/UserModel")
+const UserModel = require("../models/UserModel");
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE USER
@@ -14,7 +14,7 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user, 
+    user,
     user: { email, password, profilePicURL },
   } = req.body;
 
@@ -149,6 +149,9 @@ const updateUser = async (req, res) => {
   try {
     if (key !== "password" && key !== "email") {
       let user = UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).send("user not found");
+      }
       user[key] = input;
       user = await user.save();
 
@@ -183,10 +186,52 @@ const changePassword = async (req, res) => {
   }
 };
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AUTH USER
+.get('/user') 
+req //? Token
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const authUser = async (req, res) => {
+  const { userId } = req;
+  if (!userId) return res.status(500).send("A user couldn't be found.");
+
+  try {
+    const user = await UserModel.findById(userId);
+    const followStats = await FollowerModel.findOne({ user: userId });
+    return res.status(200).json({ user, followStats });
+  } catch (error) {
+    console.log("error at authUser controller");
+    console.log(error);
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET USER
+.post('/user/:userId') 
+req.params {userId} //? Targets userId
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = UserModel.findById(userId);
+    if(user){
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).send('No user with given Id')
+    }
+  } catch (error) {
+    console.log("error at getUser controller");
+    console.log(error);
+  }
+};
 module.exports = {
   createUser,
   loginUser,
   deleteUser,
   updateUser,
   changePassword,
+  authUser,
+  getUser,
 };

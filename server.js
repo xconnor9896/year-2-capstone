@@ -22,7 +22,7 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
-
+const authRoutes = require("./server/routes/authRoutes");
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
