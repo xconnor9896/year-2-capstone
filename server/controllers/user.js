@@ -37,6 +37,7 @@ const createUser = async (req, res) => {
 
     let newUser = new UserModel({
       ...user,
+      email: email.toLowerCase(),
       profilePicURL: profilePicURL || defaultProfilePic,
     });
 

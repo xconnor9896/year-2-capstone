@@ -11,18 +11,20 @@ const {
   importanceReport
 } = require(`../controllers/report`);
 
-
-router.post('/', createReport);
-router.get('/', getAllReports);
+const {authMiddleware} = require('../middleware/authMidware')
 
 
-router.delete('/:reportId', deleteReport);
-router.get('/:reportId', getReport);
+router.post('/', authMiddleware, createReport);
+router.get('/', authMiddleware, getAllReports);
 
 
-router.post('/:reportId', updateReport);
-router.post('/verify/:reportId', verifyReport);
-router.post('/importance/:reportId', importanceReport);
+router.delete('/:reportId', authMiddleware, deleteReport);
+router.get('/:reportId', authMiddleware, getReport);
+
+
+router.post('/:reportId', authMiddleware, updateReport);
+router.post('/verify/:reportId', authMiddleware, verifyReport);
+router.post('/importance/:reportId', authMiddleware, importanceReport);
 
 
 module.exports = router;
