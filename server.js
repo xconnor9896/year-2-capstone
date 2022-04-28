@@ -4,6 +4,7 @@ const { connectDB } = require("./server/util/connect");
 const express = require("express");
 require("dotenv").config();
 
+
 // const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -26,20 +27,24 @@ app.use(express.json());
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
+const getUserEmail = require("./server/routes/emailRoutes")
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
+app.use("/api/v1/email", getUserEmail)
 
 //conect to database
 connectDB();
 
 //Testing sendgrid email
-const {sendVefEmail} = require("./server/controllers/emailCon")
+// const {sendVerfEmail, sendPassResetEmail, getUserEmail} = require("./server/controllers/emailCon")
 
-sendVefEmail
+
+
+// sendVerfEmail()
 
 
 nextApp.prepare().then(() => {
