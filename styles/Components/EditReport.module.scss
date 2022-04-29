@@ -42,6 +42,10 @@
 
 		transition: $transition-fast;
 
+		button {
+			border-radius: $border-radius-fancy !important;
+		}
+
 		.synopsisContent {
 			span {
 				border: none !important;

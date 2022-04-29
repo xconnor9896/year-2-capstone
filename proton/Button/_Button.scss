@@ -224,6 +224,12 @@ button.proton.button {
 				}
 			}
 
+			&[fab] {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+			}
+
 			&:hover {
 				background: darken($value, 10%);
 				border-color: darken($value, 10%);

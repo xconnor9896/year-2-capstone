@@ -1,4 +1,5 @@
 const ReportModel = require("../models/ReportModel")
+const UserModel = require('../models/UserModel')
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
@@ -10,9 +11,11 @@ req.body {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-  const { user, createAt } = req.body;
+  const { userId, createAt } = req.body;
 
   try {
+    const user = UserModel.findById(userId)
+    
     if (!isEmail(personalInformation.email))
       return res.status(401).send("Invalid Email");
 
@@ -43,20 +46,18 @@ const deleteReport = async (req, res) => {
   const { user } = req.body;
 
   try {
-
-    const report = ReportModel.findById(reportId)
-    if (user.rank === "captain" || (user._id === report.responsibleOfficer._id && !report.verified)) {
-      const deleted = ReportModel.deleteOne({ reportId });
-
-      if (deleted) {
-        return res.status(200).send("Report Deleted");
-      } else {
-        return res.status(404).send("Report Not Found");
-      }
-    } else {
+    if (user.rank !== "captain") {
       return res
-      .status(403)
-      .send("Please contact your captain about deleting your report");
+        .status(403)
+        .send("Please contact your captain about deleting your report");
+    }
+
+    const deleted = ReportModel.deleteOne({ reportId });
+
+    if (deleted) {
+      return res.status(200).send("Report Deleted");
+    } else {
+      return res.status(404).send("Report Not Found");
     }
   } catch (error) {
     console.log("Error at deleteReport");
@@ -77,9 +78,9 @@ const updateReport = async (req, res) => {
 
   try {
     let report = ReportModel.findById(reportId);
-    const notInclude = ['verified','responsibleOfficer', 'importance']
+    let notInclude = ['verified','responsibleOfficer', 'importance']
 
-    if (report.createdBy === user._id) {
+    if (user.rank === "captain" || report.createdBy === user._id) {
       if (keys.length === inputs.length) {
         for (let i = 0; i < keys.length; i++) {
           if (
