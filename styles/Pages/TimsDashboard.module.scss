@@ -330,10 +330,32 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: {
+        bottom: 1rem;
+      }
+
+      h1 {
+        text-decoration: $em-primary underline 3px;
+        height: 2.9rem;
+      }
       
       .search {
         display: flex;
         height: 60%;
+        outline: none;
+        border: none;
+        background: lighten($color: $background-light, $amount: 5);
+        border: {
+          top-left-radius: 5px;
+          bottom-left-radius: 5px;
+          top-right-radius: 10px;
+          bottom-right-radius: 10px;
+        }
+        padding: .3rem;
+
+        &::placeholder {
+          color: white;
+        }
       }
     }
 

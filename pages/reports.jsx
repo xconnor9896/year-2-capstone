@@ -2,6 +2,8 @@ import styles from "../styles/pages/Reports.module.scss";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import ListReports from "../components/ListReports";
+import { Button } from "../proton";
+import { FaChevronLeft } from 'react-icons/fa'
 
 export default function Reports() {
 	const router = useRouter();
@@ -15,7 +17,7 @@ export default function Reports() {
 
 		if (!isAdmin) {
 			// Re-route if they aren't.
-			router.route("/dashboard");
+			router.push("/dashboard");
 		}
 	};
 

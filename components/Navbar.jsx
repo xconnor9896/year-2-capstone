@@ -5,8 +5,10 @@ import { Button } from "../proton";
 import Link from "next/link";
 import Image from "next/image";
 import logoImg from "../util/LPS Logo.svg";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+  const router = useRouter()
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const dropdownRef = useRef();
@@ -30,7 +32,13 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    setDropdownOpen(false)
+  }, [router.pathname])
+  
+
+  useEffect(() => {
     window.addEventListener("click", clickHandler);
+    
 
     return () => {
       window.removeEventListener("click", clickHandler);
