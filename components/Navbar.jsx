@@ -13,7 +13,9 @@ const Navbar = ({ user }) => {
 
 	const dropdownRef = useRef();
 
-	const { _id } = user;
+	if (user) {
+		const { _id } = user;
+	}
 
 	const clickHandler = (e) => {
 		if (!dropdownRef.current) {
@@ -56,12 +58,14 @@ const Navbar = ({ user }) => {
 							Dashboard
 						</button>
 					</Link>
-					<Link href={`/profile/${_id}`}>
-						<button>
-							<FaUser />
-							Profile
-						</button>
-					</Link>
+					{user && (
+						<Link href={`/profile/${_id}`}>
+							<button>
+								<FaUser />
+								Profile
+							</button>
+						</Link>
+					)}
 				</section>
 
 				<section>
