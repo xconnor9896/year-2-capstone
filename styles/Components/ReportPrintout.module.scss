@@ -1,0 +1,387 @@
+@use "../vars.scss" as *;
+
+/*
+"David fixed the react to print stuff, he is a cool coder"
+ - Tim P
+*/
+
+@media all {
+  // .pageBreak {
+  // display: block;
+  // }
+}
+
+@media print {
+  // the header and footer both stick to the  of the page
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0.5in;
+  }
+
+  .footer {
+    position: fixed;
+    top: 85%;
+    left: 0;
+
+    padding: 0 0.5in;
+  }
+
+  // content is the main content of the page
+  .content {
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 0.5in 0;
+  }
+
+  .report-info {
+    // make everything in the report-info section on the same page
+    page-break-before: always;
+  }
+
+  .page .peoplewrapper {
+    // make the people section start on a new page
+    page-break-before: always;
+  }
+
+  .personInfo {
+    margin-top: 0.5in;
+    article {
+      break-before: always;
+    }
+  }
+
+
+
+  .synopsis {
+    position: absolute;
+    // make top alway adjust based on where .hosp is, so its always under it
+    // top: auto;
+    top: 6.35in;
+    // top: 7in;
+    left: 0;
+    // make the width of the synopsis the same as everything else
+    width: 7in;
+  }
+
+  .hosp {
+    margin-top: 0.1in;
+    position: absolute;
+  }
+
+  .pageBreak {
+    margin-top: 5rem; // 50rem
+    // display: block;
+    page-break-before: always;
+  }
+
+  .reportPrintout {
+    padding: 0.75in !important;
+  }
+
+  // .peopleWrapper {
+  //   page-break-before: always;
+    
+  // }
+
+  .continuationPage {
+    page-break-before: always;
+
+    margin-top: 2rem;
+
+    // display: block;
+    // margin-top: 0.5in !important;
+
+    // add margin to the top of the page
+    // margin-top: 0.5in;
+  }
+
+}
+
+@page {
+  size: auto;
+  margin: 0 0.5rem;
+}
+
+.reportPrintout {
+  background: $text;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: $padding;
+  gap: $padding;
+
+  // height: max-content;
+
+  * {
+    color: $text-2;
+  }
+
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin-bottom: $margin;
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $em-secondary;
+
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+
+      em {
+        // font-weight: 400;
+        color: $em-default;
+      }
+    }
+  }
+
+  .page {
+    float: none !important;
+    display: block !important;
+    // flex-direction: column;
+    gap: $padding * 2;
+
+    &:last-child {
+      gap: 0;
+
+      article {
+        margin-top: $padding;
+      }
+    }
+
+    article {
+      // break-before: always;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      // border: 1px solid $text-2;
+
+      max-width: 100%;
+
+      // height: max-content;
+
+      &.narrative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        margin-top: 0;
+
+        header {
+          margin-bottom: 0;
+          text-transform: uppercase;
+        }
+
+        section {
+          text-align: left;
+          width: 100%;
+          flex-grow: 2;
+          font-weight: 400;
+        }
+      }
+
+      section {
+        // height: 100%;
+
+        &:first-child {
+          border: 1px solid $text-2;
+
+          border-right: none;
+          background: lighten($em-secondary, 25%);
+          // height: 100%;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          header {
+            color: $text-2;
+
+            flex-grow: 2;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            writing-mode: vertical-lr;
+            text-orientation: upright;
+
+            text-transform: uppercase;
+            font-weight: bolder;
+
+            letter-spacing: -0.25rem;
+
+            padding: $padding * 2 0;
+          }
+        }
+
+        &:last-child {
+          flex-grow: 2;
+
+          // min-height: 100%;
+          // height: max-content;
+
+          // max-width: 50%;
+          overflow: hidden;
+
+          display: flex;
+          flex-direction: column;
+
+          // border-left: 1px solid $text-2;
+
+          div {
+            width: 100%;
+
+            flex-grow: 2;
+
+            &:last-child {
+              border-bottom: 1px solid $text-2;
+            }
+
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            border-right: 1px solid $text-2;
+            // border-left: 1px solid $text-2;
+
+            // &:last-child {
+            // 	border-bottom: none;
+            // }
+
+            span {
+              // border-right: 1px solid $text-2;
+              // border-bottom: 1px solid $text-2;
+
+              border: 1px solid $text-2;
+              border-bottom: none;
+              border-right: none;
+              // border-left: none;
+
+              // word-wrap: break-word;
+              word-break: break-all;
+
+              flex-grow: 2;
+
+              padding: $padding / 2;
+
+              display: flex;
+              flex-direction: column;
+
+              ul,
+              ol {
+                list-style: none;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: $padding;
+
+                align-items: center;
+
+                margin: 0 auto;
+                justify-content: flex-start;
+
+                li {
+                  gap: $padding / 2;
+                  font-weight: 600;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                }
+              }
+
+              label {
+                font-weight: 700;
+              }
+
+              p {
+                font-weight: 400;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  footer {
+    margin-top: $margin * 2;
+    display: flex;
+    flex-direction: column;
+
+    font-size: 0.75rem;
+
+    section {
+      display: flex;
+      flex-direction: row;
+
+      &:first-child {
+        border: 1px solid $text-2;
+
+        div {
+          border-right: 1px solid $text-2;
+          padding: $padding;
+          flex-grow: 2;
+
+          span {
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-between;
+
+            gap: $padding;
+
+            b {
+              display: flex;
+              flex-direction: row;
+              flex-wrap: wrap;
+
+              gap: $padding / 2;
+
+              font-weight: normal;
+
+              span {
+                font-weight: bold;
+              }
+            }
+          }
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+      }
+
+      &:last-child {
+        justify-content: space-between;
+        gap: $padding;
+
+        p {
+          font-weight: normal;
+          width: 33.33333%;
+        }
+
+        p:nth-child(2) {
+          text-align: center;
+        }
+      }
+    }
+
+    .legal {
+      // make the width of the legal section equal to the width of the page
+      width: 50% !important;
+    }
+  }
+}
