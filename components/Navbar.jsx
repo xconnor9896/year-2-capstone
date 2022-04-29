@@ -8,10 +8,12 @@ import logoImg from "../util/LPS Logo.svg";
 import { logoutUser } from "../pages/util/authUser";
 import { Router } from "next/router";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	const dropdownRef = useRef();
+
+	const { _id } = user;
 
 	const clickHandler = (e) => {
 		if (!dropdownRef.current) {
@@ -54,7 +56,7 @@ const Navbar = () => {
 							Dashboard
 						</button>
 					</Link>
-					<Link href="/profile/1">
+					<Link href={`/profile/${_id}`}>
 						<button>
 							<FaUser />
 							Profile

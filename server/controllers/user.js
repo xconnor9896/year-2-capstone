@@ -13,10 +13,10 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-  const {
-    user,
-    user: { email, password, profilePicURL },
-  } = req.body;
+	const {
+		user,
+		user: { email, password, profilePicURL },
+	} = req.body;
 
 	try {
 		if (!isEmail(email)) return res.status(401).send("Invalid Email");
@@ -35,11 +35,11 @@ const createUser = async (req, res) => {
 		user = await UserModel.findOne({ email: email.toLowerCase() });
 		if (user) return res.status(401).send("Email already used");
 
-    let newUser = new UserModel({
-      ...user,
-      email: email.toLowerCase(),
-      profilePicURL: profilePicURL || defaultProfilePic,
-    });
+		let newUser = new UserModel({
+			...user,
+			email: email.toLowerCase(),
+			profilePicURL: profilePicURL || defaultProfilePic,
+		});
 
 		newUser.password = await bcrypt.hash(password, 10);
 		newUser = await newUser.save();
@@ -148,14 +148,14 @@ const updateUser = async (req, res) => {
 	const { key, input } = req.body;
 	const { userId } = req.params;
 
-  try {
-    if (key !== "password" && key !== "email") {
-      let user = UserModel.findById(userId);
-      if (!user) {
-        return res.status(404).send("user not found");
-      }
-      user[key] = input;
-      user = await user.save();
+	try {
+		if (key !== "password" && key !== "email") {
+			let user = UserModel.findById(userId);
+			if (!user) {
+				return res.status(404).send("user not found");
+			}
+			user[key] = input;
+			user = await user.save();
 
 			return res.status(200).json(user);
 		} else {
@@ -197,17 +197,30 @@ req //? Token
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const authUser = async (req, res) => {
-  const { userId } = req;
-  if (!userId) return res.status(500).send("A user couldn't be found.");
+	const {
+		userId,
 
-  try {
-    const user = await UserModel.findById(userId);
-    const followStats = await FollowerModel.findOne({ user: userId });
-    return res.status(200).json({ user, followStats });
-  } catch (error) {
-    console.log("error at authUser controller");
-    console.log(error);
-  }
+		headers: { authorization },
+	} = req;
+
+	try {
+		let id = userId;
+
+		const token = authorization.split(" ")[1];
+
+		if (!userId && !token) return res.status(404).send("User Not Found");
+
+		if (!userId && token) {
+			id = jwt.verify(token, process.env.JWT_SECRET).userId;
+		}
+
+		const user = await UserModel.findById(id);
+
+		return res.status(200).json({ user });
+	} catch (error) {
+		console.log("error at authUser controller");
+		console.error(error);
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -217,25 +230,25 @@ req.params {userId} //? Targets userId
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getUser = async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const user = UserModel.findById(userId);
-    if(user){
-      return res.status(200).json(user)
-    } else {
-      return res.status(404).send('No user with given Id')
-    }
-  } catch (error) {
-    console.log("error at getUser controller");
-    console.log(error);
-  }
+	const { userId } = req.params;
+	try {
+		const user = UserModel.findById(userId);
+		if (user) {
+			return res.status(200).json(user);
+		} else {
+			return res.status(404).send("No user with given Id");
+		}
+	} catch (error) {
+		console.log("error at getUser controller");
+		console.log(error);
+	}
 };
 module.exports = {
-  createUser,
-  loginUser,
-  deleteUser,
-  updateUser,
-  changePassword,
-  authUser,
-  getUser,
+	createUser,
+	loginUser,
+	deleteUser,
+	updateUser,
+	changePassword,
+	authUser,
+	getUser,
 };
