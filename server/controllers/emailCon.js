@@ -46,21 +46,24 @@ const sendVerfEmail = async (req, res) => {
       console.log("idk what happended");
     }
   } catch (err) {
-    alert("Im sorry we dont have that email as a user please check the email or sign up")
+    alert(
+      "Im sorry we dont have that email as a user please check the email or sign up"
+    );
     console.log(err);
     res.status(500).send("error");
   }
 
   // console.log(inputEmail);
 
-  return sgMail
-    .send(
-      (verfEmail = {
-        to: inputEmail, // Change to your recipient
-        from: "ztaylo273@west-mec.org", // Change to your verified sender
+  return (
+    sgMail
+      .send(
+        (verfEmail = {
+          to: inputEmail, // Change to your recipient
+          from: "ztaylo273@west-mec.org", // Change to your verified sender
 
-        subject: "Email Verification",
-        html: `   
+          subject: "Email Verification",
+          html: `   
       <div
       class="EmailVefDiv"
       style="
@@ -98,15 +101,28 @@ const sendVerfEmail = async (req, res) => {
       </form>
     </div>
       `,
+        })
+      )
+      // user =  userModel.find({});
+      // const randomNumberGen = () => {
+      //   randomNumber = Math.floor(Math.random() * 100000000000000000000);
+      //   if (randomNumber > 1000000000) {
+      //     return (randomNumber = Math.floor(
+      //       Math.random() * 100000000000000000000
+      //     ));
+      //   } else {
+      //     console.log(randomNumber);
+      //     randomNumberGen();
+      //   }
+      // };
+      .then((data) => {
+        res.status(202).send("Email Sent");
       })
-    )
-    .then(() => {
-      console.log("Email sent");
-      res.status(200).send("Email Sent")
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      .catch((error) => {
+        console.error(error);
+        res.status(404).send(error);
+      })
+  );
 };
 
 // const passwordResetEmail = {

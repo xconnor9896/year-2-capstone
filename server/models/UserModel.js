@@ -40,6 +40,9 @@ const UserSchema = new mongoose.Schema(
 			enum: ["officer", "captain", "teacher", "admin"],
 			default: "officer",
 		},
+		verfiy: {
+			default: false,
+		}
 	}
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
