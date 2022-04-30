@@ -130,9 +130,9 @@ const getReport = async (req, res) => {
 
   try {
     const user = await UserModel.findById(userId)
-    let report = await ReportModel.findById(reportId);
+    const report = await ReportModel.findById(reportId);
 
-    if (user.rank === "captain" || report.createdBy === user._id) {
+    if (user.rank === "captain" || report.basicInfo.responsibleOfficer === user._id) {
       return res.status(200).json(report);
     } else {
       return res
