@@ -19,7 +19,7 @@ router.get('/', authMiddleware, getAllReports);
 
 
 router.delete('/:reportId', authMiddleware, deleteReport);
-router.get('/:reportId', authMiddleware, getReport);
+router.get('/:reportId/:userId', authMiddleware, getReport);
 
 
 router.post('/:reportId', authMiddleware, updateReport);

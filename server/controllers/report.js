@@ -119,14 +119,12 @@ const updateReport = async (req, res) => {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET REPORT
-.get('/:reportId') 
-req.params {reportId} //? Targets Id
-req.body {userId} //? User
+.get('/:reportId/:userId') 
+req.params {reportId, userId} //? Targets Id, User
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getReport = async (req, res) => {
-  const { reportId } = req.params;
-  const { userId } = req.body;
+  const { reportId, userId } = req.params;
 
   try {
     const user = await UserModel.findById(userId)
