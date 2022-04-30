@@ -1,12 +1,9 @@
-
 // import the user schema
 // const User = require('../models/UserModel');
 
 // report model
 
-
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ReportSchema = new mongoose.Schema({
   // The case number will be the mongoose _id
@@ -14,43 +11,49 @@ const ReportSchema = new mongoose.Schema({
   basicInfo: {
     incidentType: {
       type: String,
-      required: true,
+      required: false,
     },
 
     code: {
       type: String,
-      required: true,
+      required: false,
     },
 
     reportType: {
       // keyRpt: false,
       // fu: false,
 
-      enum: ['keyRpt', 'fu'],
+      enum: ["keyRpt", "fu"],
       type: String,
-      required: true,
+      required: false,
     },
 
-    status: {
-      enum: ['open', "verified"],
-      type: String,
+    importance: {
+      type: Number,
+      enum: [1, 2, 3],
       required: true,
-      default: 'open',
+      default: 3,
+    },
+
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
 
     disposition: {
       type: String,
-      required: true,
+      required: false,
     },
 
     arsSectionNumber: {
       type: String,
-      required: true,
+      required: false,
     },
 
     locationOfOffense: {
       type: String,
-      required: true,
+      required: false,
     },
 
     responsibleOfficer: {
@@ -65,47 +68,47 @@ const ReportSchema = new mongoose.Schema({
 
       // use the user model
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
 
     beatOfOffense: {
       type: String,
-      required: true,
+      required: false,
     },
 
     domesticViolence: {
       type: Boolean,
-      required: true,
+      required: false,
     },
 
     incidentReportedAt: {
       date: {
         month: {
           type: String,
-          required: true,
+          required: false,
         },
         day: {
           type: String,
-          required: true,
+          required: false,
         },
         year: {
           type: String,
-          required: true,
+          required: false,
         },
       },
       day: {
         type: String,
-        required: true,
+        required: false,
       },
       time: {
         hour: {
           type: String,
-          required: true,
+          required: false,
         },
         minute: {
           type: String,
-          required: true,
+          required: false,
         },
       },
     },
@@ -115,26 +118,26 @@ const ReportSchema = new mongoose.Schema({
         date: {
           month: {
             type: String,
-            required: true,
+            required: false,
           },
           day: {
             type: String,
-            required: true,
+            required: false,
           },
           year: {
             type: String,
-            required: true,
+            required: false,
           },
         },
 
         time: {
           hour: {
             type: String,
-            required: true,
+            required: false,
           },
           minute: {
             type: String,
-            required: true,
+            required: false,
           },
         },
       },
@@ -142,26 +145,26 @@ const ReportSchema = new mongoose.Schema({
         date: {
           month: {
             type: String,
-            required: true,
+            required: false,
           },
           day: {
             type: String,
-            required: true,
+            required: false,
           },
           year: {
             type: String,
-            required: true,
+            required: false,
           },
         },
 
         time: {
           hour: {
             type: String,
-            required: true,
+            required: false,
           },
           minute: {
             type: String,
-            required: true,
+            required: false,
           },
         },
       },
@@ -187,105 +190,104 @@ const ReportSchema = new mongoose.Schema({
   peopleInfo: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Person',
+      ref: "Person",
       // makes there be at least one person
-      required: true,
+      required: false,
     },
   ],
 
   hospitalInfo: {
     injuryOccurred: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     injuryTreated: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     hospital: {
       type: String,
-      required: true,
+      required: false,
     },
     transportedBy: {
       type: String,
-      required: true,
+      required: false,
     },
     emsNumber: {
       type: Number,
-      required: true,
+      required: false,
     },
     treatmentReasons: {
       mental: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       suicide: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       icf: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       scf: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       intox: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       drugs: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       indust: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       uncon: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       resisted: {
         type: Boolean,
-        required: true,
+        required: false,
       },
       other: {
         type: Boolean,
-        required: true,
+        required: false,
       },
     },
     patientCondition: {
       type: String,
-      required: true,
+      required: false,
     },
     patientDispo: {
       type: String,
-      required: true,
+      required: false,
     },
     attendingPhysician: {
       type: String,
-      required: true,
+      required: false,
     },
   },
 
-
   submittedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+    ref: "User",
+    required: false,
   },
 
   submittedAt: {
     type: Date,
-    required: true,
+    required: false,
     default: Date.now,
   },
 
   ApprovedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: false,
 
     // make it so that only captains can approve
@@ -295,31 +297,28 @@ const ReportSchema = new mongoose.Schema({
     date: {
       month: {
         type: String,
-        required: true,
+        required: false,
       },
       day: {
         type: String,
-        required: true,
+        required: false,
       },
       year: {
         type: String,
-        required: true,
+        required: false,
       },
     },
     time: {
       hour: {
         type: String,
-        required: true,
+        required: false,
       },
       minute: {
         type: String,
-        required: true,
+        required: false,
       },
     },
-  }
-
-
-
+  },
 });
 
-module.exports = mongoose.model('Report', ReportSchema);
+module.exports = mongoose.model("Report", ReportSchema);

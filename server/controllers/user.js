@@ -55,8 +55,8 @@ const createUser = async (req, res) => {
       }
     );
   } catch (error) {
-    console.log("error at createUser controller");
     console.log(error);
+    return res.status(400).send("error at createUser controller");
   }
 };
 
@@ -97,8 +97,8 @@ const loginUser = async (req, res) => {
       }
     );
   } catch (error) {
-    console.log("error at loginUser controller");
     console.log(error);
+    return res.status(400).send("error at loginUser controller");
   }
 };
 
@@ -114,7 +114,7 @@ const deleteUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = UserModel.findById(userId);
+    const user = await UserModel.findById(userId);
 
     if (user.rank !== "captain") {
       return res
@@ -122,7 +122,7 @@ const deleteUser = async (req, res) => {
         .send("Please contact your captain about deleting your account");
     }
 
-    const deleted = UserModel.deleteOne({ _id });
+    const deleted = await UserModel.deleteOne({ _id });
 
     if (deleted) {
       return res.status(200).send("User Deleted");
@@ -130,8 +130,8 @@ const deleteUser = async (req, res) => {
       return res.status(404).send("User Not Found");
     }
   } catch (error) {
-    console.log("error at deleteUser controller");
     console.log(error);
+    return res.status(400).send("error at deleteUser controller");
   }
 };
 
@@ -148,7 +148,7 @@ const updateUser = async (req, res) => {
 
   try {
     if (key !== "password" && key !== "email") {
-      let user = UserModel.findById(userId);
+      let user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).send("user not found");
       }
@@ -160,8 +160,8 @@ const updateUser = async (req, res) => {
       res.status(400).send("You can not update the email or the password");
     }
   } catch (error) {
-    console.log("error at updateUser controller");
     console.log(error);
+    return res.status(400).send("error at updateUser controller");
   }
 };
 
@@ -175,14 +175,14 @@ const changePassword = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = UserModel.findOne({ email: email.toLowerCase() });
+    let user = await UserModel.findOne({ email: email.toLowerCase() });
     user.password = bcrypt.hash(password, 10);
     user = await user.save();
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log("error at changePassword controller");
     console.log(error);
+    return res.status(400).send("error at changePassword controller");
   }
 };
 
@@ -201,8 +201,8 @@ const authUser = async (req, res) => {
     const followStats = await FollowerModel.findOne({ user: userId });
     return res.status(200).json({ user, followStats });
   } catch (error) {
-    console.log("error at authUser controller");
     console.log(error);
+    return res.status(400).send("error at authUser controller");
   }
 };
 
@@ -215,15 +215,15 @@ req.params {userId} //? Targets userId
 const getUser = async (req, res) => {
   const { userId } = req.params;
   try {
-    const user = UserModel.findById(userId);
-    if(user){
-      return res.status(200).json(user)
+    const user = await UserModel.findById(userId);
+    if (user) {
+      return res.status(200).json(user);
     } else {
-      return res.status(404).send('No user with given Id')
+      return res.status(404).send("No user with given Id");
     }
   } catch (error) {
-    console.log("error at getUser controller");
     console.log(error);
+    return res.status(400).send("error at getUser controller");
   }
 };
 module.exports = {

@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     unique: true
   },
   squadNumber: {
-    type: Number,
+    type: Number || Array,
     required: false,
   },
   email: {
