@@ -4,7 +4,6 @@ const { connectDB } = require("./server/util/connect");
 const express = require("express");
 require("dotenv").config();
 
-
 // const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -26,14 +25,14 @@ app.use(express.json());
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
-const getUserEmail = require("./server/routes/emailRoutes")
+const getUserEmail = require("./server/routes/emailRoutes");
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
-app.use("/api/v1/email", getUserEmail)
+app.use("/api/v1/email", getUserEmail);
 
 //conect to database
 connectDB();
@@ -41,18 +40,15 @@ connectDB();
 //Testing sendgrid email
 // const {sendVerfEmail, sendPassResetEmail, getUserEmail} = require("./server/controllers/emailCon")
 
-
-
 // sendVerfEmail()
 
-
 nextApp.prepare().then(() => {
-  app.all("*", (req, res) => handler(req, res));
-  app.listen(PORT, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`server listining on ${PORT}`);
-    }
-  });
+	app.all("*", (req, res) => handler(req, res));
+	app.listen(PORT, (err) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(`server listining on ${PORT}`);
+		}
+	});
 });

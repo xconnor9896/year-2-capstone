@@ -18,3 +18,5 @@
 | `4/15` | Heavy work on dashboard. Minor changes everywhere else.                                                                                                      |
 | `4/18` | Began on view report component.                                                                                                                              |
 | `4/19` | Finished view report component.                                                                                                                              |
+| `4/27` | Hooked up signin page.                                                                                                                                       |
+| `4/28` | Finished rerouting and auth user. Hooked up navbar.                                                                                                          |

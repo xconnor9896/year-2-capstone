@@ -6,7 +6,7 @@
 const mongoose = require("mongoose");
 
 const ReportSchema = new mongoose.Schema({
-  // The case number will be the mongoose _id
+	// The case number will be the mongoose _id
 
   basicInfo: {
     incidentType: {
@@ -19,9 +19,9 @@ const ReportSchema = new mongoose.Schema({
       required: false,
     },
 
-    reportType: {
-      // keyRpt: false,
-      // fu: false,
+		reportType: {
+			// keyRpt: false,
+			// fu: false,
 
       enum: ["keyRpt", "fu"],
       type: String,
@@ -56,15 +56,15 @@ const ReportSchema = new mongoose.Schema({
       required: false,
     },
 
-    responsibleOfficer: {
-      // name: {
-      //   firstName: "",
-      //   middleName: "",
-      //   lastName: "",
-      // },
-      // rank: "",
-      // badgeNumber: "",
-      // division: "",
+		responsibleOfficer: {
+			// name: {
+			//   firstName: "",
+			//   middleName: "",
+			//   lastName: "",
+			// },
+			// rank: "",
+			// badgeNumber: "",
+			// division: "",
 
       // use the user model
       type: mongoose.Schema.Types.ObjectId,
@@ -170,22 +170,22 @@ const ReportSchema = new mongoose.Schema({
       },
     },
 
-    relatedComments: {
-      type: String,
-      required: false,
-    },
-    synopsis: {
-      type: String,
-      required: false,
-      maxCount: 300,
-    },
+		relatedComments: {
+			type: String,
+			required: false,
+		},
+		synopsis: {
+			type: String,
+			required: false,
+			maxCount: 300,
+		},
 
-    reportNarrative: {
-      type: String,
-      required: false,
-      maxCount: 500,
-    },
-  },
+		reportNarrative: {
+			type: String,
+			required: false,
+			maxCount: 500,
+		},
+	},
 
   peopleInfo: [
     {
@@ -320,5 +320,6 @@ const ReportSchema = new mongoose.Schema({
     },
   },
 });
+module.exports = mongoose.model("Report", ReportSchema);
 
 module.exports = mongoose.model("Report", ReportSchema);

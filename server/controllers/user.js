@@ -1,4 +1,4 @@
-const defaultProfilePic = require("../util/defaultPic");
+// const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -13,36 +13,36 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-  const {
-    user,
-    user: { email, password, profilePicURL },
-  } = req.body;
+	const {
+		user,
+		user: { email, password, profilePicURL },
+	} = req.body;
 
-  try {
-    if (!isEmail(email)) return res.status(401).send("Invalid Email");
-    if (password.length < 8) {
-      return res
-        .status(401)
-        .send("Password must be at least 8 characters long");
-    }
-    if (password.length > 100) {
-      return res
-        .status(401)
-        .send("Password must be less than 100 characters long");
-    }
+	try {
+		if (!isEmail(email)) return res.status(401).send("Invalid Email");
+		if (password.length < 8) {
+			return res
+				.status(401)
+				.send("Password must be at least 8 characters long");
+		}
+		if (password.length > 100) {
+			return res
+				.status(401)
+				.send("Password must be less than 100 characters long");
+		}
 
-    let checkUser;
-    checkUser = await UserModel.findOne({ email: email.toLowerCase() });
-    if (checkUser) return res.status(401).send("Email already used");
+		let user;
+		user = await UserModel.findOne({ email: email.toLowerCase() });
+		if (user) return res.status(401).send("Email already used");
 
-    let newUser = new UserModel({
-      ...user,
-      email: email.toLowerCase(),
-      profilePicURL: profilePicURL || defaultProfilePic,
-    });
+		let newUser = new UserModel({
+			...user,
+			email: email.toLowerCase(),
+			profilePicURL: profilePicURL || defaultProfilePic,
+		});
 
-    newUser.password = await bcrypt.hash(password, 10);
-    newUser = await newUser.save();
+		newUser.password = await bcrypt.hash(password, 10);
+		newUser = await newUser.save();
 
     const payload = { userID: user._id };
     jwt.sign(
@@ -67,25 +67,25 @@ req.body { email, password } //? Your email and password
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+	const { email, password } = req.body;
 
-  try {
-    if (!isEmail(email)) return res.status(401).send("Invalid Email");
-    if (password.length < 8)
-      return res
-        .status(401)
-        .send("Password must be at least 8 characters long");
+	try {
+		if (!isEmail(email)) return res.status(401).send("Invalid Email");
+		if (password.length < 8)
+			return res
+				.status(401)
+				.send("Password must be at least 8 characters long");
 
-    const user = await UserModel.findOne({
-      email: email.toLowerCase(),
-    }).select("+password");
+		const user = await UserModel.findOne({
+			email: email.toLowerCase(),
+		}).select("+password");
 
-    if (!user) return res.status(401).send("Invalid Credentials");
+		if (!user) return res.status(401).send("Invalid Credentials");
 
-    const isPassword = await bcrypt.compare(password, user.password);
-    if (!isPassword) return res.status(401).send("Invalid Credentials");
+		const isPassword = await bcrypt.compare(password, user.password);
+		if (!isPassword) return res.status(401).send("Invalid Credentials");
 
-    const payload = { userId: user._id };
+		const payload = { userId: user._id };
 
     jwt.sign(
       payload,
@@ -110,17 +110,19 @@ req.body { _id } //? Targets Id
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const deleteUser = async (req, res) => {
-  const { _id } = req.body;
-  const { userId } = req.params;
+	const { _id } = req.body;
+	const { userId } = req.params;
 
   try {
     const user = await UserModel.findById(userId);
 
-    if (user.rank !== "captain") {
-      return res
-        .status(403)
-        .send("Please contact your captain about deleting your account");
-    }
+		if (user.rank !== "captain") {
+			return res
+				.status(403)
+				.send(
+					"Please contact your captain about deleting your account"
+				);
+		}
 
     const deleted = await UserModel.deleteOne({ _id });
 
@@ -143,8 +145,8 @@ req.body {key, input} //? updates user based off the key and input
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateUser = async (req, res) => {
-  const { key, input } = req.body;
-  const { userId } = req.params;
+	const { key, input } = req.body;
+	const { userId } = req.params;
 
   try {
     if (key !== "password" && key !== "email") {
@@ -172,7 +174,7 @@ req.body {email, password} //? email, and new password
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const changePassword = async (req, res) => {
-  const { email, password } = req.body;
+	const { email, password } = req.body;
 
   try {
     let user = await UserModel.findOne({ email: email.toLowerCase() });
@@ -193,17 +195,30 @@ req //? Token
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const authUser = async (req, res) => {
-  const { userId } = req;
-  if (!userId) return res.status(500).send("A user couldn't be found.");
+	const {
+		userId,
 
-  try {
-    const user = await UserModel.findById(userId);
-    const followStats = await FollowerModel.findOne({ user: userId });
-    return res.status(200).json({ user, followStats });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at authUser controller");
-  }
+		headers: { authorization },
+	} = req;
+
+	try {
+		let id = userId;
+
+		const token = authorization.split(" ")[1];
+
+		if (!userId && !token) return res.status(404).send("User Not Found");
+
+		if (!userId && token) {
+			id = jwt.verify(token, process.env.JWT_SECRET).userId;
+		}
+
+		const user = await UserModel.findById(id);
+
+		return res.status(200).json({ user });
+	} catch (error) {
+		console.log("error at authUser controller");
+		console.error(error);
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -227,11 +242,11 @@ const getUser = async (req, res) => {
   }
 };
 module.exports = {
-  createUser,
-  loginUser,
-  deleteUser,
-  updateUser,
-  changePassword,
-  authUser,
-  getUser,
+	createUser,
+	loginUser,
+	deleteUser,
+	updateUser,
+	changePassword,
+	authUser,
+	getUser,
 };
