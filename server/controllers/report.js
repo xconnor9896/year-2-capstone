@@ -121,14 +121,15 @@ const updateReport = async (req, res) => {
 GET REPORT
 .get('/:reportId') 
 req.params {reportId} //? Targets Id
-req.body {user} //? User
+req.body {userId} //? User
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getReport = async (req, res) => {
   const { reportId } = req.params;
-  const { user } = req.body;
+  const { userId } = req.body;
 
   try {
+    const user = await UserModel.findById(userId)
     let report = await ReportModel.findById(reportId);
 
     if (user.rank === "captain" || report.createdBy === user._id) {
