@@ -15,3 +15,9 @@ Figured out how to use sendgrid to send emails
 
 4/19/22
 Looked at the controllers, Talked to Peck, Learning that i need to figure out how to encyrpt a url and how to vefication a email
+
+4/28/22
+Figured out how to get a user email and send a email to it and remade my emails so that i can control the url more AKA i made my own html in the code itself in stead of the templates that i was orginally gonna use also pretty much fished everything to send emails now i just need to figure out how to verfiy email and change passwords 
+
+4/29/22 
+Made a random number gen so i can kinda enecrypt the urls for verf email and change password 
