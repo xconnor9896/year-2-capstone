@@ -26,12 +26,15 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 	// const [view, setView] = useState(true);
 	const [view, setView] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [deleteModal, setDeleteModal] = useState(false);
 
+	const [deleteModal, setDeleteModal] = useState(false);
 	const [urgencyModal, setUrgencyModal] = useState(false);
 	const [temporaryUrgency, setTemporaryUrgency] = useState(0);
 
 	const [isCaptain, setIsCaptain] = useState(false);
+	const [isCreator, setIsCreator] = useState(false);
+	const [isVerified, setIsVerified] = useState(false);
+	const [tag, setTag] = useState(null);
 
 	useEffect(async () => {
 		const report = await getReport(id, _id);
@@ -40,6 +43,15 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 
 		setReport(report);
 		setResponsibleOfficer(report.basicInfo.responsibleOfficer);
+		setTag(report.basicInfo.importance);
+
+		setIsVerified(report.basicInfo.verified);
+
+		if (report.basicInfo.responsibleOfficer._id === _id) {
+			setIsCreator(true);
+		} else {
+			setIsCreator(false);
+		}
 	}, []);
 
 	// HOOK THIS UP TO BACKEND
@@ -83,10 +95,6 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
-
-	const isCreator = true;
-	const isVerified = false;
-	const tag = 0;
 
 	return (
 		<main className={styles.container} shadow={"true"}>
