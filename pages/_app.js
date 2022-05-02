@@ -75,6 +75,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 
 			// if (user) !isProtectedRoute && redirectUser(ctx, "/");
 			pageProps.user = user;
+			pageProps.token = token;
 
 			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
 		} catch (err) {
