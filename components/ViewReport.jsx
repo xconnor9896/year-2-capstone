@@ -8,7 +8,7 @@ import { useReactToPrint } from "react-to-print";
 
 const uuid = require("uuid").v4;
 
-const ViewReport = () => {
+const ViewReport = ({ report, responsibleOfficer, token }) => {
 	const router = useRouter();
 
 	const { id } = router.query;

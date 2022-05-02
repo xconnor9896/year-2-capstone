@@ -20,3 +20,5 @@
 | `4/19` | Finished view report component.                                                                                                                              |
 | `4/27` | Hooked up signin page.                                                                                                                                       |
 | `4/28` | Finished rerouting and auth user. Hooked up navbar.                                                                                                          |
+| `4/29` | Hooked up report page.                                                                                                                                       |
+| `5/2`  | Fixed bugs on report page hook up.                                                                                                                           |

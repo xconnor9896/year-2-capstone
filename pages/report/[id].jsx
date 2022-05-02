@@ -14,9 +14,7 @@ import {
 import Modal from "../../components/Modal";
 import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
-import axios from "axios";
-
-const tempReport = {};
+import getReport from "../util/getReport";
 
 export default function Report({ user: currentUser, user: { _id }, token }) {
 	const router = useRouter();
@@ -35,48 +33,13 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 
 	const [isCaptain, setIsCaptain] = useState(false);
 
-	const getReport = async () => {
-		try {
-			// Getting the report data.
-			const res = await axios.get(
-				`http://localhost:3000/api/v1/report/${id}/${_id}`,
+	useEffect(async () => {
+		const report = await getReport(id, _id);
 
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+		if (!report) router.push("/dashboard");
 
-			if (!res) throw new Error("no result returned");
-
-			setReport(res.data);
-
-			// Getting the responsible officer.
-			const officerId = res.data.basicInfo.responsibleOfficer;
-
-			if (!officerId) throw new Error("no officer id provided");
-
-			const officerRes = await axios.get(
-				`http://localhost:3000/api/v1/user/${officerId}`,
-
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			setResponsibleOfficer(officerRes.data);
-		} catch (err) {
-			console.error("Failed to get report with that ID.", err);
-
-			// router.push("/dashboard");
-		}
-	};
-
-	useEffect(() => {
-		getReport();
+		setReport(report);
+		setResponsibleOfficer(report.basicInfo.responsibleOfficer);
 	}, []);
 
 	// HOOK THIS UP TO BACKEND
@@ -353,7 +316,8 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 						{!loading && view ? (
 							<ViewReport
 								{...{
-									report: tempReport,
+									report,
+									responsibleOfficer,
 									loading,
 									setLoading,
 									view,
@@ -363,7 +327,8 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 						) : (
 							<EditReport
 								{...{
-									report: tempReport,
+									report,
+									responsibleOfficer,
 									loading,
 									setLoading,
 									view,
