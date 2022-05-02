@@ -7,7 +7,7 @@ import {
   FaInfoCircle,
 } from "react-icons/fa";
 
-const Tabs = () => {
+const Tabs = ({profile}) => {
   const [tabOpen, setTabOpen] = useState(1);
 
   const name = "Lee";
