@@ -79,21 +79,26 @@ const deleteReport = async (req, res) => {
 UPDATE REPORT
 .post('/:reportId') 
 req.params {reportId} //? Targets Id
-req.body {user, keys, inputs} //? updates user based off the keys and inputs
+req.body {userId, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-  const { user, keys, inputs } = req.body;
+  const { userId, keys, inputs } = req.body;
   const { reportId } = req.params;
 
   try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+
     let report = await ReportModel.findById(reportId);
     const notInclude = ["verified", "responsibleOfficer", "importance"];
 
     if (user.rank === "captain" || report.createdBy === user._id) {
       if (keys.length === inputs.length) {
         for (let i = 0; i < keys.length; i++) {
-          if (!notInclude.contains(keys[i])) {
+          if (!notInclude.includes(keys[i])) {
             report[keys[i]] = inputs[i];
             report = await report.save();
           }
@@ -127,10 +132,17 @@ const getReport = async (req, res) => {
   const { reportId, userId } = req.params;
 
   try {
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+
     const report = await ReportModel.findById(reportId);
 
-    if (user.rank === "captain" || report.basicInfo.responsibleOfficer === user._id) {
+    if (
+      user.rank === "captain" ||
+      report.basicInfo.responsibleOfficer === user._id
+    ) {
       return res.status(200).json(report);
     } else {
       return res
