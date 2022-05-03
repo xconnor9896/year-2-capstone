@@ -84,27 +84,28 @@ export default function Report({
 		authCheck();
 	}, [currentUser]);
 
-	const deleteReport = () => {
+	const deleteReport = async () => {
 		setDeleteModal(false);
 		setLoading(true);
 
 		try {
 			console.log(temporaryUrgency);
 
-			const res = await axios.post(
-				`http://localhost:3000/api/v1/report/importance/${report._id}`,
-				{
-					userId: currentUserId,
-					importance: temporaryUrgency,
-				},
+			const res = await axios.delete(
+				`http://localhost:3000/api/v1/report/${report._id}`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
+					},
+					data: {
+						userId: currentUserId,
 					},
 				}
 			);
 
 			console.log(res);
+
+			router.back();
 		} catch (err) {
 			console.error("Error on toggle verification function:", err);
 		}
@@ -142,8 +143,6 @@ export default function Report({
 		setLoading(true);
 
 		try {
-			console.log(temporaryUrgency);
-
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/importance/${report._id}`,
 				{
@@ -152,12 +151,10 @@ export default function Report({
 				},
 				{
 					headers: {
-						Authorization: `Bearer ${token}`,
+						authorization: `Bearer ${token}`,
 					},
 				}
 			);
-
-			console.log(res);
 		} catch (err) {
 			console.error("Error on toggle verification function:", err);
 		}

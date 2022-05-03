@@ -45,35 +45,40 @@ const createReport = async (req, res) => {
 DELETE REPORT
 .delete('/:reportId') 
 req.params { reportId } //? Report to be deleted
-req.body { user }
+req.body { userId }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const deleteReport = async (req, res) => {
-	const { reportId } = req.params;
-	const { user } = req.body;
+  const { reportId } = req.params;
+  const { userId } = req.body;
 
-	try {
-		const report = await ReportModel.findById(reportId);
-		if (
-			user.rank === "captain" ||
-			(user._id === report.responsibleOfficer._id && !report.verified)
-		) {
-			const deleted = await ReportModel.deleteOne({ reportId });
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+    
+    const report = await ReportModel.findById(reportId);
+    if (
+      user.rank === "captain" ||
+      (user._id === report.responsibleOfficer && !report.verified)
+    ) {
+      const deleted = await ReportModel.deleteOne({ reportId });
 
-			if (deleted) {
-				return res.status(200).send("Report Deleted");
-			} else {
-				return res.status(404).send("Report Not Found");
-			}
-		} else {
-			return res
-				.status(403)
-				.send("Please contact your captain about deleting your report");
-		}
-	} catch (error) {
-		console.log(error);
-		return res.status(400).send("Error at deleteReport");
-	}
+      if (deleted) {
+        return res.status(200).send("Report Deleted");
+      } else {
+        return res.status(404).send("Report Not Found");
+      }
+    } else {
+      return res
+        .status(403)
+        .send("Please contact a captain about deleting this report");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Error at deleteReport");
+  }
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

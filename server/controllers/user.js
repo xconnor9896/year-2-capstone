@@ -46,7 +46,7 @@ const createUser = async (req, res) => {
       profilePicUrl,
     });
 
-    newUser.password = bcrypt.hash(password, 10);
+    newUser.password = await bcrypt.hash(password, 10);
     newUser = await newUser.save();
 
 		const payload = { userID: user._id };
