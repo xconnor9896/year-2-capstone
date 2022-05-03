@@ -10,33 +10,39 @@ import axios from "axios";
 
 import styles from "../../styles/Pages/Profile.module.scss";
 
-const Profile = ({ profile }) => {
+const Profile = ({ username }) => {
   const router = useRouter();
 
-  const name = "John Doe";
+  // const name = "John Doe";
   const badgeNum = "297502";
   const rank = "Lt.";
   const caseId = "1992197";
   const squad = "K-9Unit";
   const squadNum = "593";
 
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     try {
-  //       const { username } = router.query;
-  //       const res = await axios.get(`${baseURL}/api/v1/${username}`, {
-  //         headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-  //       });
-  //       setUser(res.data)
-  //       // console.log(user);
-  //     } catch (error) {
-  //       console.log("error loading user");
-  //     }
-  //   };
-  //   getUser();
-  // }, [router.query.username]);
+  const [user, setUser] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  // console.log(user);
+  useEffect(() => {
+    const getUsers = async () => {
+      setLoading(true);
+      console.log("initiating getUsers...");
+      try {
+        const { userId } = router.query;
+        const res = await axios.get(
+          `${baseURL}/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+          }
+        );
+        setUser(res.data);
+      } catch (error) {
+        console.log("error loading posts");
+      }
+      setLoading(false);
+    };
+    getUsers();
+  }, [router.query.userId]);
 
   return (
     <main className={styles.container}>
@@ -44,7 +50,7 @@ const Profile = ({ profile }) => {
         <div className={styles.pfp}>
           <FaRegUser />
         </div>
-        {/* <h1>{username}</h1> */}
+        {/* <h1>{username.user.name}</h1> */}
         <div className={styles.banner}>
           <img />
         </div>
@@ -108,22 +114,38 @@ const Profile = ({ profile }) => {
   );
 };
 
-// Profile.getInitialProps = async (ctx) => {
-//   try {
-//     const { id: userId } = ctx.query;
-//     console.log(userId);
-//     const { token } = parseCookies(ctx);
+Profile.getInitialProps = async (ctx) => {
+  try {
+    const { id: userId } = ctx.query;
+    console.log("this is the user", userId);
+    const { token } = parseCookies(ctx);
+    const res = await axios.get(`${baseURL}/api/v1/users/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-//     const res = await axios.get(`${baseURL}/api/v1/user/${userId}`, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     });
-//     console.log(`fadsfsadsad ${res}`);
+    const { user } = res.data;
+    return { user };
+  } catch (error) {
+    return { errorLoading: true };
+  }
+};
 
-//     const { data } = res;
-//     return { data };
-//   } catch (error) {
-//     return { errorLoading: true };
-//   }
-// };
+Profile.getInitialProps = async (ctx) => {
+  try {
+    const { id: userId } = ctx.query;
+    console.log(userId);
+    const { token } = parseCookies(ctx);
+
+    const res = await axios.get(`${baseURL}/api/v1/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const { data } = res;
+    console.log("this is the users data", data);
+    return { data };
+  } catch (error) {
+    return { errorLoading: true };
+  }
+};
 
 export default Profile;

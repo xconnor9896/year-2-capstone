@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }) {
 
 	return (
 		<>
-			<HeadTags />
+			{/* <HeadTags /> */}
 			{canShowNav && <Navbar user={user} />}
 			<Component {...pageProps} />
 			{loading && <Loading />}
