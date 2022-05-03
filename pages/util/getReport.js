@@ -19,7 +19,8 @@ const getReport = async (reportId, userId) => {
 			}
 		);
 
-		if (!res) throw new Error("No result returned.");
+		if (!res || !res.data || !res.data.basicInfo)
+			throw new Error("No result returned.");
 
 		// Getting the responsible officer.
 		const officerId = res.data.basicInfo.responsibleOfficer;

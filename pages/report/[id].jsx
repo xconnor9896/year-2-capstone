@@ -17,7 +17,11 @@ import { useRouter } from "next/router";
 import getReport from "../util/getReport";
 import axios from "axios";
 
-export default function Report({ user: currentUser, user: { _id }, token }) {
+export default function Report({
+	user: currentUser,
+	user: { _id: currentUserId },
+	token,
+}) {
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -37,22 +41,34 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 	const [isVerified, setIsVerified] = useState(false);
 	const [tag, setTag] = useState(null);
 
-	useEffect(async () => {
-		const report = await getReport(id, _id);
+	const loadReport = async () => {
+		setLoading(true);
 
-		if (!report) router.push("/dashboard");
+		try {
+			const report = await getReport(id, currentUserId);
 
-		setReport(report);
-		setResponsibleOfficer(report.basicInfo.responsibleOfficer);
-		setTag(report.basicInfo.importance);
+			if (!report) router.push("/dashboard");
 
-		setIsVerified(report.basicInfo.verified);
+			setReport(report);
+			setResponsibleOfficer(report.basicInfo.responsibleOfficer);
+			setTag(report.basicInfo.importance);
 
-		if (report.basicInfo.responsibleOfficer._id === _id) {
-			setIsCreator(true);
-		} else {
-			setIsCreator(false);
+			setIsVerified(report.basicInfo.verified);
+
+			if (report.basicInfo.responsibleOfficer._id === currentUserId) {
+				setIsCreator(true);
+			} else {
+				setIsCreator(false);
+			}
+		} catch {
+			router.push("/dashboard");
 		}
+
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		loadReport();
 	}, []);
 
 	// HOOK THIS UP TO BACKEND
@@ -72,63 +88,84 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 		setDeleteModal(false);
 		setLoading(true);
 
-		console.log("implement deleteReport");
+		try {
+			console.log(temporaryUrgency);
 
-		// Should redirect if the delete succeeded.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/importance/${report._id}`,
+				{
+					userId: currentUserId,
+					importance: temporaryUrgency,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			console.log(res);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
 	};
 
 	const toggleVerified = async () => {
 		setLoading(true);
-		
+
 		try {
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/verify/${report._id}`,
+				{
+					userId: currentUserId,
+				},
 
 				{
 					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-					body: {
-						userID: _id,
+						authorization: `Bearer ${token}`,
 					},
 				}
 			);
-
 		} catch (err) {
 			console.error("Error on toggle verification function:", err);
 		}
 
 		setLoading(false);
+
+		loadReport();
 	};
 
-	const setUrgency = () => {
+	const setUrgency = async () => {
 		setUrgencyModal(false);
 		setLoading(true);
 
 		try {
 			console.log(temporaryUrgency);
-			console.log("Implement Set Urgency");
 
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/importance/${report._id}`,
-
+				{
+					userId: currentUserId,
+					importance: temporaryUrgency,
+				},
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
-					body: {
-						userID: _id,
-						importance: temporaryUrgency
-					},
 				}
 			);
+
+			console.log(res);
 		} catch (err) {
 			console.error("Error on toggle verification function:", err);
 		}
 
 		setLoading(false);
+
+		// router.reload();
+		loadReport();
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
