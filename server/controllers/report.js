@@ -1,5 +1,6 @@
 const ReportModel = require("../models/ReportModel");
 const UserModel = require("../models/UserModel");
+const Number = require("../models/Number")
 
 const isEmail = require("validator/lib/isEmail");
 
@@ -23,7 +24,13 @@ const createReport = async (req, res) => {
       return res.status(404).send("No user with the given Id");
     }
 
+    let curNum = await Number.find({})
+    curNum = curNum[0]
+    
+    console.log(curNum);
+
     const report = new ReportModel({
+      caseNumber: curNum.number++,
       basicInfo: {
         responsibleOfficer: userId,
         importance: 3,
@@ -31,11 +38,12 @@ const createReport = async (req, res) => {
       },
     });
 
+    await curNum.save();
     await report.save();
 
     return res.status(200).json(report);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.status(400).send("Error at createReport controller");
   }
 };
