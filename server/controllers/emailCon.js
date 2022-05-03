@@ -32,38 +32,49 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendVerfEmail = async (req, res) => {
   //us
   const { inputEmail } = req.body;
+  user = userModel.find({});
+  const randomNumberGen = () => {
+    randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
+    return randomNumber;
+  };
+
   try {
-    const user = await userModel.find({});
-    const userEmail = user.find(({ email }) => {
-      return email == inputEmail;
+    // const num = randomNumberGen();
+    // console.log(randomNumber);
+    const users = await userModel.find({});
+    const user = users.find(( user ) => {
+      return user.email == inputEmail;
     });
-    if (userEmail.email == inputEmail) {
+    user.verify = randomNumberGen().toString()
+    await user.save()
+    console.log(user.verify)
+
+    if (user.email == inputEmail) {
       console.log(`We have ${inputEmail} as one of our users`);
-    } else if (userEmail != inputEmail) {
+    } else if (user.email != inputEmail) {
       console.log(`${inputEmail} we dont have this email as one of users`);
       inputEmail = 0;
     } else {
       console.log("idk what happended");
     }
   } catch (err) {
-    alert(
-      "Im sorry we dont have that email as a user please check the email or sign up"
-    );
+    // alert(
+    //   "Im sorry we dont have that email as a user please check the email or sign up"
+    // );
     console.log(err);
     res.status(500).send("error");
   }
 
   // console.log(inputEmail);
 
-  return (
-    sgMail
-      .send(
-        (verfEmail = {
-          to: inputEmail, // Change to your recipient
-          from: "ztaylo273@west-mec.org", // Change to your verified sender
+  return sgMail
+    .send(
+      (verfEmail = {
+        to: inputEmail, // Change to your recipient
+        from: "ztaylo273@west-mec.org", // Change to your verified sender
 
-          subject: "Email Verification",
-          html: `   
+        subject: "Email Verification",
+        html: `   
       <div
       class="EmailVefDiv"
       style="
@@ -92,7 +103,7 @@ const sendVerfEmail = async (req, res) => {
           width: 10%;
           font-size: 1rem;
         "
-        action="http://localhost:3000"
+        action="http://localhost:3000/{user.verify}"
         method="get"
       >
         <button style="background-color: black; color: whitesmoke">
@@ -101,28 +112,15 @@ const sendVerfEmail = async (req, res) => {
       </form>
     </div>
       `,
-        })
-      )
-      // user =  userModel.find({});
-      // const randomNumberGen = () => {
-      //   randomNumber = Math.floor(Math.random() * 100000000000000000000);
-      //   if (randomNumber > 1000000000) {
-      //     return (randomNumber = Math.floor(
-      //       Math.random() * 100000000000000000000
-      //     ));
-      //   } else {
-      //     console.log(randomNumber);
-      //     randomNumberGen();
-      //   }
-      // };
-      .then((data) => {
-        res.status(202).send("Email Sent");
       })
-      .catch((error) => {
-        console.error(error);
-        res.status(404).send(error);
-      })
-  );
+    )
+    .then((data) => {
+      res.status(202).send("Email Sent");
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(404).send(error);
+    });
 };
 
 // const passwordResetEmail = {

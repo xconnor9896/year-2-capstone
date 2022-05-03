@@ -51,6 +51,10 @@ const UserSchema = new mongoose.Schema({
     default: 'officer',
     required: true,
   },
+  verfiy: {
+    type: String,
+    default: "false",
+  }
 },
   // {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
