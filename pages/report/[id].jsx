@@ -18,6 +18,7 @@ import getReport from "../util/getReport";
 import axios from "axios";
 
 export default function Report({
+	user,
 	user: currentUser,
 	user: { _id: currentUserId },
 	token,
@@ -68,6 +69,8 @@ export default function Report({
 	};
 
 	useEffect(() => {
+		if (!user) router.push("/");
+
 		loadReport();
 	}, []);
 
@@ -393,16 +396,7 @@ export default function Report({
 						</Card.Header>
 
 						{!loading && view ? (
-							<ViewReport
-								{...{
-									report,
-									responsibleOfficer,
-									loading,
-									setLoading,
-									view,
-									setView,
-								}}
-							/>
+							<ViewReport {...{ currentUserId }} />
 						) : (
 							<EditReport
 								{...{

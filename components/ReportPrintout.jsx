@@ -2,53 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/ReportPrintout.module.scss";
 import { FaCheckSquare, FaSquare } from "react-icons/fa";
 
-const uuid = require("uuid").v4;
+import getReport from "../pages/util/getReport";
 
-const ReportPrintout = ({ id }) => {
-	const person = {
-		// says weather the person is a victim, witness, suspect, or something else
-		_id: uuid(),
-		personType: "Complainant",
-		race: "Native Hawaiian / Other Pacific Islander",
-		name: {
-			firstName: "Bjørn",
-			middleName: "Frode",
-			lastName: "Gorm",
-			aka: "The BFG",
-		},
-		age: 102,
-		isJuvenile: true,
-		sex: "Female",
-		occupation: "Front-End Designer",
-		homeAddress: "79428 East Drivers Parkway, Phoenix, AZ, 85384, USA",
-		employerAddress: "79428 East Drivers Parkway, Phoenix, AZ, 85384, USA",
-		phoneNumbers: {
-			main: "+1 (789) 789-789-7897",
-			secondary: "+1 (789) 789-789-7897",
-			business: "+1 (789) 789-789-7897",
-		},
-		email: "jwefjaowiej237598237@joijwe.caw",
-		studentID: 98778,
-		victimRelationshipToSuspect: "Brother",
-		whoDescribed: "Joe Mama",
-		willProsecute: true,
-		BAC: true,
-		BACResults: "Known Criminal",
-		personalDetails: {
-			height: `5'11"`,
-			weight: "300",
-			build: "Burly",
-			hairColor: "Brown",
-			hairCharacter: "Frosted Tips",
-			complexion: "White",
-			voice: "Tenor",
-			eyeColor: "Brown",
-			facialHairColor: "Brown",
-			facialHairChar: "Spikey",
-			clothing: "None 😳",
-		},
-	};
-
+const ReportPrintout = ({ id, userId }) => {
 	const checkbox = (val) => {
 		if (val && val === true) {
 			return <FaCheckSquare />;
@@ -57,145 +13,27 @@ const ReportPrintout = ({ id }) => {
 		}
 	};
 
-	const [activeReport, setActiveReport] = useState({
-		caseNumber: "oi214joai3h523897",
+	const [activeReport, setActiveReport] = useState(null);
+	const [basicInfo, setBasicInfo] = useState(null);
+	const [peopleInfo, setPeopleInfo] = useState(null);
+	const [hospitalInfo, setHospitalInfo] = useState(null);
+	const [approvedBy, setApprovedBy] = useState(null);
 
-		approvedBy: {
-			badgeNumber: 123,
-			rank: "captain",
-		},
+	const loadReport = async () => {
+		const report = await getReport(id, userId);
 
-		approvedAt: {
-			date: {
-				month: "01",
-				day: "06",
-				year: "2021",
-			},
+		// setActiveReport(tempReport);
 
-			time: {
-				hour: "12",
-				minute: "49",
-			},
-		},
-
-		basicInfo: {
-			incidentType: "Vehicle Collision",
-
-			code: "382",
-
-			reportType: {
-				keyRpt: true,
-				fu: true,
-			},
-
-			disposition: "1",
-
-			arsSectionNumber: "84-447",
-
-			location: "Peoria, Arizona, United States of America",
-
-			synopsis: "aaaaa",
-			reportNarration:
-				"Things happened stuff and things it really do be happenin judshdhuygyuydyuwqgydyuqgyudyguwqygudwqgudgyuwqgyudgyuqwgyudgquydgwqyudq d hhdqgdg what is the day. somepeople be under the ground. Wait did you hear that, i didn't. Wait maybe i was just thinking",
-
-			responsibleOfficer: {
-				name: {
-					firstName: "Joe",
-					middleName: "B.",
-					lastName: "Mama",
-				},
-				rank: "Officer",
-				badgeNumber: "123",
-				division: "Surprise",
-			},
-
-			beatOfOffense: "983",
-
-			domesticViolence: true,
-
-			incidentReportedAt: {
-				date: {
-					month: "01",
-					day: "06",
-					year: "2021",
-				},
-				day: "Wednesday",
-				time: {
-					hour: "16",
-					minute: "49",
-				},
-			},
-
-			incidentOccurredAt: {
-				from: {
-					date: {
-						month: "01",
-						day: "06",
-						year: "2021",
-					},
-
-					time: {
-						hour: "12",
-						minute: "49",
-					},
-				},
-				to: {
-					date: {
-						month: "01",
-						day: "06",
-						year: "2021",
-					},
-
-					time: {
-						hour: "16",
-						minute: "40",
-					},
-				},
-			},
-
-			relatedComments:
-				"Things happened stuff and things it really do be happenin",
-		},
-
-		peopleInfo: [
-			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-		],
-
-		hospitalInfo: {
-			injured: true,
-			treated: false,
-			hospital: "St. Bill's Hospital",
-			transportedBy:
-				"Joe's Party Bus, Food Truck, and Emergency Services, just testing my styling skills",
-			emsNo: 3,
-			treatmentReasons: {
-				mental: true,
-				suicide: true,
-				icf: true,
-				scf: true,
-				intox: false,
-				drugs: true,
-				indust: true,
-				uncon: true,
-				resisted: true,
-				other: true,
-			},
-			patientCondition: "Running Frantically Inplace",
-			patientDispo: "Angy",
-			attendingPhysician: "Dr. Phil",
-		},
-	});
+		setBasicInfo(report.basicInfo ? report.basicInfo : null);
+		setPeopleInfo(report.peopleInfo ? report.peopleInfo : null);
+		setHospitalInfo(report.hospitalInfo ? report.hospitalInfo : null);
+		setApprovedBy(report.approvedBy ? report.approvedBy : null);
+	};
 
 	const reportPrintout = useRef(null);
 	useEffect(() => {
+		loadReport();
+
 		window.onkeydown = (e) => {
 			if (e.ctrlKey && e.key === "p") {
 				e.preventDefault();
@@ -212,8 +50,6 @@ const ReportPrintout = ({ id }) => {
 
 		window.print();
 	};
-
-	const { basicInfo, peopleInfo, hospitalInfo } = activeReport;
 
 	return (
 		<div className={styles.reportPrintout} ref={reportPrintout}>
@@ -237,23 +73,24 @@ const ReportPrintout = ({ id }) => {
 								<div>
 									<span>
 										<label>Incident Type</label>
-										<p>{basicInfo.incidentType}</p>
+										<p>{basicInfo?.incidentType}</p>
 									</span>
 									<span>
 										<label>Code</label>
-										<p>{basicInfo.code}</p>
+										<p>{basicInfo?.code}</p>
 									</span>
 									<span>
 										<ul>
 											<li>
 												{checkbox(
-													basicInfo.reportType.keyRpt
+													basicInfo?.reportType
+														?.keyRpt
 												)}
 												Key Rpt
 											</li>
 											<li>
 												{checkbox(
-													basicInfo.reportType.fu
+													basicInfo?.reportType?.fu
 												)}
 												F/U
 											</li>
@@ -261,21 +98,21 @@ const ReportPrintout = ({ id }) => {
 									</span>
 									<span>
 										<label>Status</label>
-										<p>{basicInfo.status}</p>
+										<p>{basicInfo?.status}</p>
 									</span>
 									<span>
 										<label>Dispo.</label>
-										<p>{basicInfo.disposition}</p>
+										<p>{basicInfo?.disposition}</p>
 									</span>
 									<span>
 										<label>A.R.S Section No.</label>
-										<p>{basicInfo.arsSectionNumber}</p>
+										<p>{basicInfo?.arsSectionNumber}</p>
 									</span>
 								</div>
 								<div>
 									<span>
 										<label>Location of Offense</label>
-										<p>{basicInfo.location}</p>
+										<p>{basicInfo?.location}</p>
 									</span>
 								</div>
 								<div>
@@ -285,19 +122,22 @@ const ReportPrintout = ({ id }) => {
 											First Middle Name)
 										</label>
 										<p>
-											{basicInfo.responsibleOfficer.rank}{" "}
 											{
-												basicInfo.responsibleOfficer
-													.name.lastName
+												basicInfo?.responsibleOfficer
+													?.rank
+											}{" "}
+											{
+												basicInfo?.responsibleOfficer
+													?.name?.lastName
 											}
 											,{" "}
 											{
-												basicInfo.responsibleOfficer
-													.name.firstName
+												basicInfo?.responsibleOfficer
+													?.name?.firstName
 											}{" "}
 											{
-												basicInfo.responsibleOfficer
-													.name.middleName
+												basicInfo?.responsibleOfficer
+													?.name?.middleName
 											}
 										</p>
 									</span>
@@ -305,8 +145,8 @@ const ReportPrintout = ({ id }) => {
 										<label>ID Number</label>
 										<p>
 											{
-												basicInfo.responsibleOfficer
-													.badgeNumber
+												basicInfo?.responsibleOfficer
+													?.badgeNumber
 											}
 										</p>
 									</span>
@@ -314,8 +154,8 @@ const ReportPrintout = ({ id }) => {
 										<label>Division</label>
 										<p>
 											{
-												basicInfo.responsibleOfficer
-													.division
+												basicInfo?.responsibleOfficer
+													?.division
 											}
 										</p>
 									</span>
@@ -323,12 +163,12 @@ const ReportPrintout = ({ id }) => {
 								<div>
 									<span>
 										<label>Beat of Offense</label>
-										<p>{basicInfo.beatOfOffense}</p>
+										<p>{basicInfo?.beatOfOffense}</p>
 									</span>
 									<span>
 										<label>Domestic Violence</label>
 										<p>
-											{basicInfo.domesticViolence
+											{basicInfo?.domesticViolence
 												? "Yes"
 												: "No"}
 										</p>
@@ -337,99 +177,125 @@ const ReportPrintout = ({ id }) => {
 										<label>
 											Date / Day / Time Reported
 										</label>
-										<p>
-											{
-												basicInfo.incidentReportedAt
-													.date.month
-											}
-											/
-											{
-												basicInfo.incidentReportedAt
-													.date.day
-											}
-											/
-											{
-												basicInfo.incidentReportedAt
-													.date.year
-											}{" "}
-											/ {basicInfo.incidentReportedAt.day}{" "}
-											/{" "}
-											{
-												basicInfo.incidentReportedAt
-													.time.hour
-											}
-											:
-											{
-												basicInfo.incidentReportedAt
-													.time.minute
-											}
-										</p>
+										{basicInfo.incidentReportedAt && (
+											<p>
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.date?.month
+												}
+												/
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.date?.day
+												}
+												/
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.date?.year
+												}{" "}
+												/{" "}
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.day
+												}{" "}
+												/{" "}
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.time?.hour
+												}
+												:
+												{
+													basicInfo
+														?.incidentReportedAt
+														?.time?.minute
+												}
+											</p>
+										)}
 									</span>
 									<span>
 										<label>
 											Date / Time / Occurred From
 										</label>
-										<p>
-											{
-												basicInfo.incidentOccurredAt
-													.from.date.month
-											}
-											/
-											{
-												basicInfo.incidentOccurredAt
-													.from.date.day
-											}
-											/
-											{
-												basicInfo.incidentOccurredAt
-													.from.date.year
-											}{" "}
-											/{" "}
-											{
-												basicInfo.incidentOccurredAt
-													.from.time.hour
-											}
-											:
-											{
-												basicInfo.incidentOccurredAt
-													.from.time.minute
-											}
-										</p>
+										{basicInfo?.incidentOccurredAt && (
+											<p>
+												{
+													basicInfo
+														?.incidentOccurredAt
+														?.from?.date?.month
+												}
+												/
+												{
+													basicInfo
+														?.incidentOccurredAt
+														?.from?.date?.day
+												}
+												/
+												{
+													basicInfo
+														?.incidentOccurredAt
+														?.from?.date?.year
+												}{" "}
+												/{" "}
+												{
+													basicInfo
+														?.incidentOccurredAt
+														?.from?.time?.hour
+												}
+												:
+												{
+													basicInfo
+														?.incidentOccurredAt
+														?.from?.time?.minute
+												}
+											</p>
+										)}
 									</span>
 									<span>
 										<label>Date / Time / Occurred To</label>
-										<p>
-											{
-												basicInfo.incidentOccurredAt.to
-													.date.month
-											}
-											/
-											{
-												basicInfo.incidentOccurredAt.to
-													.date.day
-											}
-											/
-											{
-												basicInfo.incidentOccurredAt.to
-													.date.year
-											}{" "}
-											/{" "}
-											{
-												basicInfo.incidentOccurredAt.to
-													.time.hour
-											}
-											:
-											{
-												basicInfo.incidentOccurredAt.to
-													.time.minute
-											}
-										</p>
+										{basicInfo?.incidentOccurredAt && (
+											<p>
+												{
+													basicInfo
+														?.incidentOccurredAt?.to
+														?.date?.month
+												}
+												/
+												{
+													basicInfo
+														?.incidentOccurredAt?.to
+														?.date?.day
+												}
+												/
+												{
+													basicInfo
+														?.incidentOccurredAt?.to
+														?.date?.year
+												}{" "}
+												/{" "}
+												{
+													basicInfo
+														?.incidentOccurredAt?.to
+														?.time?.hour
+												}
+												:
+												{
+													basicInfo
+														?.incidentOccurredAt?.to
+														?.time?.minute
+												}
+											</p>
+										)}
 									</span>
 								</div>
 								<div>
 									<span>
 										<label>Related Reports/Comments</label>
-										<p>{basicInfo.relatedComments}</p>
+										<p>{basicInfo?.relatedComments}</p>
 									</span>
 								</div>
 							</section>
@@ -444,7 +310,7 @@ const ReportPrintout = ({ id }) => {
 									<span>
 										<label>Injured</label>
 										<p>
-											{hospitalInfo.injured
+											{hospitalInfo?.injured
 												? "Yes"
 												: "No"}
 										</p>
@@ -452,68 +318,75 @@ const ReportPrintout = ({ id }) => {
 									<span>
 										<label>Treated</label>
 										<p>
-											{hospitalInfo.treated
+											{hospitalInfo?.treated
 												? "Yes"
 												: "No"}
 										</p>
 									</span>
 									<span>
 										<label>Hospital</label>
-										<p>{hospitalInfo.hospital}</p>
+										<p>{hospitalInfo?.hospital}</p>
 									</span>
 									<span>
 										<label>Transported By</label>
-										<p>{hospitalInfo.transportedBy}</p>
+										<p>{hospitalInfo?.transportedBy}</p>
 									</span>
 									<span>
 										<label>EMS #</label>
-										<p>{hospitalInfo.emsNo}</p>
+										<p>{hospitalInfo?.emsNo}</p>
 									</span>
 								</div>
 								<div>
 									<span>
 										<label>Treatment Reason</label>
 										<ul>
-											{Object.entries(
-												hospitalInfo.treatmentReasons
-											).map((reason, index) => {
-												const reasonTitles = [
-													"Mental",
-													"Suicide",
-													"I.C.F",
-													"S.C.F",
-													"Intox",
-													"Drugs",
-													"Indust",
-													"Uncon",
-													"Resisted Arrest",
-													"Other",
-												];
+											{hospitalInfo &&
+												hospitalInfo.treatmentReasons &&
+												Object.entries(
+													hospitalInfo.treatmentReasons
+												).map((reason, index) => {
+													const reasonTitles = [
+														"Mental",
+														"Suicide",
+														"I.C.F",
+														"S.C.F",
+														"Intox",
+														"Drugs",
+														"Indust",
+														"Uncon",
+														"Resisted Arrest",
+														"Other",
+													];
 
-												const isSelected = reason[1];
-												const title =
-													reasonTitles[index];
+													const isSelected =
+														reason[1];
+													const title =
+														reasonTitles[index];
 
-												return (
-													<li>
-														{checkbox(isSelected)}
-														{title}
-													</li>
-												);
-											})}
+													return (
+														<li>
+															{checkbox(
+																isSelected
+															)}
+															{title}
+														</li>
+													);
+												})}
 										</ul>
 									</span>
 									<span>
 										<label>Patient Condition</label>
-										<p>{hospitalInfo.patientCondition}</p>
+										<p>{hospitalInfo?.patientCondition}</p>
 									</span>
 									<span>
 										<label>Patient Dispo</label>
-										<p>{hospitalInfo.patientDispo}</p>
+										<p>{hospitalInfo?.patientDispo}</p>
 									</span>
 									<span>
 										<label>Attending Physician</label>
-										<p>{hospitalInfo.attendingPhysician}</p>
+										<p>
+											{hospitalInfo?.attendingPhysician}
+										</p>
 									</span>
 								</div>
 							</section>
@@ -526,7 +399,7 @@ const ReportPrintout = ({ id }) => {
 							<section>
 								<div>
 									<span>
-										<p>{basicInfo.synopsis}</p>
+										<p>{basicInfo?.synopsis}</p>
 									</span>
 								</div>
 							</section>
@@ -536,7 +409,7 @@ const ReportPrintout = ({ id }) => {
 					<div className={styles.pageBreak}></div>
 
 					<div className={styles.peopleWrapper}>
-						{peopleInfo.map((person) => {
+						{peopleInfo?.map((person) => {
 							const key = peopleInfo.indexOf(person);
 
 							const onlyPerson = peopleInfo.length === 1;
@@ -792,37 +665,39 @@ const ReportPrintout = ({ id }) => {
 							<div>
 								<span>
 									<label>Incident Type</label>
-									<p>{basicInfo.incidentType}</p>
+									<p>{basicInfo?.incidentType}</p>
 								</span>
 								<span>
 									<label>Code</label>
-									<p>{basicInfo.code}</p>
+									<p>{basicInfo?.code}</p>
 								</span>
 								<span>
 									<ul>
 										<li>
 											{checkbox(
-												basicInfo.reportType.keyRpt
+												basicInfo?.reportType?.keyRpt
 											)}
 											Key Rpt
 										</li>
 										<li>
-											{checkbox(basicInfo.reportType.fu)}
+											{checkbox(
+												basicInfo?.reportType?.fu
+											)}
 											F/U
 										</li>
 									</ul>
 								</span>
 								<span>
 									<label>Status</label>
-									<p>{basicInfo.status}</p>
+									<p>{basicInfo?.status}</p>
 								</span>
 								<span>
 									<label>Dispo.</label>
-									<p>{basicInfo.disposition}</p>
+									<p>{basicInfo?.disposition}</p>
 								</span>
 								<span>
 									<label>A.R.S Section No.</label>
-									<p>{basicInfo.arsSectionNumber}</p>
+									<p>{basicInfo?.arsSectionNumber}</p>
 								</span>
 							</div>
 							<div>
@@ -832,44 +707,46 @@ const ReportPrintout = ({ id }) => {
 									</label>
 									<p>
 										{
-											basicInfo.responsibleOfficer.name
+											basicInfo?.responsibleOfficer?.name
 												.lastName
 										}
 										,{" "}
 										{
-											basicInfo.responsibleOfficer.name
+											basicInfo?.responsibleOfficer?.name
 												.firstName
 										}{" "}
 										{
-											basicInfo.responsibleOfficer.name
+											basicInfo?.responsibleOfficer?.name
 												.middleName
 										}
 									</p>
 								</span>
 								<span>
 									<label>Date of Occurence</label>
-									<p>
-										{
-											basicInfo.incidentOccurredAt.from
-												.date.month
-										}
-										/
-										{
-											basicInfo.incidentOccurredAt.from
-												.date.day
-										}
-										/
-										{
-											basicInfo.incidentOccurredAt.from
-												.date.year
-										}
-									</p>
+									{basicInfo?.incidentOccurredAt && (
+										<p>
+											{
+												basicInfo?.incidentOccurredAt
+													?.from?.date.month
+											}
+											/
+											{
+												basicInfo?.incidentOccurredAt
+													?.from?.date.day
+											}
+											/
+											{
+												basicInfo?.incidentOccurredAt
+													?.from?.date.year
+											}
+										</p>
+									)}
 								</span>
 							</div>
 							<div>
 								<span>
 									<label>Location of Offense</label>
-									<p>{basicInfo.location}</p>
+									<p>{basicInfo?.location}</p>
 								</span>
 							</div>
 						</section>
@@ -877,7 +754,7 @@ const ReportPrintout = ({ id }) => {
 
 					<article className={styles.narrative}>
 						<header>Narrative</header>
-						<section>{basicInfo.reportNarration}</section>
+						<section>{basicInfo?.reportNarration}</section>
 					</article>
 				</div>
 			</section>
@@ -889,47 +766,46 @@ const ReportPrintout = ({ id }) => {
 						<span>
 							<b>
 								<span>ID NUMBER:</span>{" "}
-								{basicInfo.responsibleOfficer.badgeNumber}
+								{basicInfo?.responsibleOfficer?.badgeNumber}
 							</b>
 							<b>
 								<span>RANK:</span>{" "}
-								{basicInfo.responsibleOfficer.rank}
+								{basicInfo?.responsibleOfficer?.rank}
 							</b>
 							<b>
 								<span>Date/Time:</span>{" "}
-								{basicInfo.incidentReportedAt.date.month}/
-								{basicInfo.incidentReportedAt.date.day}/
-								{basicInfo.incidentReportedAt.date.year} /{" "}
-								{basicInfo.incidentReportedAt.time.hour}:
-								{basicInfo.incidentReportedAt.time.minute}
+								{basicInfo?.incidentReportedAt?.date?.month}/
+								{basicInfo?.incidentReportedAt?.date?.day}/
+								{basicInfo?.incidentReportedAt?.date?.year} /{" "}
+								{basicInfo?.incidentReportedAt?.time?.hour}:
+								{basicInfo?.incidentReportedAt?.time?.minute}
 							</b>
 						</span>
 					</div>
 					<div>
 						Approved By:
 						<span>
-							{activeReport.approvedBy ? (
+							{approvedBy ? (
 								<>
 									<b>
 										<span>ID NUMBER:</span>{" "}
-										{activeReport.approvedBy.badgeNumber}
+										{approvedBy?.badgeNumber}
 									</b>
 									<b>
 										<span>RANK:</span>{" "}
-										{activeReport.approvedBy.rank[0].toUpperCase() +
-											activeReport.approvedBy.rank.slice(
+										{approvedBy?.rank[0].toUpperCase() +
+											approvedBy?.rank.slice(
 												1,
-												activeReport.approvedBy.rank
-													.length
+												approvedBy?.rank.length
 											)}
 									</b>
 									<b>
 										<span>Date/Time:</span>{" "}
-										{activeReport.approvedAt.date.month}/
-										{activeReport.approvedAt.date.day}/
-										{activeReport.approvedAt.date.year} /{" "}
-										{activeReport.approvedAt.time.hour}:
-										{activeReport.approvedAt.time.minute}
+										{activeReport.approvedAt?.date?.month}/
+										{activeReport.approvedAt?.date?.day}/
+										{activeReport.approvedAt?.date?.year} /{" "}
+										{activeReport.approvedAt?.time?.hour}:
+										{activeReport.approvedAt?.time?.minute}
 									</b>
 								</>
 							) : (

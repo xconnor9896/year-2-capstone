@@ -58,7 +58,14 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		pageProps = await Component.getInitialProps(ctx);
 	}
 
-	const protectedRoutes = ["/dashboard", "/reports", "/profile", "/report"];
+	const protectedRoutes = [
+		"/dashboard",
+		"/reports",
+		"/profile",
+		"/profile/[id]",
+		"/report",
+		"/report/[id]",
+	];
 	const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
 
 	if (!token) {
@@ -78,6 +85,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 			pageProps.token = token;
 
 			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+			if (!user || !token) redirectUser(ctx, "/");
 		} catch (err) {
 			console.error(err);
 			destroyCookie(ctx, "token");
