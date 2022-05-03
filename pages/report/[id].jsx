@@ -80,6 +80,8 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 	};
 
 	const toggleVerified = async () => {
+		setLoading(true);
+		
 		try {
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/verify/${report._id}`,
@@ -93,18 +95,38 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 					},
 				}
 			);
+
 		} catch (err) {
 			console.error("Error on toggle verification function:", err);
 		}
+
+		setLoading(false);
 	};
 
 	const setUrgency = () => {
 		setUrgencyModal(false);
 		setLoading(true);
 
-		console.log(temporaryUrgency);
+		try {
+			console.log(temporaryUrgency);
+			console.log("Implement Set Urgency");
 
-		console.log("Implement Set Urgency");
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/importance/${report._id}`,
+
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					body: {
+						userID: _id,
+						importance: temporaryUrgency
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
 	};
