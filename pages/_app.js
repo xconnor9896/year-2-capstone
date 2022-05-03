@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		setCanShowNav(true);
 
-		console.log(router.pathname);
+		// console.log(router.pathname);
 
 		let noNavs = ["/", "/404", "/500", "/report/print/[id]"];
 

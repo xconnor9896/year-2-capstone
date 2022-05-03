@@ -15,6 +15,7 @@ import Modal from "../../components/Modal";
 import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
 import getReport from "../util/getReport";
+import axios from "axios";
 
 export default function Report({ user: currentUser, user: { _id }, token }) {
 	const router = useRouter();
@@ -56,8 +57,7 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
-		console.log(id);
-		if (currentUser.rank !== "captain") {
+		if (currentUser.rank == "captain") {
 			setIsCaptain(true);
 		} else {
 			setIsCaptain(false);
@@ -79,8 +79,23 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 		setLoading(false);
 	};
 
-	const toggleVerified = () => {
-		console.log("Implement Verification Toggle");
+	const toggleVerified = async () => {
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/verify/${report._id}`,
+
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					body: {
+						userID: _id,
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 	};
 
 	const setUrgency = () => {

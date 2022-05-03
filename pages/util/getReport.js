@@ -39,7 +39,7 @@ const getReport = async (reportId, userId) => {
 		const report = res.data;
 		report.basicInfo.responsibleOfficer = officerRes.data;
 
-		console.log(report);
+		// console.log(report);
 
 		return report;
 	} catch (err) {
