@@ -1,7 +1,6 @@
 import styles from "../../styles/Pages/SingleReport.module.scss";
-import Input from "../../components/Input";
 import { Button, Card } from "../../proton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditReport from "../../components/EditReport";
 import ViewReport from "../../components/ViewReport";
 import {
@@ -14,49 +13,159 @@ import {
 } from "react-icons/fa";
 import Modal from "../../components/Modal";
 import { Option, Select } from "../../components/Select";
+import { useRouter } from "next/router";
+import getReport from "../util/getReport";
+import axios from "axios";
 
-const tempReport = {};
+export default function Report({
+	user: currentUser,
+	user: { _id: currentUserId },
+	token,
+}) {
+	const router = useRouter();
+	const { id } = router.query;
 
-export default function Report() {
+	const [report, setReport] = useState(null);
+	const [responsibleOfficer, setResponsibleOfficer] = useState(null);
+
 	// const [view, setView] = useState(true);
 	const [view, setView] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [deleteModal, setDeleteModal] = useState(false);
 
+	const [deleteModal, setDeleteModal] = useState(false);
 	const [urgencyModal, setUrgencyModal] = useState(false);
 	const [temporaryUrgency, setTemporaryUrgency] = useState(0);
 
-	const deleteReport = () => {
+	const [isCaptain, setIsCaptain] = useState(false);
+	const [isCreator, setIsCreator] = useState(false);
+	const [isVerified, setIsVerified] = useState(false);
+	const [tag, setTag] = useState(null);
+
+	const loadReport = async () => {
+		setLoading(true);
+
+		try {
+			const report = await getReport(id, currentUserId);
+
+			if (!report) router.push("/dashboard");
+
+			setReport(report);
+			setResponsibleOfficer(report.basicInfo.responsibleOfficer);
+			setTag(report.basicInfo.importance);
+
+			setIsVerified(report.basicInfo.verified);
+
+			if (report.basicInfo.responsibleOfficer._id === currentUserId) {
+				setIsCreator(true);
+			} else {
+				setIsCreator(false);
+			}
+		} catch {
+			router.push("/dashboard");
+		}
+
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		loadReport();
+	}, []);
+
+	// HOOK THIS UP TO BACKEND
+	const authCheck = () => {
+		if (currentUser.rank == "captain") {
+			setIsCaptain(true);
+		} else {
+			setIsCaptain(false);
+		}
+	};
+
+	useEffect(() => {
+		authCheck();
+	}, [currentUser]);
+
+	const deleteReport = async () => {
 		setDeleteModal(false);
 		setLoading(true);
 
-		console.log("implement deleteReport");
+		try {
+			console.log(temporaryUrgency);
 
-		// Should redirect if the delete succeeded.
+			const res = await axios.delete(
+				`http://localhost:3000/api/v1/report/${report._id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					data: {
+						userId: currentUserId,
+					},
+				}
+			);
+
+			console.log(res);
+
+			router.back();
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
 	};
 
-	const toggleVerified = () => {
-		console.log("Implement Verification Toggle");
+	const toggleVerified = async () => {
+		setLoading(true);
+
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/verify/${report._id}`,
+				{
+					userId: currentUserId,
+				},
+
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
+
+		setLoading(false);
+
+		loadReport();
 	};
 
-	const setUrgency = () => {
+	const setUrgency = async () => {
 		setUrgencyModal(false);
 		setLoading(true);
 
-		console.log(temporaryUrgency);
-
-		console.log("Implement Set Urgency");
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/importance/${report._id}`,
+				{
+					userId: currentUserId,
+					importance: temporaryUrgency,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
+
+		// router.reload();
+		loadReport();
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
-	const isCaptain = false;
-	const isCreator = true;
-	const isVerified = false;
-	const tag = 0;
 
 	return (
 		<main className={styles.container} shadow={"true"}>
@@ -123,152 +232,192 @@ export default function Report() {
 				</Modal>
 			)}
 
-			<article className={styles.main}>
-				<Card noborder loading={loading}>
-					<Card.Header>
-						<div className={styles.header}>
-							<span>
-								<h1>CASE #: [CASE NUMBER]</h1>
-								<h1>OFFICER: [RANK], [LASTNAME]</h1>
-								<h1>BADGE #: [BADGE NUMBER]</h1>
-							</span>
-
-							<span className={styles.info}>
-								{tag !== null && (
-									<span className={styles.urgency}>
-										Urgency:
-										{tag === 1 ? (
-											<span
-												className={`${styles.tag} ${styles.tag1}`}
-											>
-												Urgent
-											</span>
-										) : tag === 2 ? (
-											<span
-												className={`${styles.tag} ${styles.tag2}`}
-											>
-												Important
-											</span>
+			{report && (
+				<article className={styles.main}>
+					<Card noborder loading={loading}>
+						<Card.Header>
+							<div className={styles.header}>
+								<span>
+									<h1>
+										CASE #:{" "}
+										{report._id.length < 16 ? (
+											report._id
 										) : (
-											<span
-												className={`${styles.tag} ${styles.tag3}`}
-											>
-												Normal
-											</span>
-										)}
-									</span>
-								)}
-
-								{isVerified ? (
-									<span className={styles.verified}>
-										Verified
-										<FaCheckCircle />
-									</span>
-								) : (
-									<span>
-										Unverified
-										<FaQuestionCircle />
-									</span>
-								)}
-							</span>
-						</div>
-
-						<div className={styles.inputs}>
-							{view && (
-								<Button.Group wrap>
-									{!isCaptain && !isVerified && isCreator && (
-										<Button
-											compact
-											onClick={() => {
-												if (view) {
-													setView(false);
-												}
-											}}
-											emphasis="primary"
-										>
-											<FaPencilAlt />
-											Edit
-										</Button>
-									)}
-									{!isVerified && (isCreator || isCaptain) && (
-										<Button
-											compact
-											onClick={() =>
-												!deleteModal &&
-												setDeleteModal(true)
-											}
-											emphasis="error"
-										>
-											<FaTrash /> Delete
-										</Button>
-									)}
-									{isCaptain && (
-										<>
-											<Button
-												compact
-												onClick={toggleVerified}
-												emphasis={
-													isVerified
-														? "primary"
-														: "success"
-												}
-											>
-												{isVerified ? (
-													<>
-														<FaTimesCircle />{" "}
-														Unverify
-													</>
-												) : (
-													<>
-														<FaCheckCircle /> Verify
-													</>
+											<>
+												{report._id.slice(0, 7)}...
+												{report._id.slice(
+													report._id.length - 6,
+													report._id.length
 												)}
-											</Button>
-											<Button
-												compact
-												onClick={() =>
-													!urgencyModal &&
-													setUrgencyModal(true)
+											</>
+										)}
+									</h1>
+									{responsibleOfficer && (
+										<>
+											<h1>
+												OFFICER:{" "}
+												{responsibleOfficer.rank[0].toUpperCase() +
+													responsibleOfficer.rank.slice(
+														1,
+														responsibleOfficer.rank
+															.length
+													)}{" "}
+												{
+													responsibleOfficer.name
+														.lastName
 												}
-												emphasis={
-													isVerified
-														? "secondary"
-														: "primary"
-												}
-											>
-												<FaExclamationCircle />
-												Urgency
-											</Button>
+											</h1>
+											<h1>
+												BADGE #:{" "}
+												{responsibleOfficer.badgeNumber}
+											</h1>
 										</>
 									)}
-								</Button.Group>
-							)}
-						</div>
-					</Card.Header>
+								</span>
 
-					{!loading && view ? (
-						<ViewReport
-							{...{
-								report: tempReport,
-								loading,
-								setLoading,
-								view,
-								setView,
-							}}
-						/>
-					) : (
-						<EditReport
-							{...{
-								report: tempReport,
-								loading,
-								setLoading,
-								view,
-								setView,
-							}}
-						/>
-					)}
-				</Card>
-			</article>
+								<span className={styles.info}>
+									{tag !== null && (
+										<span className={styles.urgency}>
+											Urgency:
+											{tag === 1 ? (
+												<span
+													className={`${styles.tag} ${styles.tag1}`}
+												>
+													Urgent
+												</span>
+											) : tag === 2 ? (
+												<span
+													className={`${styles.tag} ${styles.tag2}`}
+												>
+													Important
+												</span>
+											) : (
+												<span
+													className={`${styles.tag} ${styles.tag3}`}
+												>
+													Normal
+												</span>
+											)}
+										</span>
+									)}
+
+									{isVerified ? (
+										<span className={styles.verified}>
+											Verified
+											<FaCheckCircle />
+										</span>
+									) : (
+										<span>
+											Unverified
+											<FaQuestionCircle />
+										</span>
+									)}
+								</span>
+							</div>
+
+							<div className={styles.inputs}>
+								{view && (
+									<Button.Group wrap>
+										{!isCaptain &&
+											!isVerified &&
+											isCreator && (
+												<Button
+													compact
+													onClick={() => {
+														if (view) {
+															setView(false);
+														}
+													}}
+													emphasis="primary"
+												>
+													<FaPencilAlt />
+													Edit
+												</Button>
+											)}
+										{!isVerified &&
+											(isCreator || isCaptain) && (
+												<Button
+													compact
+													onClick={() =>
+														!deleteModal &&
+														setDeleteModal(true)
+													}
+													emphasis="error"
+												>
+													<FaTrash /> Delete
+												</Button>
+											)}
+										{isCaptain && (
+											<>
+												<Button
+													compact
+													onClick={toggleVerified}
+													emphasis={
+														isVerified
+															? "primary"
+															: "success"
+													}
+												>
+													{isVerified ? (
+														<>
+															<FaTimesCircle />{" "}
+															Unverify
+														</>
+													) : (
+														<>
+															<FaCheckCircle />{" "}
+															Verify
+														</>
+													)}
+												</Button>
+												<Button
+													compact
+													onClick={() =>
+														!urgencyModal &&
+														setUrgencyModal(true)
+													}
+													emphasis={
+														isVerified
+															? "secondary"
+															: "primary"
+													}
+												>
+													<FaExclamationCircle />
+													Urgency
+												</Button>
+											</>
+										)}
+									</Button.Group>
+								)}
+							</div>
+						</Card.Header>
+
+						{!loading && view ? (
+							<ViewReport
+								{...{
+									report,
+									responsibleOfficer,
+									loading,
+									setLoading,
+									view,
+									setView,
+								}}
+							/>
+						) : (
+							<EditReport
+								{...{
+									report,
+									responsibleOfficer,
+									loading,
+									setLoading,
+									view,
+									setView,
+								}}
+							/>
+						)}
+					</Card>
+				</article>
+			)}
 		</main>
 	);
 }

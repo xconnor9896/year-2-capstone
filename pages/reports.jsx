@@ -5,19 +5,19 @@ import ListReports from "../components/ListReports";
 import { Button } from "../proton";
 import { FaChevronLeft } from "react-icons/fa";
 
-export default function Reports() {
+export default function Reports({ user }) {
 	const router = useRouter();
 
 	const [groupID, setGroupID] = useState(null);
 	const [title, setTitle] = useState("All Reports");
 
+	const { rank } = user;
+
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
-		let isAdmin = true;
-
-		if (!isAdmin) {
+		if (rank !== "captain") {
 			// Re-route if they aren't.
-			router.route("/dashboard");
+			router.push("/dashboard");
 		}
 	};
 
