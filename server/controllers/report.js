@@ -249,17 +249,22 @@ const getAllReports = async (req, res) => {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Verify Report
 .post('/verify/:reportId') 
-req.body {user} 
-//? user - your user object
+req.body {userId} 
+//? userId - your user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const verifyReport = async (req, res) => {
   const {
     params: { reportId },
-    body: { user },
+    body: { userId },
   } = req;
 
   try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+
     if (user.rank === "captain") {
       let report = await ReportModel.findById(reportId);
       report.verified = !report.verified;
@@ -282,16 +287,21 @@ const verifyReport = async (req, res) => {
 Importance Report
 .post('/importance/:reportId') 
 req.body {user, importance} 
-//? user - your user object
+//? userId - your user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const importanceReport = async (req, res) => {
   const {
     params: { reportId },
-    body: { user, importance },
+    body: { userId, importance },
   } = req;
 
   try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+
     let report = await ReportModel.findById(reportId);
     if (user.rank === "captain" || report.createdBy._id === user._id) {
       switch (importance) {
