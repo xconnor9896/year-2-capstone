@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
     console.log(pageProps.user);
     setCanShowNav(true);
 
-    console.log(router.pathname);
+		// console.log(router.pathname);
 
     let noNavs = ["/", "/404", "/500", "/report/print/[id]"];
 

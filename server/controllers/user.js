@@ -1,4 +1,4 @@
-// const defaultProfilePic = require("../util/defaultPic");
+const defaultProfilePic = require("../util/defaultPic");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -13,36 +13,41 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-	const {
-		user,
-		user: { email, password, profilePicURL },
-	} = req.body;
+  const {
+    user,
+    user: { email, password },
+  } = req.body;
 
-	try {
-		if (!isEmail(email)) return res.status(401).send("Invalid Email");
-		if (password.length < 8) {
-			return res
-				.status(401)
-				.send("Password must be at least 8 characters long");
-		}
-		if (password.length > 100) {
-			return res
-				.status(401)
-				.send("Password must be less than 100 characters long");
-		}
+  let {profilePicUrl} = user 
 
-		let user;
-		user = await UserModel.findOne({ email: email.toLowerCase() });
-		if (user) return res.status(401).send("Email already used");
+  try {
+    if (!isEmail(email)) return res.status(401).send("Invalid Email");
+    if (password.length < 8) {
+      return res
+        .status(401)
+        .send("Password must be at least 8 characters long");
+    }
+    if (password.length > 100) {
+      return res
+        .status(401)
+        .send("Password must be less than 100 characters long");
+    }
 
-		let newUser = new UserModel({
-			...user,
-			email: email.toLowerCase(),
-			profilePicURL: profilePicURL || defaultProfilePic,
-		});
+    let checkUser;
+    checkUser = await UserModel.findOne({ email: email.toLowerCase() });
+    if (checkUser) return res.status(401).send("Email already used");
 
-		newUser.password = await bcrypt.hash(password, 10);
-		newUser = await newUser.save();
+    if (!profilePicUrl) {
+      profilePicUrl = defaultProfilePic;
+    }
+
+    let newUser = new UserModel({
+      ...user,
+      profilePicUrl,
+    });
+
+    newUser.password = await bcrypt.hash(password, 10);
+    newUser = await newUser.save();
 
 		const payload = { userID: user._id };
 		jwt.sign(

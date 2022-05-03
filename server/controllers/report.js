@@ -45,56 +45,66 @@ const createReport = async (req, res) => {
 DELETE REPORT
 .delete('/:reportId') 
 req.params { reportId } //? Report to be deleted
-req.body { user }
+req.body { userId }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const deleteReport = async (req, res) => {
-	const { reportId } = req.params;
-	const { user } = req.body;
+  const { reportId } = req.params;
+  const { userId } = req.body;
 
-	try {
-		const report = await ReportModel.findById(reportId);
-		if (
-			user.rank === "captain" ||
-			(user._id === report.responsibleOfficer._id && !report.verified)
-		) {
-			const deleted = await ReportModel.deleteOne({ reportId });
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("user not found!");
+    }
+    
+    const report = await ReportModel.findById(reportId);
+    if (
+      user.rank === "captain" ||
+      (user._id === report.responsibleOfficer && !report.verified)
+    ) {
+      const deleted = await ReportModel.deleteOne({ reportId });
 
-			if (deleted) {
-				return res.status(200).send("Report Deleted");
-			} else {
-				return res.status(404).send("Report Not Found");
-			}
-		} else {
-			return res
-				.status(403)
-				.send("Please contact your captain about deleting your report");
-		}
-	} catch (error) {
-		console.log(error);
-		return res.status(400).send("Error at deleteReport");
-	}
+      if (deleted) {
+        return res.status(200).send("Report Deleted");
+      } else {
+        return res.status(404).send("Report Not Found");
+      }
+    } else {
+      return res
+        .status(403)
+        .send("Please contact a captain about deleting this report");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Error at deleteReport");
+  }
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 UPDATE REPORT
 .post('/:reportId') 
 req.params {reportId} //? Targets Id
-req.body {user, keys, inputs} //? updates user based off the keys and inputs
+req.body {userId, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-	const { user, keys, inputs } = req.body;
+	const { userId, keys, inputs } = req.body;
 	const { reportId } = req.params;
 
 	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
+
 		let report = await ReportModel.findById(reportId);
 		const notInclude = ["verified", "responsibleOfficer", "importance"];
 
 		if (user.rank === "captain" || report.createdBy === user._id) {
 			if (keys.length === inputs.length) {
 				for (let i = 0; i < keys.length; i++) {
-					if (!notInclude.contains(keys[i])) {
+					if (!notInclude.includes(keys[i])) {
 						report[keys[i]] = inputs[i];
 						report = await report.save();
 					}
@@ -118,32 +128,27 @@ const updateReport = async (req, res) => {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET REPORT
-.get('/:reportId') 
-req.params {reportId} //? Targets Id
-req.body {userId} //? User
+.get('/:reportId/:userId') 
+req.params {reportId, userId} //? Targets Id, User
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getReport = async (req, res) => {
 	const { reportId, userId } = req.params;
 
-	if (!reportId || !userId) {
-		return res.status(404).send("Params not given.");
-	}
-
 	try {
 		const user = await UserModel.findById(userId);
-
 		if (!user) {
-			return res.status(404).send("User doesn't exist");
+			return res.status(404).send("user not found!");
 		}
 
-		let report = await ReportModel.findById(reportId);
+		const report = await ReportModel.findById(reportId);
 
-		if (!report) {
-			return res.status(404).send("Report doesn't exist");
-		}
+		if (!report) return res.status(404).send("That report doesn't exist.");
 
-		if (user.rank === "captain" || report.createdBy === user._id) {
+		if (
+			user.rank === "captain" ||
+			report.basicInfo.responsibleOfficer === user._id
+		) {
 			return res.status(200).json(report);
 		} else {
 			return res
@@ -151,7 +156,7 @@ const getReport = async (req, res) => {
 				.send("You do not have authorization to view this report");
 		}
 	} catch (error) {
-		// console.log(error);
+		console.log(error);
 		return res.status(400).send("error at getReport controller");
 	}
 };
@@ -198,11 +203,13 @@ const getAllReports = async (req, res) => {
 					);
 				} else if (sort === 5) {
 					let temp = reports.filter(
-						(report) => report.importance === 2
+						(report) => report.basicInfo.importance === 2
 					);
 					temp.push(
 						...reports
-							.filter((report) => report.importance !== 2)
+							.filter(
+								(report) => report.basicInfo.importance !== 2
+							)
 							.sort((a, b) => a.importance - b.importance)
 					);
 					reports = temp;
@@ -246,11 +253,13 @@ const getAllReports = async (req, res) => {
 					);
 				} else if (sort === 5) {
 					let temp = reports.filter(
-						(report) => report.importance === 2
+						(report) => report.basicInfo.importance === 2
 					);
 					temp.push(
 						...reports
-							.filter((report) => report.importance !== 2)
+							.filter(
+								(report) => report.basicInfo.importance !== 2
+							)
 							.sort((a, b) => a.importance - b.importance)
 					);
 					reports = temp;
@@ -274,23 +283,41 @@ const getAllReports = async (req, res) => {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Verify Report
 .post('/verify/:reportId') 
-req.body {user} 
-//? user - your user object
+req.body {userId} 
+//? userId - your user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const verifyReport = async (req, res) => {
 	const {
 		params: { reportId },
-		body: { user },
+		body: { userId },
 	} = req;
 
 	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
+
 		if (user.rank === "captain") {
 			let report = await ReportModel.findById(reportId);
-			report.verified = !report.verified;
-			report.save();
+
+			if (!report)
+				return res.status(404).send(`That report doesn't exist.`);
+			// report.verified = !report.verified;
+
+			if (report.basicInfo.verified === undefined) {
+				report.basicInfo.verified = true;
+			} else {
+				report.basicInfo.verified = !report.basicInfo.verified;
+			}
+
+			await report.save();
+
 			res.status(200).send(
-				`Report ${report.verified ? "verified" : "unverified"}`
+				`Report ${
+					report.basicInfo.verified ? "verified" : "unverified"
+				}`
 			);
 		} else {
 			return res
@@ -307,51 +334,55 @@ const verifyReport = async (req, res) => {
 Importance Report
 .post('/importance/:reportId') 
 req.body {user, importance} 
-//? user - your user object
+//? userId - your user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const importanceReport = async (req, res) => {
 	const {
 		params: { reportId },
-		body: { user, importance },
+		body: { userId, importance },
 	} = req;
 
 	try {
+		if (!userId || !importance)
+			return res.status(403).send("Required body data not sent.");
+
+		const user = await UserModel.findById(userId);
+		if (!user) return res.status(404).send("user not found!");
+
 		let report = await ReportModel.findById(reportId);
 		if (user.rank === "captain" || report.createdBy._id === user._id) {
 			switch (importance) {
 				case "normal":
-					report.importance = 3;
+					report.basicInfo.importance = 3;
 					break;
 				case "important":
-					report.importance = 2;
+					report.basicInfo.importance = 2;
 					break;
 				case "urgent":
-					report.importance = 1;
+					report.basicInfo.importance = 1;
 					break;
-				case 3:
-					report.importance = 3;
+				case "3":
+					report.basicInfo.importance = 3;
 					break;
-				case 2:
-					report.importance = 2;
+				case "2":
+					report.basicInfo.importance = 2;
 					break;
-				case 1:
-					report.importance = 1;
+				case "1":
+					report.basicInfo.importance = 1;
 					break;
 				default:
-					report = null;
+					return res
+						.status(400)
+						.send(
+							`The level of importance ${importance} does not exist`
+						);
 			}
 
-			if (report !== null) {
-				report.save();
-				res.status(200).send(
-					`Report ${report.verified ? "verified" : "unverified"}`
-				);
-			} else {
-				req.status(400).send(
-					`The level of importance ${importance} does not exist`
-				);
-			}
+			await report.save();
+			return res
+				.status(200)
+				.send(`Report urgency changed to ${report.basicInfo.urgency}`);
 		} else {
 			return res
 				.status(403)

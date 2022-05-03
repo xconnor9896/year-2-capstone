@@ -14,11 +14,14 @@ import {
 import Modal from "../../components/Modal";
 import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
+import getReport from "../util/getReport";
 import axios from "axios";
 
-const tempReport = {};
-
-export default function Report({ user: currentUser, user: { _id }, token }) {
+export default function Report({
+	user: currentUser,
+	user: { _id: currentUserId },
+	token,
+}) {
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -28,61 +31,49 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 	// const [view, setView] = useState(true);
 	const [view, setView] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [deleteModal, setDeleteModal] = useState(false);
 
+	const [deleteModal, setDeleteModal] = useState(false);
 	const [urgencyModal, setUrgencyModal] = useState(false);
 	const [temporaryUrgency, setTemporaryUrgency] = useState(0);
 
 	const [isCaptain, setIsCaptain] = useState(false);
+	const [isCreator, setIsCreator] = useState(false);
+	const [isVerified, setIsVerified] = useState(false);
+	const [tag, setTag] = useState(null);
 
-	const getReport = async () => {
+	const loadReport = async () => {
+		setLoading(true);
+
 		try {
-			// Getting the report data.
-			const res = await axios.get(
-				`http://localhost:3000/api/v1/report/${id}/${_id}`,
+			const report = await getReport(id, currentUserId);
 
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+			if (!report) router.push("/dashboard");
 
-			if (!res) throw new Error("no result returned");
+			setReport(report);
+			setResponsibleOfficer(report.basicInfo.responsibleOfficer);
+			setTag(report.basicInfo.importance);
 
-			setReport(res.data);
+			setIsVerified(report.basicInfo.verified);
 
-			// Getting the responsible officer.
-			const officerId = res.data.basicInfo.responsibleOfficer;
-
-			if (!officerId) throw new Error("no officer id provided");
-
-			const officerRes = await axios.get(
-				`http://localhost:3000/api/v1/user/${officerId}`,
-
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			setResponsibleOfficer(officerRes.data);
-		} catch (err) {
-			console.error("Failed to get report with that ID.", err);
-
-			// router.push("/dashboard");
+			if (report.basicInfo.responsibleOfficer._id === currentUserId) {
+				setIsCreator(true);
+			} else {
+				setIsCreator(false);
+			}
+		} catch {
+			router.push("/dashboard");
 		}
+
+		setLoading(false);
 	};
 
 	useEffect(() => {
-		getReport();
+		loadReport();
 	}, []);
 
 	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
-		console.log(id);
-		if (currentUser.rank !== "captain") {
+		if (currentUser.rank == "captain") {
 			setIsCaptain(true);
 		} else {
 			setIsCaptain(false);
@@ -93,37 +84,88 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 		authCheck();
 	}, [currentUser]);
 
-	const deleteReport = () => {
+	const deleteReport = async () => {
 		setDeleteModal(false);
 		setLoading(true);
 
-		console.log("implement deleteReport");
+		try {
+			console.log(temporaryUrgency);
 
-		// Should redirect if the delete succeeded.
+			const res = await axios.delete(
+				`http://localhost:3000/api/v1/report/${report._id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					data: {
+						userId: currentUserId,
+					},
+				}
+			);
+
+			console.log(res);
+
+			router.back();
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
 	};
 
-	const toggleVerified = () => {
-		console.log("Implement Verification Toggle");
+	const toggleVerified = async () => {
+		setLoading(true);
+
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/verify/${report._id}`,
+				{
+					userId: currentUserId,
+				},
+
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
+
+		setLoading(false);
+
+		loadReport();
 	};
 
-	const setUrgency = () => {
+	const setUrgency = async () => {
 		setUrgencyModal(false);
 		setLoading(true);
 
-		console.log(temporaryUrgency);
-
-		console.log("Implement Set Urgency");
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/importance/${report._id}`,
+				{
+					userId: currentUserId,
+					importance: temporaryUrgency,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+		} catch (err) {
+			console.error("Error on toggle verification function:", err);
+		}
 
 		setLoading(false);
+
+		// router.reload();
+		loadReport();
 	};
 
 	// THESE ARE TEMPORARY AND SHOULD BE REPLACED WITH SERVERSIDE GRABBERS OF SOME KIND.
-
-	const isCreator = true;
-	const isVerified = false;
-	const tag = 0;
 
 	return (
 		<main className={styles.container} shadow={"true"}>
@@ -353,7 +395,8 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 						{!loading && view ? (
 							<ViewReport
 								{...{
-									report: tempReport,
+									report,
+									responsibleOfficer,
 									loading,
 									setLoading,
 									view,
@@ -363,7 +406,8 @@ export default function Report({ user: currentUser, user: { _id }, token }) {
 						) : (
 							<EditReport
 								{...{
-									report: tempReport,
+									report,
+									responsibleOfficer,
 									loading,
 									setLoading,
 									view,
