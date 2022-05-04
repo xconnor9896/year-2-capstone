@@ -18,15 +18,27 @@ const ReportPrintout = ({ id, userId }) => {
 	const [peopleInfo, setPeopleInfo] = useState(null);
 	const [hospitalInfo, setHospitalInfo] = useState(null);
 
+	const [loading, setLoading] = useState(true);
+
 	const loadReport = async () => {
+		setLoading(true);
+
 		const report = await getReport(id, userId);
+		console.log(report);
 
 		// setActiveReport(tempReport);
 
-		setBasicInfo(report.basicInfo ? report.basicInfo : null);
-		setPeopleInfo(report.peopleInfo ? report.peopleInfo : null);
-		setHospitalInfo(report.hospitalInfo ? report.hospitalInfo : null);
+		setActiveReport(report);
+		setBasicInfo(report.basicInfo);
+		setPeopleInfo(report.peopleInfo);
+		setHospitalInfo(report.hospitalInfo);
+
+		setLoading(false);
 	};
+
+	useEffect(() => {
+		console.log(peopleInfo);
+	}, [basicInfo]);
 
 	const reportPrintout = useRef(null);
 	useEffect(() => {
@@ -49,13 +61,15 @@ const ReportPrintout = ({ id, userId }) => {
 		window.print();
 	};
 
+	if (loading) return <>Loading...</>;
+
 	return (
 		<div className={styles.reportPrintout} ref={reportPrintout}>
 			<header className={`${styles.header}`}>
 				<h1>
 					West-MEC Police Department
 					<h2>
-						Incident Report - <em>#{id}</em>
+						Incident Report - <em>#{activeReport.caseNumber}</em>
 					</h2>
 				</h1>
 			</header>
@@ -77,22 +91,25 @@ const ReportPrintout = ({ id, userId }) => {
 										<label>Code</label>
 										<p>{basicInfo.code}</p>
 									</span>
-									<span>
-										<ul>
-											<li>
-												{checkbox(
-													basicInfo.reportType.keyRpt
-												)}
-												Key Rpt
-											</li>
-											<li>
-												{checkbox(
-													basicInfo.reportType.fu
-												)}
-												F/U
-											</li>
-										</ul>
-									</span>
+									{basicInfo.reportType && (
+										<span>
+											<ul>
+												<li>
+													{checkbox(
+														basicInfo.reportType
+															.keyRpt
+													)}
+													Key Rpt
+												</li>
+												<li>
+													{checkbox(
+														basicInfo.reportType.fu
+													)}
+													F/U
+												</li>
+											</ul>
+										</span>
+									)}
 									<span>
 										<label>Status</label>
 										<p>{basicInfo.status}</p>
@@ -632,20 +649,24 @@ const ReportPrintout = ({ id, userId }) => {
 									<label>Code</label>
 									<p>{basicInfo.code}</p>
 								</span>
-								<span>
-									<ul>
-										<li>
-											{checkbox(
-												basicInfo.reportType.keyRpt
-											)}
-											Key Rpt
-										</li>
-										<li>
-											{checkbox(basicInfo.reportType.fu)}
-											F/U
-										</li>
-									</ul>
-								</span>
+								{basicInfo.reportType && (
+									<span>
+										<ul>
+											<li>
+												{checkbox(
+													basicInfo.reportType.keyRpt
+												)}
+												Key Rpt
+											</li>
+											<li>
+												{checkbox(
+													basicInfo.reportType.fu
+												)}
+												F/U
+											</li>
+										</ul>
+									</span>
+								)}
 								<span>
 									<label>Status</label>
 									<p>{basicInfo.status}</p>

@@ -241,20 +241,7 @@ export default function Report({
 						<Card.Header>
 							<div className={styles.header}>
 								<span>
-									<h1>
-										CASE #:{" "}
-										{report._id.length < 16 ? (
-											report._id
-										) : (
-											<>
-												{report._id.slice(0, 7)}...
-												{report._id.slice(
-													report._id.length - 6,
-													report._id.length
-												)}
-											</>
-										)}
-									</h1>
+									<h1>CASE #{report.caseNumber}</h1>
 									{responsibleOfficer && (
 										<>
 											<h1>
