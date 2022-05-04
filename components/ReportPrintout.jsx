@@ -36,10 +36,6 @@ const ReportPrintout = ({ id, userId }) => {
 		setLoading(false);
 	};
 
-	useEffect(() => {
-		console.log(peopleInfo);
-	}, [basicInfo]);
-
 	const reportPrintout = useRef(null);
 	useEffect(() => {
 		loadReport();

@@ -11,7 +11,7 @@ const uuid = require("uuid").v4;
 const ViewReport = ({ currentUserId }) => {
 	const router = useRouter();
 
-	const { id } = router.query;
+	const [id] = router.query.slug;
 
 	const printoutRef = useRef(null);
 
