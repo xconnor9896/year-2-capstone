@@ -331,8 +331,7 @@ const ReportSchema = new mongoose.Schema({
 	},
 
 	ApprovedBy: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
+		type: String,
 		required: false,
 
 		// make it so that only captains can approve
