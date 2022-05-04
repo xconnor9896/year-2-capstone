@@ -24,6 +24,7 @@ const ReportPrintout = ({ id, userId }) => {
 		setLoading(true);
 
 		const report = await getReport(id, userId);
+		console.log(report);
 
 		// setActiveReport(tempReport);
 
@@ -68,7 +69,7 @@ const ReportPrintout = ({ id, userId }) => {
 				<h1>
 					West-MEC Police Department
 					<h2>
-						Incident Report - <em>#{id}</em>
+						Incident Report - <em>#{activeReport.caseNumber}</em>
 					</h2>
 				</h1>
 			</header>
