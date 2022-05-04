@@ -8,6 +8,7 @@ const getReport = async (reportId, userId) => {
 
 		if (!reportId || !userId) throw new Error("Proper IDs not provided.");
 
+		console.log(userId);
 		// Getting the report data.
 		const res = await axios.get(
 			`http://localhost:3000/api/v1/report/${reportId}/${userId}`,
