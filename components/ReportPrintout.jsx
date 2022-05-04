@@ -18,7 +18,11 @@ const ReportPrintout = ({ id, userId }) => {
 	const [peopleInfo, setPeopleInfo] = useState(null);
 	const [hospitalInfo, setHospitalInfo] = useState(null);
 
+	const [loading, setLoading] = useState(true);
+
 	const loadReport = async () => {
+		setLoading(true);
+
 		const report = await getReport(id, userId);
 
 		// setActiveReport(tempReport);
@@ -27,7 +31,13 @@ const ReportPrintout = ({ id, userId }) => {
 		setBasicInfo(report.basicInfo);
 		setPeopleInfo(report.peopleInfo);
 		setHospitalInfo(report.hospitalInfo);
+
+		setLoading(false);
 	};
+
+	useEffect(() => {
+		console.log(peopleInfo);
+	}, [basicInfo]);
 
 	const reportPrintout = useRef(null);
 	useEffect(() => {
@@ -49,6 +59,8 @@ const ReportPrintout = ({ id, userId }) => {
 
 		window.print();
 	};
+
+	if (loading) return <>Loading...</>;
 
 	return (
 		<div className={styles.reportPrintout} ref={reportPrintout}>
@@ -636,20 +648,24 @@ const ReportPrintout = ({ id, userId }) => {
 									<label>Code</label>
 									<p>{basicInfo.code}</p>
 								</span>
-								<span>
-									<ul>
-										<li>
-											{checkbox(
-												basicInfo.reportType.keyRpt
-											)}
-											Key Rpt
-										</li>
-										<li>
-											{checkbox(basicInfo.reportType.fu)}
-											F/U
-										</li>
-									</ul>
-								</span>
+								{basicInfo.reportType && (
+									<span>
+										<ul>
+											<li>
+												{checkbox(
+													basicInfo.reportType.keyRpt
+												)}
+												Key Rpt
+											</li>
+											<li>
+												{checkbox(
+													basicInfo.reportType.fu
+												)}
+												F/U
+											</li>
+										</ul>
+									</span>
+								)}
 								<span>
 									<label>Status</label>
 									<p>{basicInfo.status}</p>
