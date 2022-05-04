@@ -258,7 +258,7 @@ const getUsername = async (req, res) => {
       "username"
     );
 
-    return res.status(200).json({ profile });
+    return res.status(200).json( profile );
   } catch (error) {
     console.log(error);
     return res.status(500).send("error @ getUsername");

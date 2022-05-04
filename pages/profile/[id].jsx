@@ -10,7 +10,7 @@ import axios from "axios";
 
 import styles from "../../styles/Pages/Profile.module.scss";
 
-const Profile = ({ username }) => {
+const Profile = ({ data }) => {
   const router = useRouter();
 
   // const name = "John Doe";
@@ -23,34 +23,13 @@ const Profile = ({ username }) => {
   const [user, setUser] = useState([])
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const getUsers = async () => {
-      setLoading(true);
-      console.log("initiating getUsers...");
-      try {
-        const { userId } = router.query;
-        const res = await axios.get(
-          `${baseURL}/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-          }
-        );
-        setUser(res.data);
-      } catch (error) {
-        console.log("error loading posts");
-      }
-      setLoading(false);
-    };
-    getUsers();
-  }, [router.query.userId]);
-
   return (
     <main className={styles.container}>
       <div className={styles.user}>
         <div className={styles.pfp}>
           <FaRegUser />
         </div>
-        {/* <h1>{username.user.name}</h1> */}
+        <h1>{data.username}</h1>
         <div className={styles.banner}>
           <img />
         </div>
