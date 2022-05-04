@@ -23,9 +23,10 @@ const ReportPrintout = ({ id, userId }) => {
 
 		// setActiveReport(tempReport);
 
-		setBasicInfo(report.basicInfo ? report.basicInfo : null);
-		setPeopleInfo(report.peopleInfo ? report.peopleInfo : null);
-		setHospitalInfo(report.hospitalInfo ? report.hospitalInfo : null);
+		setActiveReport(report);
+		setBasicInfo(report.basicInfo);
+		setPeopleInfo(report.peopleInfo);
+		setHospitalInfo(report.hospitalInfo);
 	};
 
 	const reportPrintout = useRef(null);
@@ -77,22 +78,25 @@ const ReportPrintout = ({ id, userId }) => {
 										<label>Code</label>
 										<p>{basicInfo.code}</p>
 									</span>
-									<span>
-										<ul>
-											<li>
-												{checkbox(
-													basicInfo.reportType.keyRpt
-												)}
-												Key Rpt
-											</li>
-											<li>
-												{checkbox(
-													basicInfo.reportType.fu
-												)}
-												F/U
-											</li>
-										</ul>
-									</span>
+									{basicInfo.reportType && (
+										<span>
+											<ul>
+												<li>
+													{checkbox(
+														basicInfo.reportType
+															.keyRpt
+													)}
+													Key Rpt
+												</li>
+												<li>
+													{checkbox(
+														basicInfo.reportType.fu
+													)}
+													F/U
+												</li>
+											</ul>
+										</span>
+									)}
 									<span>
 										<label>Status</label>
 										<p>{basicInfo.status}</p>
