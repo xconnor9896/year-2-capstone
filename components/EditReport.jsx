@@ -1,15 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/Components/EditReport.module.scss";
-import { Button, Card } from "../proton";
-import {
-	FaPencilAlt,
-	FaChevronDown,
-	FaUserPlus,
-	FaUserTimes,
-	FaTrash,
-	FaSave,
-} from "react-icons/fa";
-const uuid = require("uuid").v4;
+import { Button } from "../proton";
+import { FaChevronDown, FaUserPlus, FaTrash, FaSave } from "react-icons/fa";
 
 import { Select, Option } from "./Select";
 
@@ -18,50 +10,7 @@ const Input = ({ children }) => {
 };
 
 const EditReport = ({ report, setLoading, loading, setView }) => {
-	const person = {
-		// says weather the person is a victim, witness, suspect, or something else
-		id: uuid(),
-		personType: "",
-		race: "",
-		name: {
-			firstName: "",
-			middleName: "",
-			lastName: "",
-			aka: "",
-		},
-		DOB: "",
-		age: 0,
-		isJuvenile: false,
-		sex: "",
-		occupation: "",
-		homeAddress: "",
-		employerAddress: "",
-		phoneNumbers: {
-			main: "",
-			secondary: "",
-			business: "",
-		},
-		email: "",
-		studentID: 0,
-		victimRelationshipToSuspect: "",
-		whoDescribed: "",
-		willProsecute: false,
-		BAC: false,
-		BACResults: "",
-		personalDetails: {
-			height: "",
-			weight: 0,
-			build: "",
-			hairColor: "",
-			hairCharacter: "",
-			complexion: "",
-			voice: "",
-			eyeColor: "",
-			facialHairColor: "",
-			facialHairChar: "",
-			clothing: "",
-		},
-	};
+	const [loadingReport, setLoadingReport] = useState(true);
 
 	const [dropdowns, setDropdowns] = useState({
 		basic: false,
@@ -70,6 +19,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		syno: false,
 		cont: false,
 	});
+
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
 	};
@@ -86,132 +36,39 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 	};
 
 	const [activeReport, setActiveReport] = useState({
-		caseNumber: "oi214joai3h523897",
-
-		approvedBy: {
-			name: {
-				firstName: "Tim",
-				lastName: "P",
-			},
-		},
-
 		basicInfo: {
-			incidentType: "",
-
-			code: "",
-
 			reportType: {
 				keyRpt: false,
-				fu: false,
 			},
-
-			disposition: "",
-
-			arsSectionNumber: "",
-
-			location: "",
-
-			synopsis: "",
-			reportNarration: "",
-
-			responsibleOfficer: {
-				name: {
-					firstName: "",
-					middleName: "",
-					lastName: "",
-				},
-				rank: "",
-				badgeNumber: "",
-				division: "",
-			},
-
-			beatOfOffense: "",
-
-			domesticViolence: false,
-
-			incidentReportedAt: {
-				date: {
-					month: "",
-					day: "",
-					year: "",
-				},
-				day: "",
-				time: {
-					hour: "",
-					minute: "",
-				},
-			},
-
-			incidentOccurredAt: {
-				from: {
-					date: {
-						month: "",
-						day: "",
-						year: "",
-					},
-
-					time: {
-						hour: "",
-						minute: "",
-					},
-				},
-				to: {
-					date: {
-						month: "",
-						day: "",
-						year: "",
-					},
-
-					time: {
-						hour: "",
-						minute: "",
-					},
-				},
-			},
-
-			relatedComments: "",
-		},
-
-		peopleInfo: [],
-
-		hospitalInfo: {
-			injured: false,
-			treated: false,
-			hospital: "",
-			transportedBy: "",
-			emsNo: 0,
-			treatmentReasons: {
-				mental: false,
-				suicide: false,
-				icf: false,
-				scf: false,
-				intox: false,
-				drugs: false,
-				indust: false,
-				uncon: false,
-				resisted: false,
-
-				other: false,
-			},
-			patientCondition: "",
-			patientDispo: "",
-			attendingPhysician: "",
 		},
 	});
+	useEffect(() => {
+		setLoadingReport(true);
+
+		setActiveReport({ ...report, ...activeReport });
+	}, []);
+
+	useEffect(() => {
+		console.log(activeReport);
+
+		setLoadingReport(false);
+	}, [activeReport]);
 
 	const addPerson = () => {
-		setActiveReport({
-			...activeReport,
+		// setActiveReport({
+		// 	...activeReport,
 
-			peopleInfo: [
-				...activeReport.peopleInfo,
+		// 	peopleInfo: [
+		// 		...activeReport.peopleInfo,
 
-				{
-					...person,
-					id: uuid(),
-				},
-			],
-		});
+		// 		{
+		// 			...person,
+		// 			id: uuid(),
+		// 		},
+		// 	],
+		// });
+
+		console.log("implement add person");
 	};
 
 	const removePerson = (toDel) => {
@@ -287,6 +144,8 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 	// const blurMe = (e) => {
 	// 	e.target.blur();
 	// };
+
+	if (loadingReport) return <>Loading...</>;
 
 	return (
 		<form className={styles.reportForm} onSubmit={submitForm}>
