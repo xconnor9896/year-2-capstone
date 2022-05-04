@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const PersonSchema = new mongoose.Schema({
 	// The case number will be the mongoose _id
 
+	caseNumber: {
+		type: Number,
+		required: true
+	},
+
 	personType: {
 		enum: [
 			"Complainant",

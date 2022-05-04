@@ -230,7 +230,7 @@ const authUser = async (req, res) => {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET USER
-.post('/user/:userId') 
+.post('/:userId') 
 req.params {userId} //? Targets userId
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -248,6 +248,29 @@ const getUser = async (req, res) => {
 		return res.status(400).send("error at getUser controller");
 	}
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET SQUAD
+.post('/squad/:squadNumber') 
+req.params {squadNumber} //? Targets userId
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getSquad = async (req, res) => {
+  const { squadNumber } = req.params;
+  try {
+    const users = await UserModel.find({squadNumber});
+
+    if (users) {
+      return res.status(200).json(users);
+    } else {
+      return res.status(404).send("No users in the given squad");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("error at getSquad controller");
+  }
+}
+
 module.exports = {
 	createUser,
 	loginUser,
@@ -256,4 +279,5 @@ module.exports = {
 	changePassword,
 	authUser,
 	getUser,
+  getSquad
 };

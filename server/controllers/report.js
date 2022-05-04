@@ -1,5 +1,6 @@
 const ReportModel = require("../models/ReportModel");
 const UserModel = require("../models/UserModel");
+const Number = require("../models/Number")
 const jwt = require("jsonwebtoken"); // This isnt done just a structure
 
 const isEmail = require("validator/lib/isEmail");
@@ -24,21 +25,28 @@ const createReport = async (req, res) => {
 			return res.status(404).send("No user with the given Id");
 		}
 
-		const report = new ReportModel({
-			basicInfo: {
-				responsibleOfficer: userId,
-				importance: 3,
-				verified: false,
-			},
-		});
+    let curNum = await Number.find({})
+    curNum = curNum[0]
+    
+    console.log(curNum);
 
-		await report.save();
+    const report = new ReportModel({
+      caseNumber: curNum.number++,
+      basicInfo: {
+        responsibleOfficer: userId,
+        importance: 3,
+        verified: false,
+      },
+    });
 
-		return res.status(200).json(report);
-	} catch (error) {
-		// console.log(error);
-		return res.status(400).send("Error at createReport controller");
-	}
+    await curNum.save();
+    await report.save();
+
+    return res.status(200).json(report);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Error at createReport controller");
+  }
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

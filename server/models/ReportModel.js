@@ -8,12 +8,16 @@ const mongoose = require("mongoose");
 const ReportSchema = new mongoose.Schema({
 	// The case number will be the mongoose _id
 
-	basicInfo: {
-		incidentType: {
-			type: String,
-			required: false,
-			default: "",
-		},
+  caseNumber: {
+    type: Number,
+    required: true
+  },
+
+  basicInfo: {
+    incidentType: {
+      type: String,
+      required: false,
+    },
 
 		code: {
 			type: String,
