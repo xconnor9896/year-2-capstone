@@ -22,3 +22,4 @@
 | `4/28` | Finished rerouting and auth user. Hooked up navbar.                                                                                                          |
 | `4/29` | Hooked up report page.                                                                                                                                       |
 | `5/2`  | Fixed bugs on report page hook up.                                                                                                                           |
+| `5/3`  | Finished report page with custom routes and finished ViewReport/ReportPrintout components. Started on report editor hook up.                                 |
