@@ -62,11 +62,20 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		"/dashboard",
 		"/reports",
 		"/profile",
-		"/profile/[id]",
 		"/report",
-		"/report/[id]",
+		"/profile/[id]",
+		// "/report/[id]",
+		"/report/[...slug]",
 	];
 	const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
+
+	// let isProtectedRoute = false;
+
+	// for (let route of protectedRoutes) {
+	// 	if (ctx.pathname.includes(route)) isProtectedRoute = true;
+	// }
+
+	// console.log(ctx.pathname, isProtectedRoute);
 
 	if (!token) {
 		isProtectedRoute && redirectUser(ctx, "/");

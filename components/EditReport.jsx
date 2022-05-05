@@ -1,16 +1,78 @@
 import { useState, useEffect } from "react";
 import styles from "../styles/Components/EditReport.module.scss";
 import { Button } from "../proton";
-import { FaChevronDown, FaUserPlus, FaTrash, FaSave } from "react-icons/fa";
+import {
+	FaChevronDown,
+	FaUserPlus,
+	FaTrash,
+	FaSave,
+	FaExclamationTriangle,
+} from "react-icons/fa";
+
+import { v4 as uuid } from "uuid";
 
 import { Select, Option } from "./Select";
+
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const Input = ({ children }) => {
 	return <div className={styles.input}>{children}</div>;
 };
 
-const EditReport = ({ report, setLoading, loading, setView }) => {
-	const [loadingReport, setLoadingReport] = useState(true);
+const EditReport = ({
+	currentUserId,
+	report,
+	setLoading,
+	loading,
+	setView,
+}) => {
+	// const [loadingReport, setLoadingReport] = useState(true);
+	const person = {
+		// says weather the person is a victim, witness, suspect, or something else
+
+		personType: "",
+		race: "",
+		name: {
+			firstName: "",
+			middleName: "",
+			lastName: "",
+			aka: "",
+		},
+		age: 0,
+		isJuvenile: false,
+		sex: "",
+		occupation: "",
+		homeAddress: "",
+		employerAddress: "",
+		phoneNumbers: {
+			main: "",
+			secondary: "",
+			business: "",
+		},
+		email: "",
+		studentID: 0,
+		victimRelationshipToSuspect: "",
+		whoDescribed: "",
+		willProsecute: false,
+		BAC: false,
+		BACResults: 0,
+		personalDetails: {
+			height: "",
+			weight: 0,
+			build: "",
+			hairColor: "",
+			hairCharacter: "",
+			complexion: "",
+			voice: "",
+			eyeColor: "",
+			facialHairColor: "",
+			facialHairChar: "",
+			clothing: "",
+		},
+	};
+
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	const [dropdowns, setDropdowns] = useState({
 		basic: false,
@@ -35,40 +97,42 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setPersonDropdowns({ ...newPersonDropdowns });
 	};
 
-	const [activeReport, setActiveReport] = useState({
-		basicInfo: {
-			reportType: {
-				keyRpt: false,
-			},
-		},
-	});
-	useEffect(() => {
-		setLoadingReport(true);
-
-		setActiveReport({ ...report, ...activeReport });
-	}, []);
+	const [activeReport, setActiveReport] = useState(null);
 
 	useEffect(() => {
-		console.log(activeReport);
+		// setActiveReport((prev) => {
+		// 	const temp = Object.assign(report, prev);
 
-		setLoadingReport(false);
-	}, [activeReport]);
+		// 	setLoadingReport(false);
 
-	const addPerson = () => {
-		// setActiveReport({
-		// 	...activeReport,
-
-		// 	peopleInfo: [
-		// 		...activeReport.peopleInfo,
-
-		// 		{
-		// 			...person,
-		// 			id: uuid(),
-		// 		},
-		// 	],
+		// 	return temp;
 		// });
 
-		console.log("implement add person");
+		// console.log("spreading values");
+
+		// const newBasicInfo = Object.assign(
+		// 	activeReport.basicInfo,
+		// 	report.basicInfo
+		// );
+
+		setActiveReport(report);
+	}, [report]);
+
+	const addPerson = () => {
+		setActiveReport({
+			...activeReport,
+
+			peopleInfo: [
+				...activeReport.peopleInfo,
+
+				{
+					...person,
+					_id: uuid(),
+				},
+			],
+		});
+
+		// console.log("implement add person");
 	};
 
 	const removePerson = (toDel) => {
@@ -130,22 +194,46 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setActiveReport({ ...newReport, ...activeReport });
 	};
 
-	const submitForm = (e) => {
+	const submitForm = async (e) => {
 		e.preventDefault();
-
 		setLoading(true);
-		console.warn("implement submitting of editted report.");
-		setLoading(false);
+		setErrorMessage(null);
 
-		// If Success
-		setView(true);
+		try {
+			const token = Cookies.get("token");
+
+			if (!token) throw new Error("No token.");
+
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/${report._id}`,
+				{
+					userId: currentUserId,
+					report: activeReport,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			console.log(res);
+
+			// setView(true);
+		} catch (err) {
+			console.error("Error at form submission", err);
+			setErrorMessage(err.response.data);
+		}
+
+		setLoading(false);
 	};
 
 	// const blurMe = (e) => {
 	// 	e.target.blur();
 	// };
 
-	if (loadingReport) return <>Loading...</>;
+	if (!activeReport) return <>Loading...</>;
 
 	return (
 		<form className={styles.reportForm} onSubmit={submitForm}>
@@ -511,7 +599,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 							<h5>No People To Display</h5>
 						)}
 						{activeReport.peopleInfo.map((person) => {
-							const { id } = person;
+							const { _id: id } = person;
 							const index =
 								activeReport.peopleInfo.indexOf(person);
 							const personLoc = activeReport.peopleInfo[index];
@@ -650,7 +738,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														Native Hawaiian / Other
 														Pacific Islander
 													</Option>
-													<Option val="White">
+													<Option val="white">
 														White
 													</Option>
 												</Select>
@@ -919,7 +1007,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Will Prosecute</label>
+												<label nr="1">
+													Will Prosecute
+												</label>
 												<ul>
 													<li>
 														<input
@@ -944,7 +1034,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>BAC</label>
+												<label nr="1">BAC</label>
 												<ul>
 													<li>
 														<input
@@ -966,10 +1056,12 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>BAC Results</label>
+												<label nr="1">
+													BAC Results
+												</label>
 												<input
-													type="string"
-													placeholder="BAC Results"
+													type="number"
+													placeholder="0.0"
 													value={personLoc.BACResults}
 													path={path + "BACResults"}
 													onChange={handleChange}
@@ -1024,7 +1116,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>Build</label>
+												<label nr="1">Build</label>
 												<input
 													type="string"
 													placeholder="Build"
@@ -1082,7 +1174,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>Hair Character</label>
+												<label nr="1">
+													Hair Character
+												</label>
 												<input
 													type="string"
 													placeholder="Hair Character"
@@ -1176,7 +1270,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>Facial Hair Color</label>
+												<label nr="1">
+													Facial Hair Color
+												</label>
 												<Select
 													placeholder="Facial Hair Color"
 													path={
@@ -1216,7 +1312,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>
+												<label nr="1">
 													Facial Hair Character
 												</label>
 												<input
@@ -1724,6 +1820,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 					<FaSave />
 				</Button>
 			</div>
+			{errorMessage && <div className={styles.errorMessage}>
+				<FaExclamationTriangle /> {errorMessage}
+			</div>}
 		</form>
 	);
 };

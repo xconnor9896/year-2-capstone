@@ -27,12 +27,17 @@ const ReportSchema = new mongoose.Schema({
 		},
 
 		reportType: {
-			// keyRpt: false,
-			// fu: false,
+			keyRpt: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
 
-			enum: ["keyRpt", "fu"],
-			type: String,
-			required: false,
+			fu: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
 		},
 
 		importance: {

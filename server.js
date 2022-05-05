@@ -48,7 +48,7 @@ nextApp.prepare().then(() => {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log(`server listining on ${PORT}`);
+			console.log(`server listening on ${PORT}`);
 		}
 	});
 });

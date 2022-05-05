@@ -396,8 +396,8 @@ export default function Report({
 						) : (
 							<EditReport
 								{...{
+									currentUserId,
 									report,
-									responsibleOfficer,
 									loading,
 									setLoading,
 									view,
