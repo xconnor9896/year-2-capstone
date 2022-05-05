@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Tabs.module.scss";
+import { baseURL } from "../pages/util/baseURL";
+import { parseCookies } from "nookies";
+import axios from "axios";
 import {
   FaNetworkWired,
   FaUserFriends,
@@ -7,13 +10,16 @@ import {
   FaInfoCircle,
 } from "react-icons/fa";
 
-const Tabs = ({profile}) => {
+const Tabs = ({ data }) => {
   const [tabOpen, setTabOpen] = useState(1);
 
   const name = "Lee";
+  const lName = "Lee";
   const phone = "(623) 945-8746";
   const prefix = "Lt";
   // *=====================================================================
+
+  console.log(data);
 
   return (
     <div className={styles.tabs}>
@@ -62,6 +68,24 @@ const Tabs = ({profile}) => {
       </ul>
     </div>
   );
+};
+
+Tabs.getInitialProps = async (ctx) => {
+  try {
+    const { id: userId } = ctx.query;
+    console.log(userId);
+    const { token } = parseCookies(ctx);
+
+    const res = await axios.get(`${baseURL}/api/v1/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const { data } = res;
+    console.log("this is the users data", data);
+    return { data };
+  } catch (error) {
+    return { errorLoading: true };
+  }
 };
 
 export default Tabs;
