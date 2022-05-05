@@ -391,19 +391,23 @@ export default function Report({
 							</div>
 						</Card.Header>
 
-						{!loading && view ? (
-							<ViewReport {...{ currentUserId }} />
-						) : (
-							<EditReport
-								{...{
-									currentUserId,
-									report,
-									loading,
-									setLoading,
-									view,
-									setView,
-								}}
-							/>
+						{!loading && (
+							<>
+								{view ? (
+									<ViewReport {...{ currentUserId }} />
+								) : (
+									<EditReport
+										{...{
+											currentUserId,
+											report,
+											loading,
+											setLoading,
+											view,
+											setView,
+										}}
+									/>
+								)}
+							</>
 						)}
 					</Card>
 				</article>
