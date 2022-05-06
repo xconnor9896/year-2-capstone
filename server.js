@@ -27,7 +27,7 @@ const squadRoutes = require("./server/routes/squadRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
 const getUserEmail = require("./server/routes/emailRoutes");
-const { authMiddleware } = require("../middleware/authMidware");
+const { authMiddleware } = require("./server/middleware/authMidware");
 
 // routes
 

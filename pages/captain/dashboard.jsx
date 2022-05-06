@@ -19,6 +19,12 @@ import axios from "axios";
 import Modal from "../../components/Modal";
 
 const Dashboard = ({ user }) => {
+	const router = useRouter();
+
+	const route = (path) => {
+		router.push(path);
+	};
+
 	const [loading, setLoading] = useState(false);
 
 	const [squadNumber, setSquadNumber] = useState(user.squadNumber);
@@ -27,6 +33,8 @@ const Dashboard = ({ user }) => {
 	const token = Cookies.get("token");
 
 	const reloadSquads = async (body) => {
+		setLoading(true);
+
 		if (!body || !body.squadNumber) return;
 
 		const { squadNumber } = body;
@@ -38,10 +46,9 @@ const Dashboard = ({ user }) => {
 				try {
 					const res = await axios.get(
 						`http://localhost:3000/api/v1/squad/${num}`,
-						{ userId: user._id },
 						{
 							headers: {
-								Authorization: `Bearer ${token}`,
+								authorization: `Bearer ${token}`,
 							},
 						}
 					);
@@ -56,21 +63,16 @@ const Dashboard = ({ user }) => {
 		} else {
 			return;
 		}
+
+		setLoading(false);
 	};
 
 	useEffect(() => {
 		// Get squads
-
 		reloadSquads(user);
 	}, [squadNumber]);
 
-	// AUTH AND ROUTING
-	const router = useRouter();
-
-	const route = (path) => {
-		router.push(path);
-	};
-
+	// AUTH
 	const authCheck = () => {
 		if (!user) router.push("/");
 		if (user.rank !== "captain") {
@@ -109,7 +111,7 @@ const Dashboard = ({ user }) => {
 				{ userId: user._id },
 				{
 					headers: {
-						Authorization: `Bearer ${token}`,
+						authorization: `Bearer ${token}`,
 					},
 				}
 			);
