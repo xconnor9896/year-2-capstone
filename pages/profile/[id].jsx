@@ -2,14 +2,13 @@ import { FaRegUser, FaStar } from "react-icons/fa";
 import { baseURL } from "../util/baseURL";
 import { parseCookies } from "nookies";
 import Tabs from "../../components/Tabs";
-
 import axios from "axios";
 // import getUser from "../../server/controllers/user"
 
 import styles from "../../styles/Pages/Profile.module.scss";
 
 const Profile = ({ data }) => {
-
+  // console.log(data);
   // const fName = data.name.firstName;
   // const lName = data.name.lastName;
   const badgeNum = "297502";
@@ -93,15 +92,14 @@ const Profile = ({ data }) => {
 Profile.getInitialProps = async (ctx) => {
   try {
     const { id: userId } = ctx.query;
-    console.log(userId);
+    console.log("this is the users id:", userId);
     const { token } = parseCookies(ctx);
-
     const res = await axios.get(`${baseURL}/api/v1/user/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     const { data } = res;
-    // console.log("this is the users data", data);
+    console.log("this is the users data", data);
     return { data };
   } catch (error) {
     return { errorLoading: true };

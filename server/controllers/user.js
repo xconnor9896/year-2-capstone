@@ -251,14 +251,12 @@ const getUsername = async (req, res) => {
     const { userId } = req.params;
     const user = await UserModel.findById(userId);
     if (!user) {
-      return res.status(404).send("user not found");
+      return res.status(400).send("user not found");
     }
 
-    const profile = await UserModel.findOne({ username: user.username }).populate(
-      "username"
-    );
+    const data = await UserModel.findOne({ username: user.username })
 
-    return res.status(200).json( profile );
+    return res.status(200).json( data );
   } catch (error) {
     console.log(error);
     return res.status(500).send("error @ getUsername");
