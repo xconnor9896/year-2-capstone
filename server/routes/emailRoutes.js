@@ -1,7 +1,8 @@
 const router = require(`express`).Router();
 
-const { sendVerfEmail, sendPassResetEmail, getUserEmail} = require("../controllers/emailCon")
+const { sendVerfEmail, sendPassResetEmail, verifyController} = require("../controllers/emailCon")
 
-router.route("/").get(sendVerfEmail)
+router.route("/").post(sendVerfEmail)
+router.route("/v1").post(verifyController)
 
-module.exports =  router 
+module.exports = router 

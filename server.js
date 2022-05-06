@@ -25,14 +25,14 @@ app.use(express.json());
 const userRoutes = require("./server/routes/userRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
-const getUserEmail = require("./server/routes/emailRoutes");
+const emailRoutes = require("./server/routes/emailRoutes");
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
-app.use("/api/v1/email", getUserEmail);
+app.use("/api/v1/email", emailRoutes);
 
 //conect to database
 connectDB();

@@ -28,6 +28,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // red
 
 // console.log(sgMail)
+let emailUrl = "";
 
 const sendVerfEmail = async (req, res) => {
   //us
@@ -42,12 +43,15 @@ const sendVerfEmail = async (req, res) => {
     // const num = randomNumberGen();
     // console.log(randomNumber);
     const users = await userModel.find({});
-    const user = users.find(( user ) => {
+    const user = users.find((user) => {
       return user.email == inputEmail;
     });
-    user.verify = randomNumberGen().toString()
-    await user.save()
-    console.log(user.verify)
+    console.log(user);
+    user.verify = randomNumberGen().toString();
+    await user.save();
+    console.log(user);
+
+    emailUrl = `${user.verify}`;
 
     if (user.email == inputEmail) {
       console.log(`We have ${inputEmail} as one of our users`);
@@ -57,15 +61,14 @@ const sendVerfEmail = async (req, res) => {
     } else {
       console.log("idk what happended");
     }
+    // return(emailUrl)
   } catch (err) {
     // alert(
     //   "Im sorry we dont have that email as a user please check the email or sign up"
     // );
     console.log(err);
-    res.status(500).send("error");
+    return res.status(500).send("error");
   }
-
-  // console.log(inputEmail);
 
   return sgMail
     .send(
@@ -73,7 +76,7 @@ const sendVerfEmail = async (req, res) => {
         to: inputEmail, // Change to your recipient
         from: "ztaylo273@west-mec.org", // Change to your verified sender
 
-        subject: "Email Verification",
+        subject: "Email Verf",
         html: `   
       <div
       class="EmailVefDiv"
@@ -92,7 +95,7 @@ const sendVerfEmail = async (req, res) => {
         Thank You For Signing Up
       </h1>
       <h2 style="padding-bottom: 1rem; text-align: center">
-        Please Verify Your Email By clicking the button below
+        Start to Change to your password by clicking the button below
       </h2>
       <form
         style="
@@ -103,11 +106,11 @@ const sendVerfEmail = async (req, res) => {
           width: 10%;
           font-size: 1rem;
         "
-        action="http://localhost:3000/{user.verify}"
-        method="get"
+        method="post"
+        action="http://localhost:3000/api/v1/email/v1?verify=${emailUrl}"
       >
         <button style="background-color: black; color: whitesmoke">
-          Verify Email
+          Email Verify 
         </button>
       </form>
     </div>
@@ -115,12 +118,26 @@ const sendVerfEmail = async (req, res) => {
       })
     )
     .then((data) => {
-      res.status(202).send("Email Sent");
+      return res.status(202).send("Email Sent");
     })
     .catch((error) => {
       console.error(error);
-      res.status(404).send(error);
+      return res.status(404).send(error);
     });
+};
+
+const verifyController = async (req, res) => {
+  try {
+    let params = req.query;
+    console.log(params);
+    let urlNumber = params.verfiy;
+
+    console.log(urlNumber);
+    return res.status(202).send("Nice");
+  } catch (err) {
+    console.log(err);
+    return res.status(404).send(err);
+  }
 };
 
 // const passwordResetEmail = {
@@ -135,7 +152,45 @@ const sendVerfEmail = async (req, res) => {
 //   },
 // };
 
-const sendPassResetEmail = () => {
+const sendPassResetEmail = async (req, res) => {
+  const { inputEmail } = req.body;
+  user = userModel.find({});
+  const randomNumberGen = () => {
+    randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
+    return randomNumber;
+  };
+
+  try {
+    // const num = randomNumberGen();
+    // console.log(randomNumber);
+    const users = await userModel.find({});
+    const user = users.find((user) => {
+      return user.email == inputEmail;
+    });
+    console.log(user);
+    user.verify = randomNumberGen().toString();
+    await user.save();
+    console.log(user.verify);
+
+    emailUrl = `${user.verify}`;
+
+    if (user.email == inputEmail) {
+      console.log(`We have ${inputEmail} as one of our users`);
+    } else if (user.email != inputEmail) {
+      console.log(`${inputEmail} we dont have this email as one of users`);
+      inputEmail = 0;
+    } else {
+      console.log("idk what happended");
+    }
+    // return(emailUrl)
+  } catch (err) {
+    // alert(
+    //   "Im sorry we dont have that email as a user please check the email or sign up"
+    // );
+    console.log(err);
+    return res.status(500).send("error");
+  }
+
   return sgMail
     .send(passwordResetEmail)
     .then(() => {
@@ -146,4 +201,4 @@ const sendPassResetEmail = () => {
     });
 };
 
-module.exports = { sendVerfEmail, sendPassResetEmail };
+module.exports = { sendVerfEmail, sendPassResetEmail, verifyController };
