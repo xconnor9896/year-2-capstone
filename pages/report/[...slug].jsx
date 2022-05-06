@@ -45,7 +45,7 @@ export default function Report({
 	useEffect(() => {
 		if (mode === "view") setView(true);
 		else if (mode === "edit") setView(false);
-	}, [mode]);
+	}, []);
 
 	useEffect(() => {
 		if (isCaptain && !view) setView(true);
@@ -77,13 +77,6 @@ export default function Report({
 		setLoading(false);
 	};
 
-	useEffect(() => {
-		if (!user) router.push("/");
-
-		loadReport();
-	}, []);
-
-	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
 		if (currentUser.rank == "captain") {
 			setIsCaptain(true);
@@ -93,8 +86,11 @@ export default function Report({
 	};
 
 	useEffect(() => {
+		if (!user) router.push("/");
+
 		authCheck();
-	}, [currentUser]);
+		loadReport();
+	}, []);
 
 	const deleteReport = async () => {
 		setDeleteModal(false);
@@ -193,7 +189,10 @@ export default function Report({
 						</p>
 					</span>
 					<Button.Group>
-						<Button emphasis="primary" onClick={deleteReport}>
+						<Button
+							emphasis="primary"
+							onClick={setDeleteModal(false)}
+						>
 							Cancel
 						</Button>
 						<Button emphasis="error" onClick={deleteReport}>
@@ -391,24 +390,22 @@ export default function Report({
 							</div>
 						</Card.Header>
 
-						{!loading && (
-							<>
-								{view ? (
-									<ViewReport {...{ currentUserId }} />
-								) : (
-									<EditReport
-										{...{
-											currentUserId,
-											report,
-											loading,
-											setLoading,
-											view,
-											setView,
-										}}
-									/>
-								)}
-							</>
-						)}
+						<>
+							{view ? (
+								<ViewReport {...{ currentUserId }} />
+							) : (
+								<EditReport
+									{...{
+										currentUserId,
+										report,
+										loading,
+										setLoading,
+										view,
+										setView,
+									}}
+								/>
+							)}
+						</>
 					</Card>
 				</article>
 			)}

@@ -225,9 +225,8 @@ const ReportSchema = new mongoose.Schema({
 
 	peopleInfo: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
+			type: Object,
 			ref: "Person",
-			// makes there be at least one person
 			required: false,
 		},
 	],
