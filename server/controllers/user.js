@@ -245,6 +245,22 @@ const getUser = async (req, res) => {
   }
 };
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET ALL USERS
+.get('/all') 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+    
+		return res.status(200).json(users.filter(user => user.squadNumber === 0))
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("error at getUser controller");
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -253,4 +269,5 @@ module.exports = {
   changePassword,
   authUser,
   getUser,
+	getAllUsers
 };
