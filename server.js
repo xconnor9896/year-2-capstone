@@ -23,6 +23,7 @@ app.use(express.json());
 
 //routerss
 const userRoutes = require("./server/routes/userRoutes");
+const squadRoutes = require("./server/routes/squadRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
 const getUserEmail = require("./server/routes/emailRoutes");
@@ -30,6 +31,7 @@ const getUserEmail = require("./server/routes/emailRoutes");
 // routes
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/squad", squadRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
 app.use("/api/v1/email", getUserEmail);
