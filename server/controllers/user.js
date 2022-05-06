@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
 
-const UserModel = require("../models/UserModel")
+const UserModel = require("../models/UserModel");
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE USER
@@ -14,9 +14,11 @@ req.body {user} //? The new user in a user object
 
 const createUser = async (req, res) => {
   const {
-    user, 
-    user: { email, password, profilePicURL },
+    user,
+    user: { email, password },
   } = req.body;
+
+  let { profilePicUrl } = user;
 
   try {
     if (!isEmail(email)) return res.status(401).send("Invalid Email");
@@ -35,9 +37,13 @@ const createUser = async (req, res) => {
     checkUser = await UserModel.findOne({ email: email.toLowerCase() });
     if (checkUser) return res.status(401).send("Email already used");
 
+    if (!profilePicUrl) {
+      profilePicUrl = defaultProfilePic;
+    }
+
     let newUser = new UserModel({
       ...user,
-      profilePicURL: profilePicURL || defaultProfilePic,
+      profilePicUrl,
     });
 
     newUser.password = await bcrypt.hash(password, 10);
@@ -54,8 +60,8 @@ const createUser = async (req, res) => {
       }
     );
   } catch (error) {
-    console.log("error at createUser controller");
     console.log(error);
+    return res.status(400).send("error at createUser controller");
   }
 };
 
@@ -96,8 +102,8 @@ const loginUser = async (req, res) => {
       }
     );
   } catch (error) {
-    console.log("error at loginUser controller");
     console.log(error);
+    return res.status(400).send("error at loginUser controller");
   }
 };
 
@@ -113,7 +119,7 @@ const deleteUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = UserModel.findById(userId);
+    const user = await UserModel.findById(userId);
 
     if (user.rank !== "captain") {
       return res
@@ -121,7 +127,7 @@ const deleteUser = async (req, res) => {
         .send("Please contact your captain about deleting your account");
     }
 
-    const deleted = UserModel.deleteOne({ _id });
+    const deleted = await UserModel.deleteOne({ _id });
 
     if (deleted) {
       return res.status(200).send("User Deleted");
@@ -129,8 +135,8 @@ const deleteUser = async (req, res) => {
       return res.status(404).send("User Not Found");
     }
   } catch (error) {
-    console.log("error at deleteUser controller");
     console.log(error);
+    return res.status(400).send("error at deleteUser controller");
   }
 };
 
@@ -146,8 +152,11 @@ const updateUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    if (key !== "password" && key !== "email") {
-      let user = UserModel.findById(userId);
+    if (key !== "password" && key !== "email" && key !== "squadNumber") {
+      let user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).send("user not found");
+      }
       user[key] = input;
       user = await user.save();
 
@@ -156,8 +165,8 @@ const updateUser = async (req, res) => {
       res.status(400).send("You can not update the email or the password");
     }
   } catch (error) {
-    console.log("error at updateUser controller");
     console.log(error);
+    return res.status(400).send("error at updateUser controller");
   }
 };
 
@@ -171,14 +180,84 @@ const changePassword = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = UserModel.findOne({ email: email.toLowerCase() });
+    let user = await UserModel.findOne({ email: email.toLowerCase() });
     user.password = bcrypt.hash(password, 10);
     user = await user.save();
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log("error at changePassword controller");
     console.log(error);
+    return res.status(400).send("error at changePassword controller");
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AUTH USER
+.get('/user') 
+req //? Token
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const authUser = async (req, res) => {
+  const {
+    userId,
+
+    headers: { authorization },
+  } = req;
+
+  try {
+    let id = userId;
+
+    const token = authorization.split(" ")[1];
+
+    if (!userId && !token) return res.status(404).send("User Not Found");
+
+    if (!userId && token) {
+      id = jwt.verify(token, process.env.JWT_SECRET).userId;
+    }
+
+    const user = await UserModel.findById(id);
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.log("error at authUser controller");
+    console.error(error);
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET USER
+.post('/:userId') 
+req.params {userId} //? Targets userId
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await UserModel.findById(userId);
+    if (user) {
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).send("No user with given Id");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("error at getUser controller");
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET ALL USERS
+.get('/all') 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+    
+		return res.status(200).json(users.filter(user => user.squadNumber === 0))
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("error at getUser controller");
   }
 };
 
@@ -188,4 +267,7 @@ module.exports = {
   deleteUser,
   updateUser,
   changePassword,
+  authUser,
+  getUser,
+	getAllUsers
 };

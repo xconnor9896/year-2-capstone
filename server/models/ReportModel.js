@@ -1,325 +1,379 @@
-
 // import the user schema
 // const User = require('../models/UserModel');
 
 // report model
 
-
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ReportSchema = new mongoose.Schema({
-  // The case number will be the mongoose _id
+	// The case number will be the mongoose _id
 
-  basicInfo: {
-    incidentType: {
-      type: String,
-      required: true,
-    },
+	caseNumber: {
+		type: Number,
+		required: true,
+	},
 
-    code: {
-      type: String,
-      required: true,
-    },
+	basicInfo: {
+		incidentType: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-    reportType: {
-      // keyRpt: false,
-      // fu: false,
+		code: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-      enum: ['keyRpt', 'fu'],
-      type: String,
-      required: true,
-    },
+		reportType: {
+			keyRpt: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
 
-    status: {
-      enum: ['open', "verified"],
-      type: String,
-      required: true,
-      default: 'open',
-    },
+			fu: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+		},
 
-    disposition: {
-      type: String,
-      required: true,
-    },
+		importance: {
+			type: Number,
+			enum: [1, 2, 3],
+			required: true,
+			default: 3,
+		},
 
-    arsSectionNumber: {
-      type: String,
-      required: true,
-    },
+		verified: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
 
-    locationOfOffense: {
-      type: String,
-      required: true,
-    },
+		disposition: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-    responsibleOfficer: {
-      // name: {
-      //   firstName: "",
-      //   middleName: "",
-      //   lastName: "",
-      // },
-      // rank: "",
-      // badgeNumber: "",
-      // division: "",
+		arsSectionNumber: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-      // use the user model
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
+		locationOfOffense: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-    beatOfOffense: {
-      type: String,
-      required: true,
-    },
+		responsibleOfficer: {
+			// name: {
+			//   firstName: "",
+			//   middleName: "",
+			//   lastName: "",
+			// },
+			// rank: "",
+			// badgeNumber: "",
+			// division: "",
 
-    domesticViolence: {
-      type: Boolean,
-      required: true,
-    },
+			// use the user model
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
 
-    incidentReportedAt: {
-      date: {
-        month: {
-          type: String,
-          required: true,
-        },
-        day: {
-          type: String,
-          required: true,
-        },
-        year: {
-          type: String,
-          required: true,
-        },
-      },
-      day: {
-        type: String,
-        required: true,
-      },
-      time: {
-        hour: {
-          type: String,
-          required: true,
-        },
-        minute: {
-          type: String,
-          required: true,
-        },
-      },
-    },
+		beatOfOffense: {
+			type: String,
+			required: false,
+			default: "",
+		},
 
-    incidentOccurredAt: {
-      from: {
-        date: {
-          month: {
-            type: String,
-            required: true,
-          },
-          day: {
-            type: String,
-            required: true,
-          },
-          year: {
-            type: String,
-            required: true,
-          },
-        },
+		domesticViolence: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 
-        time: {
-          hour: {
-            type: String,
-            required: true,
-          },
-          minute: {
-            type: String,
-            required: true,
-          },
-        },
-      },
-      to: {
-        date: {
-          month: {
-            type: String,
-            required: true,
-          },
-          day: {
-            type: String,
-            required: true,
-          },
-          year: {
-            type: String,
-            required: true,
-          },
-        },
+		incidentReportedAt: {
+			date: {
+				month: {
+					type: String,
+					required: false,
+					default: "",
+				},
+				day: {
+					type: String,
+					required: false,
+					default: "",
+				},
+				year: {
+					type: String,
+					required: false,
+					default: "",
+				},
+			},
+			day: {
+				type: String,
+				required: false,
+				default: "",
+			},
+			time: {
+				hour: {
+					type: String,
+					required: false,
+					default: "",
+				},
+				minute: {
+					type: String,
+					required: false,
+					default: "",
+				},
+			},
+		},
 
-        time: {
-          hour: {
-            type: String,
-            required: true,
-          },
-          minute: {
-            type: String,
-            required: true,
-          },
-        },
-      },
-    },
+		incidentOccurredAt: {
+			from: {
+				date: {
+					month: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					day: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					year: {
+						type: String,
+						required: false,
+						default: "",
+					},
+				},
 
-    relatedComments: {
-      type: String,
-      required: false,
-    },
-    synopsis: {
-      type: String,
-      required: false,
-      maxCount: 300,
-    },
+				time: {
+					hour: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					minute: {
+						type: String,
+						required: false,
+						default: "",
+					},
+				},
+			},
+			to: {
+				date: {
+					month: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					day: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					year: {
+						type: String,
+						required: false,
+						default: "",
+					},
+				},
 
-    reportNarrative: {
-      type: String,
-      required: false,
-      maxCount: 500,
-    },
-  },
+				time: {
+					hour: {
+						type: String,
+						required: false,
+						default: "",
+					},
+					minute: {
+						type: String,
+						required: false,
+						default: "",
+					},
+				},
+			},
+		},
 
-  peopleInfo: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Person',
-      // makes there be at least one person
-      required: true,
-    },
-  ],
+		relatedComments: {
+			type: String,
+			required: false,
+			default: "",
+		},
+		synopsis: {
+			type: String,
+			required: false,
+			maxCount: 300,
+			default: "",
+		},
 
-  hospitalInfo: {
-    injuryOccurred: {
-      type: Boolean,
-      required: true,
-    },
-    injuryTreated: {
-      type: Boolean,
-      required: true,
-    },
-    hospital: {
-      type: String,
-      required: true,
-    },
-    transportedBy: {
-      type: String,
-      required: true,
-    },
-    emsNumber: {
-      type: Number,
-      required: true,
-    },
-    treatmentReasons: {
-      mental: {
-        type: Boolean,
-        required: true,
-      },
-      suicide: {
-        type: Boolean,
-        required: true,
-      },
-      icf: {
-        type: Boolean,
-        required: true,
-      },
-      scf: {
-        type: Boolean,
-        required: true,
-      },
-      intox: {
-        type: Boolean,
-        required: true,
-      },
-      drugs: {
-        type: Boolean,
-        required: true,
-      },
-      indust: {
-        type: Boolean,
-        required: true,
-      },
-      uncon: {
-        type: Boolean,
-        required: true,
-      },
-      resisted: {
-        type: Boolean,
-        required: true,
-      },
-      other: {
-        type: Boolean,
-        required: true,
-      },
-    },
-    patientCondition: {
-      type: String,
-      required: true,
-    },
-    patientDispo: {
-      type: String,
-      required: true,
-    },
-    attendingPhysician: {
-      type: String,
-      required: true,
-    },
-  },
+		reportNarrative: {
+			type: String,
+			required: false,
+			maxCount: 500,
+			default: "",
+		},
+	},
 
+	peopleInfo: [
+		{
+			type: Object,
+			ref: "Person",
+			required: false,
+		},
+	],
 
-  submittedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
+	hospitalInfo: {
+		injuryOccurred: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		injuryTreated: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		hospital: {
+			type: String,
+			required: false,
+			default: "",
+		},
+		transportedBy: {
+			type: String,
+			required: false,
+			default: "",
+		},
+		emsNumber: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
+		treatmentReasons: {
+			mental: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			suicide: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			icf: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			scf: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			intox: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			drugs: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			indust: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			uncon: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			resisted: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			other: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+		},
+		patientCondition: {
+			type: String,
+			required: false,
+		},
+		patientDispo: {
+			type: String,
+			required: false,
+		},
+		attendingPhysician: {
+			type: String,
+			required: false,
+		},
+	},
 
-  submittedAt: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
+	submittedBy: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: false,
+	},
 
-  ApprovedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: false,
+	submittedAt: {
+		type: Date,
+		required: false,
+		default: Date.now,
+	},
 
-    // make it so that only captains can approve
-  },
+	ApprovedBy: {
+		type: String,
+		required: false,
 
-  ApprovedAt: {
-    date: {
-      month: {
-        type: String,
-        required: true,
-      },
-      day: {
-        type: String,
-        required: true,
-      },
-      year: {
-        type: String,
-        required: true,
-      },
-    },
-    time: {
-      hour: {
-        type: String,
-        required: true,
-      },
-      minute: {
-        type: String,
-        required: true,
-      },
-    },
-  }
+		// make it so that only captains can approve
+	},
 
-
-
+	ApprovedAt: {
+		date: {
+			month: {
+				default: "",
+				type: String,
+				required: false,
+			},
+			day: {
+				default: "",
+				type: String,
+				required: false,
+			},
+			year: {
+				default: "",
+				type: String,
+				required: false,
+			},
+		},
+		time: {
+			hour: {
+				default: "",
+				type: String,
+				required: false,
+			},
+			minute: {
+				default: "",
+				type: String,
+				required: false,
+			},
+		},
+	},
 });
+module.exports = mongoose.model("Report", ReportSchema);
 
 module.exports = mongoose.models?.User || mongoose.model('Report', ReportSchema);

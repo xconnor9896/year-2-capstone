@@ -22,33 +22,36 @@ const handler = nextApp.getRequestHandler();
 app.use(express.json());
 
 //routerss
-
 const userRoutes = require("./server/routes/userRoutes");
+const squadRoutes = require("./server/routes/squadRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
+const getUserEmail = require("./server/routes/emailRoutes");
+const { authMiddleware } = require("./server/middleware/authMidware");
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/squad", authMiddleware, squadRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
+app.use("/api/v1/email", getUserEmail);
 
 //conect to database
 connectDB();
 
 //Testing sendgrid email
-const {sendVefEmail} = require("./server/controllers/emailCon")
+// const {sendVerfEmail, sendPassResetEmail, getUserEmail} = require("./server/controllers/emailCon")
 
-sendVefEmail
-
+// sendVerfEmail()
 
 nextApp.prepare().then(() => {
-  app.all("*", (req, res) => handler(req, res));
-  app.listen(PORT, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`server listining on ${PORT}`);
-    }
-  });
+	app.all("*", (req, res) => handler(req, res));
+	app.listen(PORT, (err) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(`server listening on ${PORT}`);
+		}
+	});
 });

@@ -1,26 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/Components/EditReport.module.scss";
-import { Button, Card } from "../proton";
+import { Button } from "../proton";
 import {
-	FaPencilAlt,
 	FaChevronDown,
 	FaUserPlus,
-	FaUserTimes,
 	FaTrash,
 	FaSave,
+	FaExclamationTriangle,
 } from "react-icons/fa";
-const uuid = require("uuid").v4;
+
+import { v4 as uuid } from "uuid";
+
+import { useRouter } from "next/router";
 
 import { Select, Option } from "./Select";
+
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const Input = ({ children }) => {
 	return <div className={styles.input}>{children}</div>;
 };
 
-const EditReport = ({ report, setLoading, loading, setView }) => {
+const EditReport = ({
+	currentUserId,
+	report,
+	setLoading,
+	loading,
+	setView,
+}) => {
+	const router = useRouter();
+
+	// const [loadingReport, setLoadingReport] = useState(true);
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
-		id: uuid(),
+
 		personType: "",
 		race: "",
 		name: {
@@ -29,7 +43,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 			lastName: "",
 			aka: "",
 		},
-		DOB: "",
 		age: 0,
 		isJuvenile: false,
 		sex: "",
@@ -47,7 +60,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		whoDescribed: "",
 		willProsecute: false,
 		BAC: false,
-		BACResults: "",
+		BACResults: 0,
 		personalDetails: {
 			height: "",
 			weight: 0,
@@ -63,6 +76,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		},
 	};
 
+	const [activeReport, setActiveReport] = useState(null);
+	const [errorMessage, setErrorMessage] = useState(null);
+
 	const [dropdowns, setDropdowns] = useState({
 		basic: false,
 		people: false,
@@ -70,6 +86,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		syno: false,
 		cont: false,
 	});
+
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
 	};
@@ -85,119 +102,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setPersonDropdowns({ ...newPersonDropdowns });
 	};
 
-	const [activeReport, setActiveReport] = useState({
-		caseNumber: "oi214joai3h523897",
-
-		approvedBy: {
-			name: {
-				firstName: "Tim",
-				lastName: "P",
-			},
-		},
-
-		basicInfo: {
-			incidentType: "",
-
-			code: "",
-
-			reportType: {
-				keyRpt: false,
-				fu: false,
-			},
-
-			disposition: "",
-
-			arsSectionNumber: "",
-
-			location: "",
-
-			synopsis: "",
-			reportNarration: "",
-
-			responsibleOfficer: {
-				name: {
-					firstName: "",
-					middleName: "",
-					lastName: "",
-				},
-				rank: "",
-				badgeNumber: "",
-				division: "",
-			},
-
-			beatOfOffense: "",
-
-			domesticViolence: false,
-
-			incidentReportedAt: {
-				date: {
-					month: "",
-					day: "",
-					year: "",
-				},
-				day: "",
-				time: {
-					hour: "",
-					minute: "",
-				},
-			},
-
-			incidentOccurredAt: {
-				from: {
-					date: {
-						month: "",
-						day: "",
-						year: "",
-					},
-
-					time: {
-						hour: "",
-						minute: "",
-					},
-				},
-				to: {
-					date: {
-						month: "",
-						day: "",
-						year: "",
-					},
-
-					time: {
-						hour: "",
-						minute: "",
-					},
-				},
-			},
-
-			relatedComments: "",
-		},
-
-		peopleInfo: [],
-
-		hospitalInfo: {
-			injured: false,
-			treated: false,
-			hospital: "",
-			transportedBy: "",
-			emsNo: 0,
-			treatmentReasons: {
-				mental: false,
-				suicide: false,
-				icf: false,
-				scf: false,
-				intox: false,
-				drugs: false,
-				indust: false,
-				uncon: false,
-				resisted: false,
-
-				other: false,
-			},
-			patientCondition: "",
-			patientDispo: "",
-			attendingPhysician: "",
-		},
-	});
+	useEffect(() => {
+		if (report && !activeReport) setActiveReport(report);
+	}, []);
 
 	const addPerson = () => {
 		setActiveReport({
@@ -208,10 +115,12 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 
 				{
 					...person,
-					id: uuid(),
+					_id: uuid(),
 				},
 			],
 		});
+
+		// console.log("implement add person");
 	};
 
 	const removePerson = (toDel) => {
@@ -273,23 +182,62 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 		setActiveReport({ ...newReport, ...activeReport });
 	};
 
-	const submitForm = (e) => {
-		e.preventDefault();
-
+	const submitForm = async () => {
 		setLoading(true);
-		console.warn("implement submitting of editted report.");
-		setLoading(false);
+		setErrorMessage(null);
 
-		// If Success
-		setView(true);
+		try {
+			const token = Cookies.get("token");
+
+			if (!token) throw new Error("No token.");
+
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/${activeReport._id}`,
+				{
+					userId: currentUserId,
+					report: activeReport,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			// console.log(res);
+
+			let newPathname = window.location.pathname.split("/");
+			newPathname[newPathname.length - 1] = "view";
+			newPathname = newPathname.join("/");
+
+			setView(true);
+			router.reload();
+		} catch (err) {
+			console.error("Error at form submission", err);
+			setErrorMessage(
+				err.response.data
+					? err.response.data
+					: "Unkown error. Please try again later."
+			);
+		}
+
+		setLoading(false);
 	};
 
 	// const blurMe = (e) => {
 	// 	e.target.blur();
 	// };
 
+	if (!activeReport) return <>Loading...</>;
+
 	return (
-		<form className={styles.reportForm} onSubmit={submitForm}>
+		<form
+			className={styles.reportForm}
+			onSubmit={(e) => {
+				e.preventDefault();
+			}}
+		>
 			<section
 				className={styles.basicInfo}
 				dropped={dropdowns.basic ? "1" : "0"}
@@ -652,7 +600,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 							<h5>No People To Display</h5>
 						)}
 						{activeReport.peopleInfo.map((person) => {
-							const { id } = person;
+							const { _id: id } = person;
 							const index =
 								activeReport.peopleInfo.indexOf(person);
 							const personLoc = activeReport.peopleInfo[index];
@@ -791,7 +739,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 														Native Hawaiian / Other
 														Pacific Islander
 													</Option>
-													<Option val="White">
+													<Option val="white">
 														White
 													</Option>
 												</Select>
@@ -1060,7 +1008,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												/>
 											</Input>
 											<Input>
-												<label>Will Prosecute</label>
+												<label nr="1">
+													Will Prosecute
+												</label>
 												<ul>
 													<li>
 														<input
@@ -1085,7 +1035,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>BAC</label>
+												<label nr="1">BAC</label>
 												<ul>
 													<li>
 														<input
@@ -1107,10 +1057,12 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>BAC Results</label>
+												<label nr="1">
+													BAC Results
+												</label>
 												<input
-													type="string"
-													placeholder="BAC Results"
+													type="number"
+													placeholder="0.0"
 													value={personLoc.BACResults}
 													path={path + "BACResults"}
 													onChange={handleChange}
@@ -1165,7 +1117,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</ul>
 											</Input>
 											<Input>
-												<label>Build</label>
+												<label nr="1">Build</label>
 												<input
 													type="string"
 													placeholder="Build"
@@ -1223,7 +1175,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>Hair Character</label>
+												<label nr="1">
+													Hair Character
+												</label>
 												<input
 													type="string"
 													placeholder="Hair Character"
@@ -1317,7 +1271,9 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>Facial Hair Color</label>
+												<label nr="1">
+													Facial Hair Color
+												</label>
 												<Select
 													placeholder="Facial Hair Color"
 													path={
@@ -1357,7 +1313,7 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 												</Select>
 											</Input>
 											<Input>
-												<label>
+												<label nr="1">
 													Facial Hair Character
 												</label>
 												<input
@@ -1407,7 +1363,6 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 					<Button
 						onClick={addPerson}
 						type="button"
-						hollow
 						emphasis="primary"
 						// color="success"
 					>
@@ -1862,10 +1817,21 @@ const EditReport = ({ report, setLoading, loading, setView }) => {
 				{/* <Button emphasis="primary">
 					<FaSave /> Save Report
 				</Button> */}
-				<Button icon circular emphasis="primary">
+				<Button
+					icon
+					circular
+					type="button"
+					onClick={submitForm}
+					emphasis="primary"
+				>
 					<FaSave />
 				</Button>
 			</div>
+			{errorMessage && (
+				<div className={styles.errorMessage}>
+					<FaExclamationTriangle /> {errorMessage}
+				</div>
+			)}
 		</form>
 	);
 };

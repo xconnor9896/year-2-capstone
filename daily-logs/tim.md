@@ -18,3 +18,9 @@
 | `4/15` | Heavy work on dashboard. Minor changes everywhere else.                                                                                                      |
 | `4/18` | Began on view report component.                                                                                                                              |
 | `4/19` | Finished view report component.                                                                                                                              |
+| `4/27` | Hooked up signin page.                                                                                                                                       |
+| `4/28` | Finished rerouting and auth user. Hooked up navbar.                                                                                                          |
+| `4/29` | Hooked up report page.                                                                                                                                       |
+| `5/2`  | Fixed bugs on report page hook up.                                                                                                                           |
+| `5/3`  | Finished report page with custom routes and finished ViewReport/ReportPrintout components. Started on report editor hook up.                                 |
+| `5/4`  | Hooking up report editor. Serverside validation and people configuring.                                                                                      |

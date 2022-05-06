@@ -1,231 +1,195 @@
-
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PersonSchema = new mongoose.Schema({
-  // The case number will be the mongoose _id
+	// The case number will be the mongoose _id
 
-  personType: {
-    enum: ['Complainant', 'Victim', 'Reporting Person', 'Finder', 'Witness', 'Suspect'],
-    type: String,
-    required: true,
-  },
+	// caseNumber: {
+	// 	type: Number,
+	// 	required: true
+	// },
 
-  race: {
-    enum: ['White', 'Black/African American', 'Asian', 'American Indian/Alaska Native', 'Native Hawaiian/Pacific Islander', 'Hispanic/Latino'],
-    type: String,
-    required: true,
-  },
+	personType: {
+		type: String,
+		required: true,
+	},
 
-  name: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    middleName: {
-      type: String,
-      required: false,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    otherNames: [
-      {
-        type: String,
-        required: false,
-      }
-    ],
-  },
+	race: {
+		type: String,
+		required: true,
+	},
 
-  DOB: {
-    type: Date,
-    required: true,
-  },
+	name: {
+		firstName: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		middleName: {
+			type: String,
+			required: false,
+			minLength: 1,
+		},
+		lastName: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		aka: {
+			type: String,
+			required: false,
+		},
+	},
 
-  age: {
-    type: Number,
-    required: true,
+	// DOB: {
+	// 	type: Date,
+	// 	required: true,
+	// },
 
-    // let age equal the difference between the current date and the date of birth
-    get: function () {
-      return new Date().getFullYear() - this.DOB.getFullYear();
-    },
-  },
+	age: {
+		type: Number,
+		required: true,
+		min: 1,
 
-  juvenile: {
-    type: Boolean,
-    required: true,
-  },
+		// let age equal the difference between the current date and the date of birth
+		// get: function () {
+		// 	return new Date().getFullYear() - this.DOB.getFullYear();
+		// },
+	},
 
-  sex: {
-    type: String,
-    required: true,
-  },
+	isJuvenile: {
+		type: Boolean,
+		required: true,
+	},
 
-  occupation: {
-    type: String,
-    required: true,
+	sex: {
+		type: String,
+		required: true,
+	},
 
-    // if juvenile is true, then default to 'school attending'
+	occupation: {
+		type: String,
+		required: false,
 
-  },
+		// if juvenile is true, then default to 'school attending'
+	},
 
-  homeAddress: {
+	homeAddress: {
+		type: String,
+		required: false,
+	},
 
-    street: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    county: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    zip: {
-      type: Number,
-      required: true,
-    },
-  },
+	employerAddress: {
+		type: String,
+		required: false,
+	},
 
-  workAddress: {
-    street: {
-      type: String,
-      required: false,
-    },
-    city: {
-      type: String,
-      required: false,
-    },
-    county: {
-      type: String,
-      required: false,
-    },
-    state: {
-      type: String,
-      required: false,
-    },
-    zip: {
-      type: Number,
-      required: false,
-    },
-  },
+	phoneNumbers: {
+		main: {
+			type: String,
+			required: true,
+			min: 1,
+		},
+		secondary: {
+			type: String,
+			required: false,
+		},
+		business: {
+			type: String,
+			required: false,
+		},
+	},
 
-  phoneNumbers: {
-    primary: {
-      type: String,
-      required: true,
-    },
-    secondary: {
-      type: String,
-      required: false,
-    },
-    work: {
-      type: String,
-      required: false,
-    },
-  },
+	email: {
+		type: String,
+		required: false,
+	},
 
-  email: {
-    type: String,
-    required: true,
+	studentID: {
+		type: String,
+		required: false,
+	},
 
-  },
+	// victim relationships to suspect
+	victimRelationshipToSuspect: {
+		type: String,
+		required: true,
+		minLength: 1,
+	},
 
+	// who described the person
+	whoDescribed: {
+		type: String,
+		required: true,
+		minLength: 1,
+	},
 
-  SID: {
-    type: String,
-    required: false,
-  },
+	// will prosecute the person
+	willProsecute: {
+		type: Boolean,
+		required: true,
+	},
 
-  // victim relationships to suspect
-  victimRelationship: {
-    type: String,
-    required: true,
-  },
+	// blood achool content
+	BAC: {
+		type: Boolean,
+		required: true,
+	},
+	BACResults: {
+		type: Number,
+		required: false,
+	},
 
-  // who described the person
-  reportingPerson: {
-    type: String,
-    required: true,
-  },
-
-  // will prosecute the person
-  isProsecuting: {
-    type: Boolean,
-    required: true,
-  },
-
-  // blood achool content
-  bacTest: {
-    isUsed: {
-      type: Boolean,
-      required: true,
-    },
-    results: {
-      type: Number,
-      required: true,
-    },
-  },
-
-  Characteristics: {
-    height: {
-      type: String,
-      required: true,
-    },
-    weight: {
-      type: String,
-      required: true,
-    },
-    build: {
-      type: String,
-      required: true,
-    },
-    hairColor: {
-      type: String,
-      required: true,
-    },
-    hairCharacteristics: {
-      type: String,
-      required: true,
-    },
-    complexion: {
-      type: String,
-      required: true,
-    },
-    voiceType: {
-      type: String,
-      required: true,
-    },
-    eyeColor: {
-      type: String,
-      required: true,
-    },
-    facialHairColor: {
-      type: String,
-      required: true,
-    },
-    facialHairCharacteristics: {
-      type: String,
-      required: true,
-    },
-    clothing: {
-      type: String,
-      required: true,
-    },
-  },
-
-
-
+	personalDetails: {
+		height: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		weight: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		build: {
+			type: String,
+			required: false,
+		},
+		hairColor: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		hairCharacter: {
+			type: String,
+			required: false,
+		},
+		complexion: {
+			type: String,
+			required: false,
+		},
+		voice: {
+			type: String,
+			required: false,
+		},
+		eyeColor: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+		facialHairColor: {
+			type: String,
+			required: false,
+		},
+		facialHairChar: {
+			type: String,
+			required: false,
+		},
+		clothing: {
+			type: String,
+			required: true,
+			minLength: 1,
+		},
+	},
 });
-
-
 
 module.exports = mongoose.models?.User || mongoose.model('Person', PersonSchema);
