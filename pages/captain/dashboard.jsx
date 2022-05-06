@@ -12,29 +12,29 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Input from "../../components/Input";
+import Cookies from "js-cookie";
 
-import { v4 as uuid } from "uuid";
+import axios from "axios";
+
 import Modal from "../../components/Modal";
-
-const exStudent = () => {
-	let e = [];
-	for (let i = 0; i < Math.ceil(Math.random() * 30) + 5; i++) {
-		e.push({
-			name: `${["John", "Jane"][Math.floor(Math.random() * 2)]} ${
-				["Doe", "Apple"][Math.floor(Math.random() * 2)]
-			}`,
-			studentID: `${Math.floor(Math.random() * 10)}${Math.floor(
-				Math.random() * 10
-			)}${Math.floor(Math.random() * 10)}`,
-			_id: uuid(),
-		});
-	}
-
-	return e;
-};
 
 const Dashboard = ({ user }) => {
 	const [loading, setLoading] = useState(false);
+
+	console.log(user);
+
+	const { squadNumber } = user;
+	const [squads, setSquads] = useState([]);
+
+	const reloadSquads = () => {
+		console.log(squadNumber);
+	};
+
+	useEffect(() => {
+		// Get squads
+
+		reloadSquads();
+	}, [squadNumber]);
 
 	// AUTH AND ROUTING
 	const router = useRouter();
@@ -55,72 +55,85 @@ const Dashboard = ({ user }) => {
 		authCheck();
 	}, [user]);
 
-	// DELETE GROUP MODAL
+	// DELETE squad MODAL
 	const [deleteModal, setDeleteModal] = useState(false);
-	const openDeleteModal = (groupId) => {
-		console.log(groupId);
+	const openDeleteModal = (squadId) => {
+		console.log(squadId);
 
-		setDeleteModal(groupId);
+		setDeleteModal(squadId);
 	};
 
-	const [addStudentDropdown, setAddStudentDropdown] = useState(false);
 	// Temporary local variables. Should be replaced with server getters.
 	const [dropdowns, setDropdowns] = useState({});
 	const toggleDropdown = (dropdown) => {
 		setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
 	};
 
-	const groups = [
-		{
-			_id: 0,
-			name: "Unnamed Group",
-			students: [...exStudent()],
-		},
-		{ _id: 1, name: "Unnamed Group 2", students: [...exStudent()] },
-	];
+	// Functions
+	const createSquad = async () => {
+		setLoading(true);
 
-	const TEMP_addableStudents = [...exStudent()];
+		try {
+			const token = Cookies.get("token");
 
-	const updateGroup = (e, id) => {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/squad`,
+				{ userId: user._id },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res) throw new Error("No result returned.");
+
+			reloadSquads();
+		} catch (err) {
+			console.error("Failed to add squad.", err);
+		}
+
+		setLoading(false);
+	};
+
+	const updateSquad = async (e, id) => {
 		e.preventDefault();
 
 		setLoading(true);
 
-		console.log("Hook up group management", id);
+		console.log("Hook up squad management", id);
+		reloadSquads();
 
 		setLoading(false);
 	};
 
-	const addGroup = () => {
-		setLoading(true);
-
-		console.log("Hook up adding GROUPS");
-
-		setLoading(false);
-	};
-
-	const deleteGroup = (id) => {
+	const deleteSquad = async (id) => {
 		setLoading(true);
 
 		console.log("Hook up deleting GROUPS");
+		reloadSquads();
 
 		setLoading(false);
 	};
 
-	const addStudents = (e, id) => {
+	const addStudentsToSquad = async (e, id) => {
 		e.preventDefault();
 
 		setLoading(true);
 
-		console.log("Hook up adding students to group", id);
+		console.log("Hook up adding students to squad", id);
+		reloadSquads();
 
 		setLoading(false);
 	};
 
-	const removeFromGroup = (id) => {
+	const removeFromSquad = async (id) => {
 		setLoading(true);
 
-		console.log("Hook up remove from group.", id);
+		console.log("Hook up remove from squad.", id);
+		reloadSquads();
 
 		setLoading(false);
 	};
@@ -130,22 +143,22 @@ const Dashboard = ({ user }) => {
 			{deleteModal !== false && (
 				<Modal closeModal={() => setDeleteModal(false)}>
 					<span>
-						<h1>Delete [groupName] and?</h1>
+						<h1>Delete [squadName] and?</h1>
 						<p>
 							This is a{" "}
 							<b style={{ color: "red" }}>permanent action</b>,
-							and any associated students will stop having a group
+							and any associated students will stop having a squad
 							assigned to them.
 						</p>
 					</span>
-					<Button.Group>
+					<Button.Squad>
 						<Button emphasis="primary" onClick={() => {}}>
 							Cancel
 						</Button>
 						<Button emphasis="error" onClick={deleteReport}>
 							Yes, delete it forever!
 						</Button>
-					</Button.Group>
+					</Button.Squad>
 				</Modal>
 			)}
 
@@ -203,16 +216,16 @@ const Dashboard = ({ user }) => {
 							</Button>
 						</div>
 
-						<div className={styles.groupManagement}>
-							<h1>Your Groups</h1>
-							<div className={styles.groups}>
-								{groups.length < 1 && (
+						<div className={styles.squadManagement}>
+							<h1>Your Squads</h1>
+							<div className={styles.squads}>
+								{squads.length < 1 && (
 									<h3 className={styles.noMsg}>
-										No Groups to Display
+										No Squads to Display
 									</h3>
 								)}
-								{groups.map((group) => {
-									const { _id, name, students } = group;
+								{squads.map((squad) => {
+									const { _id, name, students } = squad;
 
 									return (
 										<div
@@ -222,7 +235,7 @@ const Dashboard = ({ user }) => {
 													? "true"
 													: "false"
 											}
-											className={styles.group}
+											className={styles.squad}
 										>
 											<header
 												onClick={() =>
@@ -236,17 +249,17 @@ const Dashboard = ({ user }) => {
 											<div className={styles.content}>
 												<form
 													onSubmit={(e) =>
-														updateGroup(e, _id)
+														updateSquad(e, _id)
 													}
 													className={styles.sect}
 													dropped={
 														dropdowns.hasOwnProperty(
 															_id +
-																"_changeGroupName"
+																"_changeSquadName"
 														) &&
 														dropdowns[
 															_id +
-																"_changeGroupName"
+																"_changeSquadName"
 														] == true
 															? "true"
 															: "false"
@@ -256,12 +269,12 @@ const Dashboard = ({ user }) => {
 														onClick={() =>
 															toggleDropdown(
 																_id +
-																	"_changeGroupName"
+																	"_changeSquadName"
 															)
 														}
 													>
 														<h3>
-															Change Group Name
+															Change Squad Name
 														</h3>
 														<FaChevronDown />
 													</header>
@@ -272,7 +285,7 @@ const Dashboard = ({ user }) => {
 													>
 														<Input
 															type="text"
-															placeholder="Group Name"
+															placeholder="Squad Name"
 															maxLength={64}
 														/>
 														<Button
@@ -287,7 +300,10 @@ const Dashboard = ({ user }) => {
 
 												<form
 													onSubmit={(e) =>
-														addStudents(e, _id)
+														addStudentsToSquad(
+															e,
+															_id
+														)
 													}
 													className={`${styles.addStudentForm} ${styles.sect}`}
 													dropped={
@@ -395,7 +411,7 @@ const Dashboard = ({ user }) => {
 													>
 														<h3>
 															Students Already in
-															Group
+															Squad
 														</h3>
 														<FaChevronDown />
 													</header>
@@ -455,7 +471,7 @@ const Dashboard = ({ user }) => {
 																				</span>
 																			</div>
 																		</div>
-																		<Button.Group
+																		<Button.Squad
 																			split
 																		>
 																			<Button
@@ -472,7 +488,7 @@ const Dashboard = ({ user }) => {
 																			</Button>
 																			<Button
 																				onClick={() =>
-																					removeFromGroup(
+																					removeFromSquad(
 																						_id
 																					)
 																				}
@@ -482,7 +498,7 @@ const Dashboard = ({ user }) => {
 																				<FaTrash />
 																				Remove
 																			</Button>
-																		</Button.Group>
+																		</Button.Squad>
 																	</div>
 																);
 															}
@@ -497,7 +513,7 @@ const Dashboard = ({ user }) => {
 													emphasis="error"
 												>
 													<FaTrash />
-													Permanently Delete Group
+													Permanently Delete Squad
 												</Button>
 											</div>
 										</div>
@@ -506,9 +522,9 @@ const Dashboard = ({ user }) => {
 								<Button
 									emphasis="primary"
 									hollow
-									onClick={addGroup}
+									onClick={createSquad}
 								>
-									<FaPlus /> Add Group
+									<FaPlus /> Add Squad
 								</Button>
 							</div>
 						</div>
