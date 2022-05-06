@@ -11,6 +11,8 @@ import {
 
 import { v4 as uuid } from "uuid";
 
+import { useRouter } from "next/router";
+
 import { Select, Option } from "./Select";
 
 import Cookies from "js-cookie";
@@ -27,6 +29,8 @@ const EditReport = ({
 	loading,
 	setView,
 }) => {
+	const router = useRouter();
+
 	// const [loadingReport, setLoadingReport] = useState(true);
 	const person = {
 		// says weather the person is a victim, witness, suspect, or something else
@@ -72,6 +76,7 @@ const EditReport = ({
 		},
 	};
 
+	const [activeReport, setActiveReport] = useState(null);
 	const [errorMessage, setErrorMessage] = useState(null);
 
 	const [dropdowns, setDropdowns] = useState({
@@ -97,26 +102,9 @@ const EditReport = ({
 		setPersonDropdowns({ ...newPersonDropdowns });
 	};
 
-	const [activeReport, setActiveReport] = useState(null);
-
 	useEffect(() => {
-		// setActiveReport((prev) => {
-		// 	const temp = Object.assign(report, prev);
-
-		// 	setLoadingReport(false);
-
-		// 	return temp;
-		// });
-
-		// console.log("spreading values");
-
-		// const newBasicInfo = Object.assign(
-		// 	activeReport.basicInfo,
-		// 	report.basicInfo
-		// );
-
-		setActiveReport(report);
-	}, [report]);
+		if (report && !activeReport) setActiveReport(report);
+	}, []);
 
 	const addPerson = () => {
 		setActiveReport({
@@ -194,8 +182,7 @@ const EditReport = ({
 		setActiveReport({ ...newReport, ...activeReport });
 	};
 
-	const submitForm = async (e) => {
-		e.preventDefault();
+	const submitForm = async () => {
 		setLoading(true);
 		setErrorMessage(null);
 
@@ -206,7 +193,7 @@ const EditReport = ({
 
 			// Getting the report data.
 			const res = await axios.post(
-				`http://localhost:3000/api/v1/report/${report._id}`,
+				`http://localhost:3000/api/v1/report/${activeReport._id}`,
 				{
 					userId: currentUserId,
 					report: activeReport,
@@ -218,12 +205,21 @@ const EditReport = ({
 				}
 			);
 
-			console.log(res);
+			// console.log(res);
 
-			// setView(true);
+			let newPathname = window.location.pathname.split("/");
+			newPathname[newPathname.length - 1] = "view";
+			newPathname = newPathname.join("/");
+
+			setView(true);
+			router.reload();
 		} catch (err) {
 			console.error("Error at form submission", err);
-			setErrorMessage(err.response.data);
+			setErrorMessage(
+				err.response.data
+					? err.response.data
+					: "Unkown error. Please try again later."
+			);
 		}
 
 		setLoading(false);
@@ -236,7 +232,12 @@ const EditReport = ({
 	if (!activeReport) return <>Loading...</>;
 
 	return (
-		<form className={styles.reportForm} onSubmit={submitForm}>
+		<form
+			className={styles.reportForm}
+			onSubmit={(e) => {
+				e.preventDefault();
+			}}
+		>
 			<section
 				className={styles.basicInfo}
 				dropped={dropdowns.basic ? "1" : "0"}
@@ -1816,13 +1817,21 @@ const EditReport = ({
 				{/* <Button emphasis="primary">
 					<FaSave /> Save Report
 				</Button> */}
-				<Button icon circular emphasis="primary">
+				<Button
+					icon
+					circular
+					type="button"
+					onClick={submitForm}
+					emphasis="primary"
+				>
 					<FaSave />
 				</Button>
 			</div>
-			{errorMessage && <div className={styles.errorMessage}>
-				<FaExclamationTriangle /> {errorMessage}
-			</div>}
+			{errorMessage && (
+				<div className={styles.errorMessage}>
+					<FaExclamationTriangle /> {errorMessage}
+				</div>
+			)}
 		</form>
 	);
 };

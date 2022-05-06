@@ -159,6 +159,8 @@ const updateReport = async (req, res) => {
 
 		report.peopleInfo = validatedPeople;
 
+		// console.log(report.peopleInfo);
+
 		// Check new report against model.
 		// const newReportValid = await ReportModel.
 

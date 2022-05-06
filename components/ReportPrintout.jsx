@@ -24,7 +24,6 @@ const ReportPrintout = ({ id, userId }) => {
 		setLoading(true);
 
 		const report = await getReport(id, userId);
-		console.log(report);
 
 		// setActiveReport(tempReport);
 
@@ -57,17 +56,15 @@ const ReportPrintout = ({ id, userId }) => {
 		window.print();
 	};
 
-	if (loading) return <>Loading...</>;
+	if (loading || !activeReport) return <>Loading...</>;
 
 	return (
 		<div className={styles.reportPrintout} ref={reportPrintout}>
 			<header className={`${styles.header}`}>
-				<h1>
-					West-MEC Police Department
-					<h2>
-						Incident Report - <em>#{activeReport.caseNumber}</em>
-					</h2>
-				</h1>
+				<h1>West-MEC Police Department</h1>
+				<h2>
+					Incident Report - <em>#{activeReport.caseNumber}</em>
+				</h2>
 			</header>
 
 			<section className={styles.content}>
@@ -342,7 +339,7 @@ const ReportPrintout = ({ id, userId }) => {
 													reasonTitles[index];
 
 												return (
-													<li>
+													<li key={index}>
 														{checkbox(isSelected)}
 														{title}
 													</li>
@@ -406,22 +403,20 @@ const ReportPrintout = ({ id, userId }) => {
 								willProsecute,
 								BAC,
 								BACResults,
-								personalDetails,
+								personalDetails: {
+									height,
+									weight,
+									build,
+									hairColor,
+									hairCharacter,
+									complexion,
+									voice,
+									eyeColor,
+									facialHairColor,
+									facialHairChar,
+									clothing,
+								},
 							} = person;
-
-							const {
-								height,
-								weight,
-								build,
-								hairColor,
-								hairCharacter,
-								complexion,
-								voice,
-								eyeColor,
-								facialHairColor,
-								facialHairChar,
-								clothing,
-							} = personalDetails;
 
 							return (
 								<div className={styles.personInfo}>

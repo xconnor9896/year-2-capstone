@@ -58,14 +58,14 @@ const Navbar = ({ user }) => {
 				}`}
 			>
 				<section>
-					<Link href="/dashboard">
-						<button>
-							<FaColumns />
-							Dashboard
-						</button>
-					</Link>
 					{user && (
 						<>
+							<Link href={user.rank === "captain" ? "/captain/dashboard" : "/dashboard"}>
+								<button>
+									<FaColumns />
+									Dashboard
+								</button>
+							</Link>
 							<Link href={`/profile/${user._id}`}>
 								<button>
 									<FaUser />
