@@ -228,4 +228,4 @@ const PersonSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('Person', PersonSchema);
+module.exports = mongoose.models?.User || mongoose.model('Person', PersonSchema);

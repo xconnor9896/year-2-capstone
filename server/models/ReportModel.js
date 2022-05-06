@@ -322,4 +322,4 @@ const ReportSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('Report', ReportSchema);
+module.exports = mongoose.models?.User || mongoose.model('Report', ReportSchema);

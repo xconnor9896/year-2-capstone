@@ -55,4 +55,4 @@ const UserSchema = new mongoose.Schema({
   // {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.models?.User ||  mongoose.model('User', UserSchema);
