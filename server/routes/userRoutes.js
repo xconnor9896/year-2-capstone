@@ -7,7 +7,7 @@ const {
 	updateUser,
 	authUser,
 	getUser,
-	getSquad
+	getAllUsers
 } = require("../controllers/user");
 
 const { authMiddleware } = require("../middleware/authMidware");
@@ -20,6 +20,6 @@ router
 	.post(authMiddleware, updateUser);
 router.get("/", authUser);
 router.get("/:userId", getUser);
-router.get("/squad/:squadNumber", getSquad);
+router.get("/all", getAllUsers)
 
 module.exports = router;

@@ -27,11 +27,12 @@ const squadRoutes = require("./server/routes/squadRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
 const getUserEmail = require("./server/routes/emailRoutes");
+const { authMiddleware } = require("../middleware/authMidware");
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/squad", squadRoutes);
+app.use("/api/v1/squad", authMiddleware, squadRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
 app.use("/api/v1/email", getUserEmail);

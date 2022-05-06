@@ -50,7 +50,7 @@ const createSquad = async (req, res) => {
       return req.send(403).send("sorry only captains can create a squad");
     }
 
-    if (!captain.squadNumber) {
+    if (captain.squadNumber === 0) {
       captain.squadNumber = [];
     }
 
