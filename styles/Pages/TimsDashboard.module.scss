@@ -172,9 +172,26 @@
 									display: flex;
 									flex-direction: row;
 									align-items: center;
-									justify-content: center;
-									padding: $padding;
+									justify-content: space-between;
+									// padding: $padding;
+									padding-right: $padding * 2;
 									gap: $padding;
+
+									h3 {
+										display: flex;
+										flex-direction: row;
+										align-items: center;
+										gap: $padding;
+
+										span {
+											padding: $padding;
+										}
+
+										span:first-child {
+											border-right: $border;
+											padding-right: $padding;
+										}
+									}
 
 									svg {
 										fill: $em-primary;

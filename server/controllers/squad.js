@@ -38,7 +38,7 @@ const createSquad = async (req, res) => {
 
 	const squadNumber = curNum.number++;
 
-	squadName = `Unnamed Squad ${squadNumber}`;
+	squadName = `Unnamed Squad`;
 
 	try {
 		// let checkSquad = await SquadModel.find({});
@@ -72,7 +72,7 @@ const createSquad = async (req, res) => {
 		await captain.save();
 		await curNum.save();
 
-		return res.status(200).json(squad);
+		return res.status(200).json(captain);
 	} catch (error) {
 		console.log(error);
 		return res.status(400).send("error at createSquad controller");
@@ -100,7 +100,7 @@ const addToSquad = async (req, res) => {
 				.send("sorry only officers can be added to a squad");
 		}
 
-		if (officer.squadNumber) {
+		if (officer.squadNumber[0]) {
 			let oldSquad = await SquadModel.findOne({
 				squadNumber: officer.squadNumber,
 			});
@@ -112,7 +112,7 @@ const addToSquad = async (req, res) => {
 
 		if (squad) {
 			squad.officers.push(userId);
-			officer.squadNumber = squadNumber;
+			officer.squadNumber[0] = squadNumber;
 
 			await squad.save();
 			await officer.save();
@@ -239,7 +239,7 @@ const removeFromSquad = async (req, res) => {
 
 		if (squad) {
 			squad.officers.filter((id) => id !== officerId);
-			officer.squadNumber = 0;
+			officer.squadNumber[0] = 0;
 
 			await squad.save();
 			await officer.save();

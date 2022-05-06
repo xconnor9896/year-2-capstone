@@ -15,7 +15,6 @@ const SquadSchema = new mongoose.Schema(
 		squadName: {
 			type: String,
 			required: true,
-			// unique: true,
 		},
 		squadNumber: {
 			type: Number,

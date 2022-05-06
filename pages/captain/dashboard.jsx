@@ -21,19 +21,47 @@ import Modal from "../../components/Modal";
 const Dashboard = ({ user }) => {
 	const [loading, setLoading] = useState(false);
 
-	console.log(user);
-
-	const { squadNumber } = user;
+	const [squadNumber, setSquadNumber] = useState(user.squadNumber);
 	const [squads, setSquads] = useState([]);
 
-	const reloadSquads = () => {
-		console.log(squadNumber);
+	const token = Cookies.get("token");
+
+	const reloadSquads = async (body) => {
+		if (!body || !body.squadNumber) return;
+
+		const { squadNumber } = body;
+		if (squadNumber) {
+			// let squads = squadNumber;
+			let squads = [];
+
+			for (let num of squadNumber) {
+				try {
+					const res = await axios.get(
+						`http://localhost:3000/api/v1/squad/${num}`,
+						{ userId: user._id },
+						{
+							headers: {
+								Authorization: `Bearer ${token}`,
+							},
+						}
+					);
+
+					squads.push(res.data);
+				} catch (err) {
+					console.error("Failed to get squad.", err);
+				}
+			}
+
+			setSquads(squads);
+		} else {
+			return;
+		}
 	};
 
 	useEffect(() => {
 		// Get squads
 
-		reloadSquads();
+		reloadSquads(user);
 	}, [squadNumber]);
 
 	// AUTH AND ROUTING
@@ -74,8 +102,6 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 
 		try {
-			const token = Cookies.get("token");
-
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
@@ -90,7 +116,7 @@ const Dashboard = ({ user }) => {
 
 			if (!res) throw new Error("No result returned.");
 
-			reloadSquads();
+			reloadSquads(res.data);
 		} catch (err) {
 			console.error("Failed to add squad.", err);
 		}
@@ -104,7 +130,7 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 
 		console.log("Hook up squad management", id);
-		reloadSquads();
+		// reloadSquads();
 
 		setLoading(false);
 	};
@@ -113,18 +139,18 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 
 		console.log("Hook up deleting GROUPS");
-		reloadSquads();
+		// reloadSquads();
 
 		setLoading(false);
 	};
 
-	const addStudentsToSquad = async (e, id) => {
+	const addOfficersToSquad = async (e, id) => {
 		e.preventDefault();
 
 		setLoading(true);
 
-		console.log("Hook up adding students to squad", id);
-		reloadSquads();
+		console.log("Hook up adding officers to squad", id);
+		// reloadSquads();
 
 		setLoading(false);
 	};
@@ -133,7 +159,7 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 
 		console.log("Hook up remove from squad.", id);
-		reloadSquads();
+		// reloadSquads();
 
 		setLoading(false);
 	};
@@ -147,7 +173,7 @@ const Dashboard = ({ user }) => {
 						<p>
 							This is a{" "}
 							<b style={{ color: "red" }}>permanent action</b>,
-							and any associated students will stop having a squad
+							and any associated officers will stop having a squad
 							assigned to them.
 						</p>
 					</span>
@@ -225,7 +251,14 @@ const Dashboard = ({ user }) => {
 									</h3>
 								)}
 								{squads.map((squad) => {
-									const { _id, name, students } = squad;
+									const {
+										_id,
+										squadName,
+										squadNumber,
+										officers,
+									} = squad;
+
+									// console.log(squad);
 
 									return (
 										<div
@@ -235,6 +268,7 @@ const Dashboard = ({ user }) => {
 													? "true"
 													: "false"
 											}
+											key={_id}
 											className={styles.squad}
 										>
 											<header
@@ -242,7 +276,13 @@ const Dashboard = ({ user }) => {
 													toggleDropdown(_id)
 												}
 											>
-												<h3>{name}</h3>
+												<h3>
+													<span>
+														Squad #{squadNumber}
+													</span>
+													<span>{squadName}</span>
+												</h3>
+
 												<FaChevronDown />
 											</header>
 
@@ -300,7 +340,7 @@ const Dashboard = ({ user }) => {
 
 												<form
 													onSubmit={(e) =>
-														addStudentsToSquad(
+														addOfficersToSquad(
 															e,
 															_id
 														)
@@ -327,7 +367,7 @@ const Dashboard = ({ user }) => {
 															)
 														}
 													>
-														<h3>Add Students</h3>
+														<h3>Add Officers</h3>
 														<FaChevronDown />
 													</header>
 													<div
@@ -336,7 +376,7 @@ const Dashboard = ({ user }) => {
 														}
 													>
 														<ul>
-															{TEMP_addableStudents.map(
+															{/* {TEMP_addableOfficers.map(
 																(student) => {
 																	const {
 																		name,
@@ -376,26 +416,26 @@ const Dashboard = ({ user }) => {
 																		</li>
 																	);
 																}
-															)}
+															)} */}
 														</ul>
 														<Button
 															type="submit"
 															emphasis="primary"
 														>
 															<FaUserPlus />
-															Add These Students
+															Add These Officers
 														</Button>
 													</div>
 												</form>
 
 												<div
-													className={`${styles.students} ${styles.sect}`}
+													className={`${styles.officers} ${styles.sect}`}
 													dropped={
 														dropdowns.hasOwnProperty(
-															_id + "_students"
+															_id + "_officers"
 														) &&
 														dropdowns[
-															_id + "_students"
+															_id + "_officers"
 														] == true
 															? "true"
 															: "false"
@@ -405,12 +445,12 @@ const Dashboard = ({ user }) => {
 														onClick={() =>
 															toggleDropdown(
 																_id +
-																	"_students"
+																	"_officers"
 															)
 														}
 													>
 														<h3>
-															Students Already in
+															Officers Already in
 															Squad
 														</h3>
 														<FaChevronDown />
@@ -420,14 +460,14 @@ const Dashboard = ({ user }) => {
 															styles.content
 														}
 													>
-														{students.length <
+														{officers.length <
 															1 && (
 															<h3>
-																No Students to
+																No Officers to
 																Display
 															</h3>
 														)}
-														{students.map(
+														{officers.map(
 															(student) => {
 																const {
 																	name,

@@ -19,11 +19,9 @@ const UserSchema = new mongoose.Schema(
 		badgeNumber: {
 			type: Number,
 			required: true,
+			unique: false,
 		},
-		squadNumber: {
-			required: false,
-			default: 0,
-		},
+		squadNumber: [{ type: Number, default: [] }],
 		email: {
 			type: String,
 			required: true,
@@ -35,18 +33,18 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			select: false,
 		},
-		username: {
-			type: String,
-			required: true,
-			// unique: true,
-			trim: true,
-		},
+
 		profilePicURL: {
 			type: String,
 		},
 		rank: {
 			type: String,
-			enum: ["officer", "captain", "teacher", "admin"],
+			enum: [
+				"officer",
+				"captain",
+				//  "teacher",
+				//  "admin"
+			],
 			default: "officer",
 		},
 	}
