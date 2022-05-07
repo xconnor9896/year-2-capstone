@@ -1,5 +1,5 @@
 // import the user schema
-// const User = require('../models/UserModel');
+// const User = require("../models/UserModel");
 
 // report model
 
@@ -374,6 +374,5 @@ const ReportSchema = new mongoose.Schema({
 		},
 	},
 });
-module.exports = mongoose.model("Report", ReportSchema);
-
-module.exports = mongoose.model("Report", ReportSchema);
+module.exports =
+	mongoose.models.Report || mongoose.model("Report", ReportSchema);

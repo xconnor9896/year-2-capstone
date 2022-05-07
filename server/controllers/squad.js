@@ -147,16 +147,16 @@ const deleteSquad = async (req, res) => {
 				.send("Please contact your captain about deleting this squad");
 		}
 
-		captain.squadNumber.splice(captain.squadNumber.indexOf(squadNumber), 1)
+		captain.squadNumber.splice(captain.squadNumber.indexOf(squadNumber), 1);
 
-		const squad = await SquadModel.findOne({squadNumber})
+		const squad = await SquadModel.findOne({ squadNumber });
 
 		squad.officers.forEach(async (id) => {
-			let officer = await UserModel.findById(id)
+			let officer = await UserModel.findById(id);
 
-			officer.squadNumber = []
+			officer.squadNumber = [];
 
-			await officer.save()
+			await officer.save();
 		});
 
 		const deleted = await SquadModel.deleteOne({ squadNumber });
@@ -205,7 +205,7 @@ const changeSquadName = async (req, res) => {
 
 			await squad.save();
 
-			return res.status(200).send("squad name updated");
+			return res.status(200).json(captain);
 		} else {
 			return res.status(400).send("Squad with given name already exists");
 		}

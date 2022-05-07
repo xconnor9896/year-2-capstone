@@ -140,9 +140,6 @@ const Dashboard = ({ user }) => {
 	const deleteSquad = async (squadNumber) => {
 		setLoading(true);
 
-		console.log("Hook up deleting squads", squadNumber);
-		// reloadSquads();
-
 		try {
 			const res = await axios.delete(
 				`http://localhost:3000/api/v1/squad/${squadNumber}`,
@@ -161,6 +158,36 @@ const Dashboard = ({ user }) => {
 			setDeleteModal(false);
 		} catch (err) {
 			console.error("Failed to delete squad.", err);
+		}
+
+		setLoading(false);
+	};
+
+	const changeSquadName = async (_id, squadNumber, newName) => {
+		setLoading(true);
+
+		console.log(squadNumber, newName);
+
+		try {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/squad/name/${squadNumber}`,
+				{ userId: user._id, squadName: newName },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res) throw new Error("No result returned.");
+
+			reloadSquads(res.data);
+
+			document.getElementById(`newSquadName-${_id}`).value = "";
+		} catch (err) {
+			console.error("Failed to rename squad.", err);
 		}
 
 		setLoading(false);
@@ -210,7 +237,7 @@ const Dashboard = ({ user }) => {
 							assigned to them.
 						</p>
 					</span>
-					<Button.Group>
+					<Button.Group split wrap>
 						<Button
 							emphasis="primary"
 							onClick={() => setDeleteModal(false)}
@@ -366,10 +393,28 @@ const Dashboard = ({ user }) => {
 															type="text"
 															placeholder="Squad Name"
 															maxLength={64}
+															id={`newSquadName-${_id}`}
 														/>
 														<Button
-															type="submit"
+															type="button"
 															emphasis="primary"
+															onClick={() => {
+																const val =
+																	document.getElementById(
+																		`newSquadName-${_id}`
+																	).value;
+
+																if (
+																	val.length >
+																	0
+																) {
+																	changeSquadName(
+																		_id,
+																		squadNumber,
+																		val
+																	);
+																}
+															}}
 														>
 															<FaSave />
 															Apply Changes

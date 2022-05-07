@@ -24,4 +24,4 @@ const SquadSchema = new mongoose.Schema(
 	}
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
-module.exports = mongoose.model("Squad", SquadSchema);
+module.exports = mongoose.models.Squad || mongoose.model("Squad", SquadSchema);
