@@ -19,11 +19,11 @@ const UserSchema = new mongoose.Schema(
 		badgeNumber: {
 			type: Number,
 			required: true,
-			unique: true,
+			unique: false,
 		},
 		squadNumber: {
-			type: Number,
-			required: true,
+			type: [Number],
+			default: [],
 		},
 		email: {
 			type: String,
@@ -36,18 +36,18 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			select: false,
 		},
-		username: {
-			type: String,
-			required: true,
-			unique: true,
-			trim: true,
-		},
+
 		profilePicURL: {
 			type: String,
 		},
 		rank: {
 			type: String,
-			enum: ["officer", "captain", "teacher", "admin"],
+			enum: [
+				"officer",
+				"captain",
+				//  "teacher",
+				//  "admin"
+			],
 			default: "officer",
 		},
 		verify: {
@@ -57,4 +57,4 @@ const UserSchema = new mongoose.Schema(
 	}
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
