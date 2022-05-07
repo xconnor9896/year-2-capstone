@@ -21,7 +21,10 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			unique: false,
 		},
-		squadNumber: [{ type: Number, default: [] }],
+		squadNumber: {
+			type: [Number],
+			default: []
+		},
 		email: {
 			type: String,
 			required: true,

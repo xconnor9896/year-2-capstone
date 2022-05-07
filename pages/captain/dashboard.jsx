@@ -32,6 +32,24 @@ const Dashboard = ({ user }) => {
 
 	const token = Cookies.get("token");
 
+	const getSquad = async (squadNumber) => {
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/squad/${squadNumber}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			return res.data;
+		} catch (err) {
+			console.error("Failed to get squad.", err);
+			return null;
+		}
+	};
+
 	const reloadSquads = async (body) => {
 		setLoading(true);
 
@@ -43,20 +61,9 @@ const Dashboard = ({ user }) => {
 			let squads = [];
 
 			for (let num of squadNumber) {
-				try {
-					const res = await axios.get(
-						`http://localhost:3000/api/v1/squad/${num}`,
-						{
-							headers: {
-								authorization: `Bearer ${token}`,
-							},
-						}
-					);
+				const squad = await getSquad(num);
 
-					squads.push(res.data);
-				} catch (err) {
-					console.error("Failed to get squad.", err);
-				}
+				if (squad) squads.push(squad);
 			}
 
 			setSquads(squads);
@@ -70,7 +77,7 @@ const Dashboard = ({ user }) => {
 	useEffect(() => {
 		// Get squads
 		reloadSquads(user);
-	}, [squadNumber]);
+	}, []);
 
 	// AUTH
 	const authCheck = () => {
@@ -87,10 +94,14 @@ const Dashboard = ({ user }) => {
 
 	// DELETE squad MODAL
 	const [deleteModal, setDeleteModal] = useState(false);
-	const openDeleteModal = (squadId) => {
-		console.log(squadId);
+	const openDeleteModal = async (squadNumber) => {
+		const gottenSquad = await getSquad(squadNumber);
 
-		setDeleteModal(squadId);
+		if (gottenSquad) {
+			setDeleteModal(gottenSquad);
+		} else {
+			setDeleteModal(false);
+		}
 	};
 
 	// Temporary local variables. Should be replaced with server getters.
@@ -126,21 +137,41 @@ const Dashboard = ({ user }) => {
 		setLoading(false);
 	};
 
+	const deleteSquad = async (squadNumber) => {
+		setLoading(true);
+
+		console.log("Hook up deleting squads", squadNumber);
+		// reloadSquads();
+
+		try {
+			const res = await axios.delete(
+				`http://localhost:3000/api/v1/squad/${squadNumber}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+					data: {
+						userId: user._id,
+					},
+				}
+			);
+
+			reloadSquads(res.data);
+
+			setDeleteModal(false);
+		} catch (err) {
+			console.error("Failed to delete squad.", err);
+		}
+
+		setLoading(false);
+	};
+
 	const updateSquad = async (e, id) => {
 		e.preventDefault();
 
 		setLoading(true);
 
 		console.log("Hook up squad management", id);
-		// reloadSquads();
-
-		setLoading(false);
-	};
-
-	const deleteSquad = async (id) => {
-		setLoading(true);
-
-		console.log("Hook up deleting GROUPS");
 		// reloadSquads();
 
 		setLoading(false);
@@ -171,22 +202,28 @@ const Dashboard = ({ user }) => {
 			{deleteModal !== false && (
 				<Modal closeModal={() => setDeleteModal(false)}>
 					<span>
-						<h1>Delete [squadName] and?</h1>
+						<h1>Delete {deleteModal.squadName}?</h1>
 						<p>
-							This is a{" "}
+							Deleting Squad #{deleteModal.squadNumber} is a{" "}
 							<b style={{ color: "red" }}>permanent action</b>,
 							and any associated officers will stop having a squad
 							assigned to them.
 						</p>
 					</span>
-					<Button.Squad>
-						<Button emphasis="primary" onClick={() => {}}>
+					<Button.Group>
+						<Button
+							emphasis="primary"
+							onClick={() => setDeleteModal(false)}
+						>
 							Cancel
 						</Button>
-						<Button emphasis="error" onClick={deleteReport}>
+						<Button
+							emphasis="error"
+							onClick={() => deleteSquad(deleteModal.squadNumber)}
+						>
 							Yes, delete it forever!
 						</Button>
-					</Button.Squad>
+					</Button.Group>
 				</Modal>
 			)}
 
@@ -550,7 +587,9 @@ const Dashboard = ({ user }) => {
 
 												<Button
 													onClick={() =>
-														openDeleteModal(_id)
+														openDeleteModal(
+															squadNumber
+														)
 													}
 													emphasis="error"
 												>
