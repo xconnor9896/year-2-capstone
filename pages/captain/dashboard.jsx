@@ -355,7 +355,7 @@ const Dashboard = ({ user }) => {
 											<div className={styles.content}>
 												<form
 													onSubmit={(e) =>
-														updateSquad(e, _id)
+														e.preventDefault()
 													}
 													className={styles.sect}
 													dropped={
