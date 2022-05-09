@@ -53,7 +53,11 @@ const UserSchema = new mongoose.Schema(
 		verfiy: {
       type: String,
       default: "UNVEF",
-    }
+	},
+	pass :{
+		type: String,
+		default: "BLA"
+	},
 	}
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
