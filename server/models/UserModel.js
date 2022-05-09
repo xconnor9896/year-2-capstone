@@ -50,7 +50,7 @@ const UserSchema = new mongoose.Schema(
 			enum: ["officer", "captain", "teacher", "admin"],
 			default: "officer",
 		},
-		verify: {
+		verfiy: {
       type: String,
       default: "UNVEF",
     }

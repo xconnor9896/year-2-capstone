@@ -21,3 +21,7 @@ Figured out how to get a user email and send a email to it and remade my emails 
 
 4/29/22 
 Made a random number gen so i can kinda enecrypt the urls for verf email and change password 
+
+5/6/22
+
+i compently finshed the send verfiy email controller now to finsh up the password reset which should be easyish because the bulk of it is the same

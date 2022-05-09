@@ -47,11 +47,11 @@ const sendVerfEmail = async (req, res) => {
       return user.email == inputEmail;
     });
     console.log(user);
-    user.verify = randomNumberGen().toString();
+    user.verfiy = randomNumberGen().toString();
     await user.save();
     console.log(user);
 
-    emailUrl = `${user.verify}`;
+    emailUrl = `${user.verfiy}`;
 
     if (user.email == inputEmail) {
       console.log(`We have ${inputEmail} as one of our users`);
@@ -130,10 +130,18 @@ const verifyController = async (req, res) => {
   try {
     let params = req.query;
     console.log(params);
-    let urlNumber = params.verfiy;
+    let urlNumber = params.verify;
+    const users = await userModel.find({});
 
-    console.log(urlNumber);
-    return res.status(202).send("Nice");
+    const user = users.find((user) => {
+      return user.verfiy == urlNumber;
+    });
+    // console.log(`This is the choosen user`)
+    // console.log(urlNumber)
+    user.verfiy = "true"
+    user.save()
+    // console.log(user.verfiy)
+    return res.status(202).send("Your Email Is Verfiyed");
   } catch (err) {
     console.log(err);
     return res.status(404).send(err);
