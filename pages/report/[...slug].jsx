@@ -18,12 +18,13 @@ import getReport from "../util/getReport";
 import axios from "axios";
 
 export default function Report({
+	user,
 	user: currentUser,
 	user: { _id: currentUserId },
 	token,
 }) {
 	const router = useRouter();
-	const { id } = router.query;
+	const [id, mode] = router.query.slug;
 
 	const [report, setReport] = useState(null);
 	const [responsibleOfficer, setResponsibleOfficer] = useState(null);
@@ -40,6 +41,15 @@ export default function Report({
 	const [isCreator, setIsCreator] = useState(false);
 	const [isVerified, setIsVerified] = useState(false);
 	const [tag, setTag] = useState(null);
+
+	useEffect(() => {
+		if (mode === "view") setView(true);
+		else if (mode === "edit") setView(false);
+	}, []);
+
+	useEffect(() => {
+		if (isCaptain && !view) setView(true);
+	}, [isCaptain]);
 
 	const loadReport = async () => {
 		setLoading(true);
@@ -67,11 +77,6 @@ export default function Report({
 		setLoading(false);
 	};
 
-	useEffect(() => {
-		loadReport();
-	}, []);
-
-	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
 		if (currentUser.rank == "captain") {
 			setIsCaptain(true);
@@ -81,8 +86,11 @@ export default function Report({
 	};
 
 	useEffect(() => {
+		if (!user) router.push("/");
+
 		authCheck();
-	}, [currentUser]);
+		loadReport();
+	}, []);
 
 	const deleteReport = async () => {
 		setDeleteModal(false);
@@ -181,7 +189,10 @@ export default function Report({
 						</p>
 					</span>
 					<Button.Group>
-						<Button emphasis="primary" onClick={deleteReport}>
+						<Button
+							emphasis="primary"
+							onClick={setDeleteModal(false)}
+						>
 							Cancel
 						</Button>
 						<Button emphasis="error" onClick={deleteReport}>
@@ -238,20 +249,7 @@ export default function Report({
 						<Card.Header>
 							<div className={styles.header}>
 								<span>
-									<h1>
-										CASE #:{" "}
-										{report._id.length < 16 ? (
-											report._id
-										) : (
-											<>
-												{report._id.slice(0, 7)}...
-												{report._id.slice(
-													report._id.length - 6,
-													report._id.length
-												)}
-											</>
-										)}
-									</h1>
+									<h1>CASE #{report.caseNumber}</h1>
 									{responsibleOfficer && (
 										<>
 											<h1>
@@ -392,29 +390,22 @@ export default function Report({
 							</div>
 						</Card.Header>
 
-						{!loading && view ? (
-							<ViewReport
-								{...{
-									report,
-									responsibleOfficer,
-									loading,
-									setLoading,
-									view,
-									setView,
-								}}
-							/>
-						) : (
-							<EditReport
-								{...{
-									report,
-									responsibleOfficer,
-									loading,
-									setLoading,
-									view,
-									setView,
-								}}
-							/>
-						)}
+						<>
+							{view ? (
+								<ViewReport {...{ currentUserId }} />
+							) : (
+								<EditReport
+									{...{
+										currentUserId,
+										report,
+										loading,
+										setLoading,
+										view,
+										setView,
+									}}
+								/>
+							)}
+						</>
 					</Card>
 				</article>
 			)}

@@ -1,8 +1,10 @@
 const ReportModel = require("../models/ReportModel");
 const UserModel = require("../models/UserModel");
+const Number = require("../models/Number");
 const jwt = require("jsonwebtoken"); // This isnt done just a structure
 
 const isEmail = require("validator/lib/isEmail");
+const PeopleModel = require("../models/PeopleModel");
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
@@ -18,13 +20,15 @@ const createReport = async (req, res) => {
 	try {
 		const user = await UserModel.findById(userId);
 
-		console.log(userId);
-
 		if (!user) {
 			return res.status(404).send("No user with the given Id");
 		}
 
+		let curNum = await Number.find({});
+		curNum = curNum[0];
+
 		const report = new ReportModel({
+			caseNumber: curNum.number++,
 			basicInfo: {
 				responsibleOfficer: userId,
 				importance: 3,
@@ -32,11 +36,12 @@ const createReport = async (req, res) => {
 			},
 		});
 
+		await curNum.save();
 		await report.save();
 
 		return res.status(200).json(report);
 	} catch (error) {
-		// console.log(error);
+		console.log(error);
 		return res.status(400).send("Error at createReport controller");
 	}
 };
@@ -49,36 +54,36 @@ req.body { userId }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const deleteReport = async (req, res) => {
-  const { reportId } = req.params;
-  const { userId } = req.body;
+	const { reportId } = req.params;
+	const { userId } = req.body;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
-    
-    const report = await ReportModel.findById(reportId);
-    if (
-      user.rank === "captain" ||
-      (user._id === report.responsibleOfficer && !report.verified)
-    ) {
-      const deleted = await ReportModel.deleteOne({ reportId });
+	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
 
-      if (deleted) {
-        return res.status(200).send("Report Deleted");
-      } else {
-        return res.status(404).send("Report Not Found");
-      }
-    } else {
-      return res
-        .status(403)
-        .send("Please contact a captain about deleting this report");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("Error at deleteReport");
-  }
+		const report = await ReportModel.findById(reportId);
+		if (
+			user.rank === "captain" ||
+			(user._id === report.responsibleOfficer && !report.verified)
+		) {
+			const deleted = await ReportModel.deleteOne({ reportId });
+
+			if (deleted) {
+				return res.status(200).send("Report Deleted");
+			} else {
+				return res.status(404).send("Report Not Found");
+			}
+		} else {
+			return res
+				.status(403)
+				.send("Please contact a captain about deleting this report");
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("Error at deleteReport");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,40 +94,84 @@ req.body {userId, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-	const { userId, keys, inputs } = req.body;
+	const { userId, report } = req.body;
+	// const { userId, keys, inputs } = req.body;
 	const { reportId } = req.params;
 
+	// Check that necessary values exist.
+	if (!reportId) return res.status(400).send("No reportId in params.");
+	if (!userId) return res.status(400).send("No userID in body.");
+	if (!report) return res.status(400).send("No new report in body.");
+
 	try {
+		// Confirm user exists.
 		const user = await UserModel.findById(userId);
 		if (!user) {
-			return res.status(404).send("user not found!");
+			return res.status(404).send("User with that ID does not exist.");
 		}
 
-		let report = await ReportModel.findById(reportId);
-		const notInclude = ["verified", "responsibleOfficer", "importance"];
+		// Confirm existing report.
+		const oldReport = await ReportModel.findById(reportId);
 
-		if (user.rank === "captain" || report.createdBy === user._id) {
-			if (keys.length === inputs.length) {
-				for (let i = 0; i < keys.length; i++) {
-					if (!notInclude.includes(keys[i])) {
-						report[keys[i]] = inputs[i];
-						report = await report.save();
-					}
-				}
-				return res.status(200).json(report);
-			} else {
-				res.status(400).send(
-					"Please make sure the number of keys matches the number of inputs"
-				);
-			}
-		} else {
+		if (!oldReport) {
+			return res.status(404).send("Report with that ID does not exist.");
+		}
+
+		// Confirm user authorization.
+		if (user.rank === "captain")
+			return res.status(401).send("Officers cannot edit reports.");
+
+		if (oldReport.basicInfo.responsibleOfficer.toString() !== userId)
 			return res
-				.status(403)
-				.send("You do not have authorization to change this report");
+				.status(401)
+				.send("Only the creator of this report can edit it.");
+
+		// Update people.
+		const people = report.peopleInfo;
+		const validatedPeople = [];
+
+		for (let person of people) {
+			const juvenile = person.age < 18;
+			delete person._id;
+
+			const serverSupportedPerson = new PeopleModel({
+				...person,
+				juvenile,
+			});
+
+			// console.log(serverSupportedPerson);
+
+			const invalid = serverSupportedPerson.validateSync((err) => {
+				if (err) {
+				}
+				console.log("no error");
+			});
+
+			if (!!invalid === true)
+				return res.status(400).send("Fill out required fields.");
+
+			// (err) => {
+			// 	console.error(err);
+			// }
+
+			validatedPeople.push(serverSupportedPerson);
 		}
-	} catch (error) {
-		console.log(error);
-		return res.status(400).send("error at updateReport controller");
+
+		report.peopleInfo = validatedPeople;
+
+		// console.log(report.peopleInfo);
+
+		// Check new report against model.
+		// const newReportValid = await ReportModel.
+
+		await ReportModel.findByIdAndUpdate(reportId, report);
+
+		return res.status(200).send("Report saved!");
+
+		// Update existing report.
+	} catch (err) {
+		console.error(err);
+		return res.status(400).send("Unknown error at updateReport controller");
 	}
 };
 
@@ -147,7 +196,7 @@ const getReport = async (req, res) => {
 
 		if (
 			user.rank === "captain" ||
-			report.basicInfo.responsibleOfficer === user._id
+			report.basicInfo.responsibleOfficer.toString() == userId
 		) {
 			return res.status(200).json(report);
 		} else {
@@ -304,12 +353,13 @@ const verifyReport = async (req, res) => {
 
 			if (!report)
 				return res.status(404).send(`That report doesn't exist.`);
-			// report.verified = !report.verified;
 
-			if (report.basicInfo.verified === undefined) {
-				report.basicInfo.verified = true;
+			report.basicInfo.verified = !report.basicInfo.verified;
+
+			if (report.basicInfo.verified) {
+				report.ApprovedBy = `${userId}`;
 			} else {
-				report.basicInfo.verified = !report.basicInfo.verified;
+				report.ApprovedBy = "";
 			}
 
 			await report.save();
