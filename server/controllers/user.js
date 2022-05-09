@@ -248,15 +248,15 @@ req.params {username} //? Targets username
 
 const getUsername = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await UserModel.findById(userId);
+    const { username } = req.params;
+
+    const user = await UserModel.findOne({ username: username });
+
     if (!user) {
       return res.status(400).send("user not found");
     }
 
-    const data = await UserModel.findOne({ username: user.username })
-
-    return res.status(200).json( data );
+    return res.status(200).json(user);
   } catch (error) {
     console.log(error);
     return res.status(500).send("error @ getUsername");

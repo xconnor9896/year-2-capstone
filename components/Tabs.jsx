@@ -45,8 +45,7 @@ const Tabs = ({ firstName, lastName, email, rank }) => {
           <h2>
             {rank}.{lastName}
           </h2>
-          <h2>Rank</h2>
-          <h2>Squad</h2>
+          <h2>Rank: {rank}</h2>
         </li>
         <li className={tabOpen === 2 ? styles.active : styles.hidden}>
           <h2>
