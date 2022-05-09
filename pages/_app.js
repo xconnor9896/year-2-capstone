@@ -59,18 +59,34 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
     pageProps = await Component.getInitialProps(ctx);
   }
 
-  const protectedRoutes = ["/dashboard", "/reports", "/profile", "/report"];
-  const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
+	const protectedRoutes = [
+		"/dashboard",
+		"/reports",
+		"/profile",
+		"/report",
+		"/profile/[id]",
+		// "/report/[id]",
+		"/report/[...slug]",
+	];
+	const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
 
-  if (!token) {
-    isProtectedRoute && redirectUser(ctx, "/");
-  } else {
-    try {
-      const res = await axios.get(`http://localhost:3000/api/v1/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+	// let isProtectedRoute = false;
+
+	// for (let route of protectedRoutes) {
+	// 	if (ctx.pathname.includes(route)) isProtectedRoute = true;
+	// }
+
+	// console.log(ctx.pathname, isProtectedRoute);
+
+	if (!token) {
+		isProtectedRoute && redirectUser(ctx, "/");
+	} else {
+		try {
+			const res = await axios.get(`http://localhost:3000/api/v1/user`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
       const { user } = res.data;
       console.log(user);
@@ -86,7 +102,16 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
     }
   }
 
-  return { pageProps };
+			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+			if (!user || !token) redirectUser(ctx, "/");
+		} catch (err) {
+			console.error(err);
+			destroyCookie(ctx, "token");
+			redirectUser(ctx, "/");
+		}
+	}
+
+	return { pageProps };
 };
 
 export default MyApp;

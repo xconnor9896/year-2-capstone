@@ -2,53 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/ReportPrintout.module.scss";
 import { FaCheckSquare, FaSquare } from "react-icons/fa";
 
-const uuid = require("uuid").v4;
+import getReport from "../pages/util/getReport";
 
-const ReportPrintout = ({ id }) => {
-	const person = {
-		// says weather the person is a victim, witness, suspect, or something else
-		_id: uuid(),
-		personType: "Complainant",
-		race: "Native Hawaiian / Other Pacific Islander",
-		name: {
-			firstName: "Bjørn",
-			middleName: "Frode",
-			lastName: "Gorm",
-			aka: "The BFG",
-		},
-		age: 102,
-		isJuvenile: true,
-		sex: "Female",
-		occupation: "Front-End Designer",
-		homeAddress: "79428 East Drivers Parkway, Phoenix, AZ, 85384, USA",
-		employerAddress: "79428 East Drivers Parkway, Phoenix, AZ, 85384, USA",
-		phoneNumbers: {
-			main: "+1 (789) 789-789-7897",
-			secondary: "+1 (789) 789-789-7897",
-			business: "+1 (789) 789-789-7897",
-		},
-		email: "jwefjaowiej237598237@joijwe.caw",
-		studentID: 98778,
-		victimRelationshipToSuspect: "Brother",
-		whoDescribed: "Joe Mama",
-		willProsecute: true,
-		BAC: true,
-		BACResults: "Known Criminal",
-		personalDetails: {
-			height: `5'11"`,
-			weight: "300",
-			build: "Burly",
-			hairColor: "Brown",
-			hairCharacter: "Frosted Tips",
-			complexion: "White",
-			voice: "Tenor",
-			eyeColor: "Brown",
-			facialHairColor: "Brown",
-			facialHairChar: "Spikey",
-			clothing: "None 😳",
-		},
-	};
-
+const ReportPrintout = ({ id, userId }) => {
 	const checkbox = (val) => {
 		if (val && val === true) {
 			return <FaCheckSquare />;
@@ -57,145 +13,32 @@ const ReportPrintout = ({ id }) => {
 		}
 	};
 
-	const [activeReport, setActiveReport] = useState({
-		caseNumber: "oi214joai3h523897",
+	const [activeReport, setActiveReport] = useState(null);
+	const [basicInfo, setBasicInfo] = useState(null);
+	const [peopleInfo, setPeopleInfo] = useState(null);
+	const [hospitalInfo, setHospitalInfo] = useState(null);
 
-		approvedBy: {
-			badgeNumber: 123,
-			rank: "captain",
-		},
+	const [loading, setLoading] = useState(true);
 
-		approvedAt: {
-			date: {
-				month: "01",
-				day: "06",
-				year: "2021",
-			},
+	const loadReport = async () => {
+		setLoading(true);
 
-			time: {
-				hour: "12",
-				minute: "49",
-			},
-		},
+		const report = await getReport(id, userId);
 
-		basicInfo: {
-			incidentType: "Vehicle Collision",
+		// setActiveReport(tempReport);
 
-			code: "382",
+		setActiveReport(report);
+		setBasicInfo(report.basicInfo);
+		setPeopleInfo(report.peopleInfo);
+		setHospitalInfo(report.hospitalInfo);
 
-			reportType: {
-				keyRpt: true,
-				fu: true,
-			},
-
-			disposition: "1",
-
-			arsSectionNumber: "84-447",
-
-			location: "Peoria, Arizona, United States of America",
-
-			synopsis: "aaaaa",
-			reportNarration:
-				"Things happened stuff and things it really do be happenin judshdhuygyuydyuwqgydyuqgyudyguwqygudwqgudgyuwqgyudgyuqwgyudgquydgwqyudq d hhdqgdg what is the day. somepeople be under the ground. Wait did you hear that, i didn't. Wait maybe i was just thinking",
-
-			responsibleOfficer: {
-				name: {
-					firstName: "Joe",
-					middleName: "B.",
-					lastName: "Mama",
-				},
-				rank: "Officer",
-				badgeNumber: "123",
-				division: "Surprise",
-			},
-
-			beatOfOffense: "983",
-
-			domesticViolence: true,
-
-			incidentReportedAt: {
-				date: {
-					month: "01",
-					day: "06",
-					year: "2021",
-				},
-				day: "Wednesday",
-				time: {
-					hour: "16",
-					minute: "49",
-				},
-			},
-
-			incidentOccurredAt: {
-				from: {
-					date: {
-						month: "01",
-						day: "06",
-						year: "2021",
-					},
-
-					time: {
-						hour: "12",
-						minute: "49",
-					},
-				},
-				to: {
-					date: {
-						month: "01",
-						day: "06",
-						year: "2021",
-					},
-
-					time: {
-						hour: "16",
-						minute: "40",
-					},
-				},
-			},
-
-			relatedComments:
-				"Things happened stuff and things it really do be happenin",
-		},
-
-		peopleInfo: [
-			{ ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-			// { ...person, e: uuid(), age: Math.ceil(Math.random() * 56) + 5 },
-		],
-
-		hospitalInfo: {
-			injured: true,
-			treated: false,
-			hospital: "St. Bill's Hospital",
-			transportedBy:
-				"Joe's Party Bus, Food Truck, and Emergency Services, just testing my styling skills",
-			emsNo: 3,
-			treatmentReasons: {
-				mental: true,
-				suicide: true,
-				icf: true,
-				scf: true,
-				intox: false,
-				drugs: true,
-				indust: true,
-				uncon: true,
-				resisted: true,
-				other: true,
-			},
-			patientCondition: "Running Frantically Inplace",
-			patientDispo: "Angy",
-			attendingPhysician: "Dr. Phil",
-		},
-	});
+		setLoading(false);
+	};
 
 	const reportPrintout = useRef(null);
 	useEffect(() => {
+		loadReport();
+
 		window.onkeydown = (e) => {
 			if (e.ctrlKey && e.key === "p") {
 				e.preventDefault();
@@ -213,17 +56,15 @@ const ReportPrintout = ({ id }) => {
 		window.print();
 	};
 
-	const { basicInfo, peopleInfo, hospitalInfo } = activeReport;
+	if (loading || !activeReport) return <>Loading...</>;
 
 	return (
 		<div className={styles.reportPrintout} ref={reportPrintout}>
 			<header className={`${styles.header}`}>
-				<h1>
-					West-MEC Police Department
-					<h2>
-						Incident Report - <em>#{id}</em>
-					</h2>
-				</h1>
+				<h1>West-MEC Police Department</h1>
+				<h2>
+					Incident Report - <em>#{activeReport.caseNumber}</em>
+				</h2>
 			</header>
 
 			<section className={styles.content}>
@@ -243,22 +84,25 @@ const ReportPrintout = ({ id }) => {
 										<label>Code</label>
 										<p>{basicInfo.code}</p>
 									</span>
-									<span>
-										<ul>
-											<li>
-												{checkbox(
-													basicInfo.reportType.keyRpt
-												)}
-												Key Rpt
-											</li>
-											<li>
-												{checkbox(
-													basicInfo.reportType.fu
-												)}
-												F/U
-											</li>
-										</ul>
-									</span>
+									{basicInfo.reportType && (
+										<span>
+											<ul>
+												<li>
+													{checkbox(
+														basicInfo.reportType
+															.keyRpt
+													)}
+													Key Rpt
+												</li>
+												<li>
+													{checkbox(
+														basicInfo.reportType.fu
+													)}
+													F/U
+												</li>
+											</ul>
+										</span>
+									)}
 									<span>
 										<label>Status</label>
 										<p>{basicInfo.status}</p>
@@ -495,7 +339,7 @@ const ReportPrintout = ({ id }) => {
 													reasonTitles[index];
 
 												return (
-													<li>
+													<li key={index}>
 														{checkbox(isSelected)}
 														{title}
 													</li>
@@ -559,22 +403,20 @@ const ReportPrintout = ({ id }) => {
 								willProsecute,
 								BAC,
 								BACResults,
-								personalDetails,
+								personalDetails: {
+									height,
+									weight,
+									build,
+									hairColor,
+									hairCharacter,
+									complexion,
+									voice,
+									eyeColor,
+									facialHairColor,
+									facialHairChar,
+									clothing,
+								},
 							} = person;
-
-							const {
-								height,
-								weight,
-								build,
-								hairColor,
-								hairCharacter,
-								complexion,
-								voice,
-								eyeColor,
-								facialHairColor,
-								facialHairChar,
-								clothing,
-							} = personalDetails;
 
 							return (
 								<div className={styles.personInfo}>
@@ -798,20 +640,24 @@ const ReportPrintout = ({ id }) => {
 									<label>Code</label>
 									<p>{basicInfo.code}</p>
 								</span>
-								<span>
-									<ul>
-										<li>
-											{checkbox(
-												basicInfo.reportType.keyRpt
-											)}
-											Key Rpt
-										</li>
-										<li>
-											{checkbox(basicInfo.reportType.fu)}
-											F/U
-										</li>
-									</ul>
-								</span>
+								{basicInfo.reportType && (
+									<span>
+										<ul>
+											<li>
+												{checkbox(
+													basicInfo.reportType.keyRpt
+												)}
+												Key Rpt
+											</li>
+											<li>
+												{checkbox(
+													basicInfo.reportType.fu
+												)}
+												F/U
+											</li>
+										</ul>
+									</span>
+								)}
 								<span>
 									<label>Status</label>
 									<p>{basicInfo.status}</p>

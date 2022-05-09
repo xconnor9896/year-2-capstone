@@ -23,16 +23,19 @@ app.use(express.json());
 
 //routerss
 const userRoutes = require("./server/routes/userRoutes");
+const squadRoutes = require("./server/routes/squadRoutes");
 const reportRoutes = require("./server/routes/reportRoutes");
 const settingsRoutes = require("./server/routes/settingsRoutes");
-const getUserEmail = require("./server/routes/emailRoutes");
+const emailRoutes = require("./server/routes/emailRoutes");
+const { authMiddleware } = require("./server/middleware/authMidware");
 
 // routes
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/squad", authMiddleware, squadRoutes);
 app.use("/api/v1/report", reportRoutes);
 app.use("/api/v1/settings", settingsRoutes);
-app.use("/api/v1/email", getUserEmail);
+app.use("/api/v1/email", emailRoutes);
 
 //conect to database
 connectDB();
@@ -48,7 +51,7 @@ nextApp.prepare().then(() => {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log(`server listining on ${PORT}`);
+			console.log(`server listening on ${PORT}`);
 		}
 	});
 });

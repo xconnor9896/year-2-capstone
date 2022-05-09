@@ -11,23 +11,20 @@ export default function Reports({ user }) {
 	const [groupID, setGroupID] = useState(null);
 	const [title, setTitle] = useState("All Reports");
 
-	const { rank } = user;
-
-	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
-		if (rank !== "captain") {
+		if (!user || user.rank !== "captain") {
 			// Re-route if they aren't.
 			router.push("/dashboard");
 		}
 	};
 
-	const route = (path) => {
-		router.push(path);
-	};
-
 	useEffect(() => {
 		authCheck();
 	}, []);
+
+	const route = (path) => {
+		router.push(path);
+	};
 
 	return (
 		<main className={styles.container}>
@@ -38,7 +35,7 @@ export default function Reports({ user }) {
 					circular
 					icon
 					emphasis="primary"
-					onClick={() => route("/dashboard")}
+					onClick={() => route("/captain/dashboard")}
 				>
 					<FaChevronLeft />
 				</Button>

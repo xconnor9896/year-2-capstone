@@ -8,10 +8,10 @@ import { useReactToPrint } from "react-to-print";
 
 const uuid = require("uuid").v4;
 
-const ViewReport = ({ report, responsibleOfficer, token }) => {
+const ViewReport = ({ currentUserId }) => {
 	const router = useRouter();
 
-	const { id } = router.query;
+	const [id] = router.query.slug;
 
 	const printoutRef = useRef(null);
 
@@ -39,7 +39,7 @@ const ViewReport = ({ report, responsibleOfficer, token }) => {
 	return (
 		<div className={styles.viewReport}>
 			<span ref={printoutRef}>
-				<ReportPrintout id={id} />
+				<ReportPrintout id={id} userId={currentUserId} />
 			</span>
 
 			<div className={styles.saveButton}>
