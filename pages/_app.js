@@ -94,7 +94,8 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 			pageProps.token = token;
 
 			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-			if (!user || !token) redirectUser(ctx, "/");
+			if (!user || !token)
+				throw new Error("No user or token. Deleting bad cookie.");
 		} catch (err) {
 			console.error(err);
 			destroyCookie(ctx, "token");

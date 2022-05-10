@@ -94,7 +94,7 @@ const addToSquad = async (req, res) => {
 		let squad = await SquadModel.findOne({ squadNumber });
 		let officer = await UserModel.findById(userId);
 
-		if (captain.rank !== "officer") {
+		if (officer.rank !== "officer") {
 			return req
 				.send(403)
 				.send("sorry only officers can be added to a squad");
@@ -111,7 +111,8 @@ const addToSquad = async (req, res) => {
 		}
 
 		if (squad) {
-			squad.officers.push(userId);
+			// squad.officers.push(userId);
+			squad.officers.addToSet(userId);
 			officer.squadNumber[0] = squadNumber;
 
 			await squad.save();
@@ -249,7 +250,7 @@ const removeFromSquad = async (req, res) => {
 
 		if (squad) {
 			squad.officers.filter((id) => id !== officerId);
-			officer.squadNumber[0] = 0;
+			officer.squadNumber = [];
 
 			await squad.save();
 			await officer.save();

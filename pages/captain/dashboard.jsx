@@ -32,6 +32,19 @@ const Dashboard = ({ user }) => {
 
 	const token = Cookies.get("token");
 
+	// AUTH
+	const authCheck = () => {
+		if (!user) router.push("/");
+		if (user.rank !== "captain") {
+			// Re-route if they aren't.
+			router.push("/dashboard");
+		}
+	};
+
+	useEffect(() => {
+		authCheck();
+	}, [user]);
+
 	const getSquad = async (squadNumber) => {
 		try {
 			const res = await axios.get(
@@ -50,6 +63,24 @@ const Dashboard = ({ user }) => {
 		}
 	};
 
+	const getUser = async (userId) => {
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/user/${userId}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			return res.data;
+		} catch (err) {
+			console.error("Failed to get user.", err);
+			return null;
+		}
+	};
+
 	const reloadSquads = async (body) => {
 		setLoading(true);
 
@@ -63,6 +94,16 @@ const Dashboard = ({ user }) => {
 			for (let num of squadNumber) {
 				const squad = await getSquad(num);
 
+				let newOfficers = [];
+
+				for (let officer of squad.officers) {
+					const newOfficer = await getUser(officer);
+
+					newOfficers.push(newOfficer);
+				}
+
+				squad.officers = newOfficers;
+
 				if (squad) squads.push(squad);
 			}
 
@@ -71,26 +112,10 @@ const Dashboard = ({ user }) => {
 			return;
 		}
 
+		await getAddableOfficers();
+
 		setLoading(false);
 	};
-
-	useEffect(() => {
-		// Get squads
-		reloadSquads(user);
-	}, []);
-
-	// AUTH
-	const authCheck = () => {
-		if (!user) router.push("/");
-		if (user.rank !== "captain") {
-			// Re-route if they aren't.
-			router.push("/dashboard");
-		}
-	};
-
-	useEffect(() => {
-		authCheck();
-	}, [user]);
 
 	// DELETE squad MODAL
 	const [deleteModal, setDeleteModal] = useState(false);
@@ -166,7 +191,7 @@ const Dashboard = ({ user }) => {
 	const changeSquadName = async (_id, squadNumber, newName) => {
 		setLoading(true);
 
-		console.log(squadNumber, newName);
+		// console.log(squadNumber, newName);
 
 		try {
 			// console.log(userId);
@@ -193,36 +218,105 @@ const Dashboard = ({ user }) => {
 		setLoading(false);
 	};
 
-	const updateSquad = async (e, id) => {
-		e.preventDefault();
-
+	const [addableOfficers, setAddableOfficers] = useState(null);
+	const getAddableOfficers = async () => {
 		setLoading(true);
 
-		console.log("Hook up squad management", id);
-		// reloadSquads();
+		try {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/user/all`,
+
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			setAddableOfficers(res.data);
+		} catch (err) {
+			console.error("Failed to rename squad.", err);
+		}
 
 		setLoading(false);
 	};
 
-	const addOfficersToSquad = async (e, id) => {
-		e.preventDefault();
+	// const updateSquad = async (e, id) => {
+	// 	e.preventDefault();
 
+	// 	setLoading(true);
+
+	// 	console.log("Hook up squad management", id);
+	// 	// reloadSquads();
+
+	// 	setLoading(false);
+	// };
+
+	const addOfficerToSquad = async (squadNumber, officerId) => {
 		setLoading(true);
 
-		console.log("Hook up adding officers to squad", id);
-		// reloadSquads();
+		try {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/squad/${squadNumber}`,
+				{ userId: officerId },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			await reloadSquads();
+
+			console.log(res);
+		} catch (err) {
+			console.error("Failed to add officer to squad.", err);
+		}
 
 		setLoading(false);
 	};
 
-	const removeFromSquad = async (id) => {
+	const removeFromSquad = async (squadNumber, officerId) => {
 		setLoading(true);
 
-		console.log("Hook up remove from squad.", id);
-		// reloadSquads();
+		try {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/squad/remove/${squadNumber}`,
+				{ officerId, userId: user._id },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			await reloadSquads();
+
+			console.log(res);
+		} catch (err) {
+			console.error("Failed to add officer to squad.", err);
+		}
 
 		setLoading(false);
 	};
+
+	useEffect(() => {
+		// Get squads
+		reloadSquads(user);
+		getAddableOfficers();
+	}, []);
 
 	return (
 		<main className={styles.container}>
@@ -324,8 +418,6 @@ const Dashboard = ({ user }) => {
 										officers,
 									} = squad;
 
-									// console.log(squad);
-
 									return (
 										<div
 											dropped={
@@ -391,9 +483,11 @@ const Dashboard = ({ user }) => {
 													>
 														<Input
 															type="text"
-															placeholder="Squad Name"
 															maxLength={64}
 															id={`newSquadName-${_id}`}
+															placeholder={
+																squadName
+															}
 														/>
 														<Button
 															type="button"
@@ -422,213 +516,286 @@ const Dashboard = ({ user }) => {
 													</div>
 												</form>
 
-												<form
-													onSubmit={(e) =>
-														addOfficersToSquad(
-															e,
-															_id
-														)
-													}
-													className={`${styles.addStudentForm} ${styles.sect}`}
-													dropped={
-														dropdowns.hasOwnProperty(
-															_id +
-																"_addStudentForm"
-														) &&
-														dropdowns[
-															_id +
-																"_addStudentForm"
-														] == true
-															? "true"
-															: "false"
-													}
-												>
-													<header
-														onClick={() =>
-															toggleDropdown(
-																_id +
-																	"_addStudentForm"
-															)
-														}
-													>
-														<h3>Add Officers</h3>
-														<FaChevronDown />
-													</header>
-													<div
-														className={
-															styles.content
-														}
-													>
-														<ul>
-															{/* {TEMP_addableOfficers.map(
-																(student) => {
-																	const {
-																		name,
-																		studentID,
-																		_id,
-																	} = student;
+												{addableOfficers &&
+													addableOfficers.filter(
+														(officer) =>
+															officer.rank !==
+															"captain"
+													).length > 1 && (
+														<div
+															className={`${styles.addOfficerForm} ${styles.sect}`}
+															dropped={
+																dropdowns.hasOwnProperty(
+																	_id +
+																		"_addOfficerForm"
+																) &&
+																dropdowns[
+																	_id +
+																		"_addOfficerForm"
+																] == true
+																	? "true"
+																	: "false"
+															}
+														>
+															<header
+																onClick={() =>
+																	toggleDropdown(
+																		_id +
+																			"_addOfficerForm"
+																	)
+																}
+															>
+																<h3>
+																	Add Officers
+																</h3>
+																<FaChevronDown />
+															</header>
+															<div
+																className={
+																	styles.content
+																}
+															>
+																<ul
+																	className={
+																		styles.officers
+																	}
+																>
+																	{addableOfficers
+																		.filter(
+																			(
+																				officer
+																			) =>
+																				officer.rank !==
+																				"captain"
+																		)
+																		.map(
+																			(
+																				officer
+																			) => {
+																				const {
+																					name: {
+																						firstName,
+																						lastName,
+																					},
+																					rank,
+																					badgeNumber,
+																					_id,
+																				} = officer;
 
-																	return (
-																		<li
-																			key={
-																				_id
-																			}
-																		>
-																			<Input
-																				name={
-																					_id
-																				}
-																				id={
-																					_id
-																				}
-																				type="checkbox"
-																				checked={
-																					true
-																				}
-																				label={
-																					<label
-																						htmlFor={
+																				return (
+																					<li
+																						className={
+																							styles.officer
+																						}
+																						key={
 																							_id
 																						}
 																					>
-																						{
-																							name
-																						}
-																					</label>
-																				}
-																			/>
-																		</li>
-																	);
-																}
-															)} */}
-														</ul>
-														<Button
-															type="submit"
-															emphasis="primary"
-														>
-															<FaUserPlus />
-															Add These Officers
-														</Button>
-													</div>
-												</form>
+																						<div
+																							className={
+																								styles.info
+																							}
+																						>
+																							<div
+																								className={
+																									styles.pfp
+																								}
+																							></div>
+																							<div
+																								className={
+																									styles.data
+																								}
+																							>
+																								<span>
+																									Officer{" "}
+																									{
+																										lastName
+																									}
 
-												<div
-													className={`${styles.officers} ${styles.sect}`}
-													dropped={
-														dropdowns.hasOwnProperty(
-															_id + "_officers"
-														) &&
-														dropdowns[
-															_id + "_officers"
-														] == true
-															? "true"
-															: "false"
-													}
-												>
-													<header
-														onClick={() =>
-															toggleDropdown(
+																									,{" "}
+																									{
+																										firstName
+																									}
+																								</span>
+																								<span>
+																									#
+																									{
+																										badgeNumber
+																									}
+																								</span>
+																							</div>
+																						</div>
+
+																						<nav>
+																							<Button
+																								onClick={() =>
+																									addOfficerToSquad(
+																										squadNumber,
+																										_id
+																									)
+																								}
+																								compact
+																								emphasis="primary"
+																							>
+																								<FaUserPlus />
+																								Add
+																								Officer
+																							</Button>
+																						</nav>
+																					</li>
+																				);
+																			}
+																		)}
+																</ul>
+															</div>
+														</div>
+													)}
+
+												{officers.filter(
+													(officer) =>
+														officer.rank !==
+														"captain"
+												).length > 1 && (
+													<div
+														className={`${styles.officers} ${styles.sect}`}
+														dropped={
+															dropdowns.hasOwnProperty(
 																_id +
 																	"_officers"
-															)
+															) &&
+															dropdowns[
+																_id +
+																	"_officers"
+															] == true
+																? "true"
+																: "false"
 														}
 													>
-														<h3>
-															Officers Already in
-															Squad
-														</h3>
-														<FaChevronDown />
-													</header>
-													<div
-														className={
-															styles.content
-														}
-													>
-														{officers.length <
-															1 && (
-															<h3>
-																No Officers to
-																Display
-															</h3>
-														)}
-														{officers.map(
-															(student) => {
-																const {
-																	name,
-																	studentID,
-																	_id: linkID,
-																} = student;
-
-																return (
-																	<div
-																		className={
-																			styles.student
-																		}
-																		key={
-																			_id
-																		}
-																	>
-																		<div
-																			className={
-																				styles.info
-																			}
-																		>
-																			<div
-																				className={
-																					styles.pfp
-																				}
-																			></div>
-																			<div
-																				className={
-																					styles.data
-																				}
-																			>
-																				<span>
-																					{
-																						name
-																					}
-																				</span>
-																				<span>
-																					{
-																						studentID
-																					}
-																				</span>
-																			</div>
-																		</div>
-																		<Button.Squad
-																			split
-																		>
-																			<Button
-																				onClick={() =>
-																					route(
-																						`/profile/${linkID}`
-																					)
-																				}
-																				compact
-																				emphasis="secondary"
-																			>
-																				<FaUser />
-																				View
-																			</Button>
-																			<Button
-																				onClick={() =>
-																					removeFromSquad(
-																						_id
-																					)
-																				}
-																				compact
-																				emphasis="error"
-																			>
-																				<FaTrash />
-																				Remove
-																			</Button>
-																		</Button.Squad>
-																	</div>
-																);
+														<header
+															onClick={() =>
+																toggleDropdown(
+																	_id +
+																		"_officers"
+																)
 															}
-														)}
+														>
+															<h3>
+																Officers in this
+																Squad
+															</h3>
+															<FaChevronDown />
+														</header>
+														<div
+															className={
+																styles.content
+															}
+														>
+															<ul
+																className={
+																	styles.officers
+																}
+															>
+																{officers
+																	.filter(
+																		(
+																			officer
+																		) =>
+																			officer.rank !==
+																			"captain"
+																	)
+																	.map(
+																		(
+																			officer
+																		) => {
+																			const {
+																				name: {
+																					firstName,
+																					lastName,
+																				},
+																				rank,
+																				badgeNumber,
+																				_id,
+																			} = officer;
+
+																			return (
+																				<li
+																					className={
+																						styles.officer
+																					}
+																					key={
+																						_id
+																					}
+																				>
+																					<div
+																						className={
+																							styles.info
+																						}
+																					>
+																						<div
+																							className={
+																								styles.pfp
+																							}
+																						></div>
+																						<div
+																							className={
+																								styles.data
+																							}
+																						>
+																							<span>
+																								Officer{" "}
+																								{
+																									lastName
+																								}
+
+																								,{" "}
+																								{
+																									firstName
+																								}
+																							</span>
+																							<span>
+																								#
+																								{
+																									badgeNumber
+																								}
+																							</span>
+																						</div>
+																					</div>
+
+																					<nav>
+																						<Button
+																							onClick={() =>
+																								route(
+																									`/profile/${_id}`
+																								)
+																							}
+																							compact
+																							emphasis="primary"
+																						>
+																							<FaUser />
+																							View
+																						</Button>
+																						<Button
+																							onClick={() =>
+																								removeFromSquad(
+																									squadNumber,
+																									_id
+																								)
+																							}
+																							compact
+																							emphasis="error"
+																						>
+																							<FaTrash />
+																							Remove
+																						</Button>
+																					</nav>
+																				</li>
+																			);
+																		}
+																	)}
+															</ul>
+														</div>
 													</div>
-												</div>
+												)}
 
 												<Button
 													onClick={() =>

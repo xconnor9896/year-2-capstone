@@ -19,7 +19,6 @@ const UserSchema = new mongoose.Schema(
 		badgeNumber: {
 			type: Number,
 			required: true,
-			unique: false,
 		},
 		squadNumber: {
 			type: [Number],
