@@ -43,9 +43,9 @@ const Profile = ({ user }) => {
 
 Profile.getInitialProps = async (ctx) => {
   try {
-    const { username: username } = ctx.query;
+    const { email: email } = ctx.query;
     const { token } = parseCookies(ctx);
-    const res = await axios.get(`${baseURL}/api/v1/user/${username}`, {
+    const res = await axios.get(`${baseURL}/api/v1/user/${email}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

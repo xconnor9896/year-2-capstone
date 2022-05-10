@@ -246,11 +246,11 @@ GET USER
 req.params {username} //? Targets username
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-const getUsername = async (req, res) => {
+const getEmail = async (req, res) => {
   try {
-    const { username } = req.params;
+    const { email } = req.params;
 
-    const user = await UserModel.findOne({ username: username });
+    const user = await UserModel.findOne({ email: email });
 
     if (!user) {
       return res.status(400).send("user not found");
@@ -271,5 +271,5 @@ module.exports = {
   changePassword,
   authUser,
   // getUser,
-  getUsername,
+  getEmail,
 };
