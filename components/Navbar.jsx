@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Navbar.module.scss";
-import { FaAngleDown, FaColumns, FaUser, FaSignOutAlt } from "react-icons/fa";
+import {
+	FaAngleDown,
+	FaColumns,
+	FaUser,
+	FaSignOutAlt,
+	FaClipboardList,
+} from "react-icons/fa";
 import { Button } from "../proton";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +19,10 @@ const Navbar = ({ user }) => {
 
 	const dropdownRef = useRef();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 	const clickHandler = (e) => {
 		if (!dropdownRef.current) {
 			console.warn(
@@ -40,6 +49,10 @@ const Navbar = ({ user }) => {
 		};
 	}, [dropdownRef, dropdownOpen]);
 
+	Router.events.on("routeChangeComplete", () => {
+		setDropdownOpen(false);
+	});
+
 	return (
 		<div className={styles.navParent}>
 			<div
@@ -49,19 +62,38 @@ const Navbar = ({ user }) => {
 				}`}
 			>
 				<section>
-					<Link href="/dashboard">
-						<button>
-							<FaColumns />
-							Dashboard
-						</button>
-					</Link>
 					{user && (
+<<<<<<< HEAD
 						<Link href={`/profile/${user._id}`}>
 							<button>
 								<FaUser />
 								Profile
 							</button>
 						</Link>
+=======
+						<>
+							<Link href={user.rank === "captain" ? "/captain/dashboard" : "/dashboard"}>
+								<button>
+									<FaColumns />
+									Dashboard
+								</button>
+							</Link>
+							<Link href={`/profile/${user._id}`}>
+								<button>
+									<FaUser />
+									Profile
+								</button>
+							</Link>
+							{user.rank === "captain" && (
+								<Link href={`/reports`}>
+									<button>
+										<FaClipboardList />
+										Reports
+									</button>
+								</Link>
+							)}
+						</>
+>>>>>>> master
 					)}
 				</section>
 

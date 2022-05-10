@@ -1,3 +1,4 @@
+// import {sendPassResetEmail} from "../server/controllers/emailCon"
 import styles from "../styles/pages/Home.module.scss";
 import { Button } from "../proton";
 import { useState, useRef } from "react";
@@ -62,7 +63,7 @@ const LoginPage = ({ setState }) => {
 				});
 		} catch (err) {
 			console.error(err);
-			setErrorMessage(err);
+			setErrorMessage(err.response.data ? err.response.data : err);
 		}
 
 		setLoading(false);
@@ -129,11 +130,10 @@ const LoginPage = ({ setState }) => {
 		</>
 	);
 };
-
 const RecoveryPage = ({ setState }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
+		sendPassResetEmail()
 		setLoading(true);
 
 		console.log("implement handleSubmit for recovery page...");
