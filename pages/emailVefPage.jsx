@@ -1,6 +1,8 @@
 import {sendVerfEmail } from "../server/controllers/emailCon"
+import {axios} from "axios"
 
 const emailVefPage = () => {
+        axios.post("http://localhost:3000/api/v1/email/verf")
     return(
         <>
             <div>
