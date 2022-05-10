@@ -1,41 +1,40 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
-  {
-    name: {
-      firstName: {
-        type: String,
-        required: true,
-      },
-      middleName: {
-        type: String,
-        required: false,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-    },
-    badgeNumber: {
-      type: Number,
-      required: true,
-      unique: false,
-    },
-    squadNumber: {
-      type: [Number],
-      default: [],
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      // verification from either west-mec.org or west-mec.edu goes here
-    },
-    password: {
-      type: String,
-      required: true,
-      select: false,
-    },
+	{
+		name: {
+			firstName: {
+				type: String,
+				required: true,
+			},
+			middleName: {
+				type: String,
+				required: false,
+			},
+			lastName: {
+				type: String,
+				required: true,
+			},
+		},
+		badgeNumber: {
+			type: Number,
+			required: true,
+		},
+		squadNumber: {
+			type: [Number],
+			default: [],
+		},
+		email: {
+			type: String,
+			required: true,
+			unique: true,
+			// verification from either west-mec.org or west-mec.edu goes here
+		},
+		password: {
+			type: String,
+			required: true,
+			select: false,
+		},
 
     profilePicURL: {
       type: String,
