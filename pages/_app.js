@@ -95,6 +95,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
       console.log(pageProps.user);
 
       if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+      if (!user || !token) redirectUser(ctx, "/");
     } catch (err) {
       console.error(err);
       destroyCookie(ctx, "token");
@@ -102,14 +103,14 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
     }
   }
 
-			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-			if (!user || !token) redirectUser(ctx, "/");
-		} catch (err) {
-			console.error(err);
-			destroyCookie(ctx, "token");
-			redirectUser(ctx, "/");
-		}
-	}
+		// 	if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+		// 	if (!user || !token) redirectUser(ctx, "/");
+		// } catch (err) {
+		// 	console.error(err);
+		// 	destroyCookie(ctx, "token");
+		// 	redirectUser(ctx, "/");
+		// }
+// }
 
 	return { pageProps };
 };
