@@ -249,7 +249,7 @@ const removeFromSquad = async (req, res) => {
 		const squad = await SquadModel.findOne({ squadNumber });
 
 		if (squad) {
-			squad.officers.filter((id) => id !== officerId);
+			squad.officers = squad.officers.filter((id) => id !== officerId);
 			officer.squadNumber = [];
 
 			await squad.save();

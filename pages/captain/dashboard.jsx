@@ -81,6 +81,33 @@ const Dashboard = ({ user }) => {
 		}
 	};
 
+	const [addableOfficers, setAddableOfficers] = useState(null);
+	const getAddableOfficers = async () => {
+		setLoading(true);
+
+		try {
+			// console.log(userId);
+			// Getting the report data.
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/user/all`,
+
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			setAddableOfficers(res.data);
+		} catch (err) {
+			console.error("Failed to rename squad.", err);
+		}
+
+		setLoading(false);
+	};
+
 	const reloadSquads = async (body) => {
 		setLoading(true);
 
@@ -218,33 +245,6 @@ const Dashboard = ({ user }) => {
 		setLoading(false);
 	};
 
-	const [addableOfficers, setAddableOfficers] = useState(null);
-	const getAddableOfficers = async () => {
-		setLoading(true);
-
-		try {
-			// console.log(userId);
-			// Getting the report data.
-			const res = await axios.get(
-				`http://localhost:3000/api/v1/user/all`,
-
-				{
-					headers: {
-						authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			if (!res || !res.data) throw new Error("No result returned.");
-
-			setAddableOfficers(res.data);
-		} catch (err) {
-			console.error("Failed to rename squad.", err);
-		}
-
-		setLoading(false);
-	};
-
 	// const updateSquad = async (e, id) => {
 	// 	e.preventDefault();
 
@@ -274,7 +274,7 @@ const Dashboard = ({ user }) => {
 
 			if (!res || !res.data) throw new Error("No result returned.");
 
-			await reloadSquads();
+			await reloadSquads(user);
 
 			console.log(res);
 		} catch (err) {
@@ -302,7 +302,7 @@ const Dashboard = ({ user }) => {
 
 			if (!res || !res.data) throw new Error("No result returned.");
 
-			await reloadSquads();
+			await reloadSquads(user);
 
 			console.log(res);
 		} catch (err) {
@@ -521,7 +521,7 @@ const Dashboard = ({ user }) => {
 														(officer) =>
 															officer.rank !==
 															"captain"
-													).length > 1 && (
+													).length > 0 && (
 														<div
 															className={`${styles.addOfficerForm} ${styles.sect}`}
 															dropped={
@@ -580,6 +580,7 @@ const Dashboard = ({ user }) => {
 																					rank,
 																					badgeNumber,
 																					_id,
+																					profilePicURL,
 																				} = officer;
 
 																				return (
@@ -599,6 +600,11 @@ const Dashboard = ({ user }) => {
 																							<div
 																								className={
 																									styles.pfp
+																								}
+																								style={
+																									profilePicURL && {
+																										backgroundImage: `url("${profilePicURL}")`,
+																									}
 																								}
 																							></div>
 																							<div
@@ -651,151 +657,158 @@ const Dashboard = ({ user }) => {
 														</div>
 													)}
 
-												{officers.filter(
-													(officer) =>
-														officer.rank !==
-														"captain"
-												).length > 1 && (
-													<div
-														className={`${styles.officers} ${styles.sect}`}
-														dropped={
-															dropdowns.hasOwnProperty(
-																_id +
-																	"_officers"
-															) &&
-															dropdowns[
-																_id +
-																	"_officers"
-															] == true
-																? "true"
-																: "false"
-														}
-													>
-														<header
-															onClick={() =>
-																toggleDropdown(
+												{officers &&
+													officers.filter(
+														(officer) =>
+															officer.rank !==
+															"captain"
+													).length > 0 && (
+														<div
+															className={`${styles.officers} ${styles.sect}`}
+															dropped={
+																dropdowns.hasOwnProperty(
 																	_id +
 																		"_officers"
-																)
+																) &&
+																dropdowns[
+																	_id +
+																		"_officers"
+																] == true
+																	? "true"
+																	: "false"
 															}
 														>
-															<h3>
-																Officers in this
-																Squad
-															</h3>
-															<FaChevronDown />
-														</header>
-														<div
-															className={
-																styles.content
-															}
-														>
-															<ul
-																className={
-																	styles.officers
+															<header
+																onClick={() =>
+																	toggleDropdown(
+																		_id +
+																			"_officers"
+																	)
 																}
 															>
-																{officers
-																	.filter(
-																		(
-																			officer
-																		) =>
-																			officer.rank !==
-																			"captain"
-																	)
-																	.map(
-																		(
-																			officer
-																		) => {
-																			const {
-																				name: {
-																					firstName,
-																					lastName,
-																				},
-																				rank,
-																				badgeNumber,
-																				_id,
-																			} = officer;
+																<h3>
+																	Officers in
+																	this Squad
+																</h3>
+																<FaChevronDown />
+															</header>
+															<div
+																className={
+																	styles.content
+																}
+															>
+																<ul
+																	className={
+																		styles.officers
+																	}
+																>
+																	{officers
+																		.filter(
+																			(
+																				officer
+																			) =>
+																				officer.rank !==
+																				"captain"
+																		)
+																		.map(
+																			(
+																				officer
+																			) => {
+																				const {
+																					name: {
+																						firstName,
+																						lastName,
+																					},
+																					rank,
+																					badgeNumber,
+																					_id,
+																					profilePicURL,
+																				} = officer;
 
-																			return (
-																				<li
-																					className={
-																						styles.officer
-																					}
-																					key={
-																						_id
-																					}
-																				>
-																					<div
+																				return (
+																					<li
 																						className={
-																							styles.info
+																							styles.officer
+																						}
+																						key={
+																							_id
 																						}
 																					>
 																						<div
 																							className={
-																								styles.pfp
-																							}
-																						></div>
-																						<div
-																							className={
-																								styles.data
+																								styles.info
 																							}
 																						>
-																							<span>
-																								Officer{" "}
-																								{
-																									lastName
+																							<div
+																								className={
+																									styles.pfp
 																								}
+																								style={
+																									profilePicURL && {
+																										backgroundImage: `url("${profilePicURL}")`,
+																									}
+																								}
+																							></div>
+																							<div
+																								className={
+																									styles.data
+																								}
+																							>
+																								<span>
+																									Officer{" "}
+																									{
+																										lastName
+																									}
 
-																								,{" "}
-																								{
-																									firstName
-																								}
-																							</span>
-																							<span>
-																								#
-																								{
-																									badgeNumber
-																								}
-																							</span>
+																									,{" "}
+																									{
+																										firstName
+																									}
+																								</span>
+																								<span>
+																									#
+																									{
+																										badgeNumber
+																									}
+																								</span>
+																							</div>
 																						</div>
-																					</div>
 
-																					<nav>
-																						<Button
-																							onClick={() =>
-																								route(
-																									`/profile/${_id}`
-																								)
-																							}
-																							compact
-																							emphasis="primary"
-																						>
-																							<FaUser />
-																							View
-																						</Button>
-																						<Button
-																							onClick={() =>
-																								removeFromSquad(
-																									squadNumber,
-																									_id
-																								)
-																							}
-																							compact
-																							emphasis="error"
-																						>
-																							<FaTrash />
-																							Remove
-																						</Button>
-																					</nav>
-																				</li>
-																			);
-																		}
-																	)}
-															</ul>
+																						<nav>
+																							<Button
+																								onClick={() =>
+																									route(
+																										`/profile/${_id}`
+																									)
+																								}
+																								compact
+																								emphasis="primary"
+																							>
+																								<FaUser />
+																								View
+																							</Button>
+																							<Button
+																								onClick={() =>
+																									removeFromSquad(
+																										squadNumber,
+																										_id
+																									)
+																								}
+																								compact
+																								emphasis="error"
+																							>
+																								<FaTrash />
+																								Remove
+																							</Button>
+																						</nav>
+																					</li>
+																				);
+																			}
+																		)}
+																</ul>
+															</div>
 														</div>
-													</div>
-												)}
+													)}
 
 												<Button
 													onClick={() =>
