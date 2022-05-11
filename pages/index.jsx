@@ -70,7 +70,7 @@ const LoginPage = ({ setState }) => {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit} id="loginForm">
+			<form onSubmit={()=>handleSubmit()} id="loginForm">
 				<h1>LOGIN</h1>
 				<Input
 					required
@@ -143,7 +143,7 @@ const RecoveryPage = ({ setState }) => {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={()=>handleSubmit()}>
 				<h1>RECOVER PASSWORD</h1>
 				<Input
 					required
@@ -313,7 +313,7 @@ const SignUpPage = ({ setState }) => {
 		<>
 			<div className={`${styles.section} ${styles.formContainer}`}>
 				<h1>SIGN UP</h1>
-				<form ref={form} className={styles.row} onSubmit={handleSubmit}>
+				<form ref={form} className={styles.row} onSubmit={() => handleSubmit()}>
 					<div step={step} className={styles.steps}>
 						<div
 							className={`${styles.step} ${
@@ -347,7 +347,7 @@ const SignUpPage = ({ setState }) => {
 								<Button
 									emphasis="secondary"
 									compact
-									onClick={next}
+									onClick={() => next()}
 									type="button"
 								>
 									<FaArrowRight />
@@ -392,7 +392,7 @@ const SignUpPage = ({ setState }) => {
 												noborder
 												// compact
 												emphasis="primary"
-												onClick={triggerFileMenu}
+												onClick={() => triggerFileMenu()}
 											>
 												Or click here instead.
 											</Button>
@@ -407,7 +407,7 @@ const SignUpPage = ({ setState }) => {
 											}}
 										></div>
 										<Button
-											onClick={clearFiles}
+											onClick={() => clearFiles()}
 											icon
 											circular
 											color="red"
@@ -448,7 +448,7 @@ const SignUpPage = ({ setState }) => {
 								<Button
 									emphasis="primary"
 									compact
-									onClick={back}
+									onClick={() => back()}
 									type="button"
 								>
 									<FaArrowLeft />
@@ -457,7 +457,7 @@ const SignUpPage = ({ setState }) => {
 								<Button
 									emphasis="secondary"
 									compact
-									onClick={next}
+									onClick={() => next()}
 									type="button"
 								>
 									<FaArrowRight />
@@ -515,7 +515,7 @@ const SignUpPage = ({ setState }) => {
 								<Button
 									emphasis="secondary"
 									compact
-									onClick={back}
+									onClick={() => back()}
 									type="button"
 								>
 									<FaArrowLeft />

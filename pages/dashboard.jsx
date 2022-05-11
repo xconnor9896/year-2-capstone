@@ -13,9 +13,7 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = ({ user }) => {
-	const name = "John";
-	const rank = "Lt.";
-	const caseId = "1992197";
+  console.log(user)
 
 	const router = useRouter();
 
