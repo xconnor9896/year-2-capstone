@@ -3,7 +3,6 @@ import styles from "../styles/Components/Tabs.module.scss";
 import {
   FaNetworkWired,
   FaUserFriends,
-  FaPen,
   FaInfoCircle,
 } from "react-icons/fa";
 

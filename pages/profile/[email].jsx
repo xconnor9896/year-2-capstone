@@ -8,11 +8,11 @@ import axios from "axios";
 import styles from "../../styles/Pages/Profile.module.scss";
 
 const Profile = ({ user }) => {
-  const fName = user.name.firstName;
   const lName = user.name.lastName;
   const badgeNum = user.badgeNumber;
   const email = user.email;
   const rank = user.rank;
+  console.log(user.name.firstName);
 
   return (
     <main className={styles.container}>
@@ -24,7 +24,6 @@ const Profile = ({ user }) => {
           <img />
         </div>
         <Tabs
-          firstName={fName}
           lastName={lName}
           badgeNum={badgeNum}
           email={email}
