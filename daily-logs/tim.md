@@ -25,3 +25,6 @@
 | `5/3`  | Finished report page with custom routes and finished ViewReport/ReportPrintout components. Started on report editor hook up.                                 |
 | `5/4`  | Hooking up report editor. Serverside validation and people configuring.                                                                                      |
 | `5/9`  | Heavy work on dashboard hookup.                                                                                                                              |
+| `5/10` | Finished dashboard hookup.                                                                                                                                   |
+| `5/11` | Fixed pagination bugs. Hooked up /reports page. Hooked up ReportTab components and hooked up most of the features for the ReportsList component.             |
+| `5/12` | Finalized ReportsList hookup with some serverside modifications.                                                                                             |

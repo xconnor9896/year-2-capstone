@@ -236,6 +236,9 @@ req.params {userId} //? Targets userId
 
 const getUser = async (req, res) => {
 	const { userId } = req.params;
+
+	if (!userId) return res.status(400).send("No userID");
+
 	try {
 		const user = await UserModel.findById(userId);
 		if (user) {
@@ -245,7 +248,7 @@ const getUser = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error);
-		return res.status(400).send("test error at getUser controller");
+		return res.status(400).send("error at getUser controller");
 	}
 };
 
