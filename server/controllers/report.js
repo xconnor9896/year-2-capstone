@@ -264,11 +264,11 @@ const getAllReports = async (req, res) => {
 
 				if (verified === true) {
 					reports = reports.filter(
-						(report) => report.verified === true
+						(report) => report.basicInfo.verified === true
 					);
 				} else if (verified === false) {
 					reports = reports.filter(
-						(report) => report.verified === false
+						(report) => report.basicInfo.verified === false
 					);
 				}
 

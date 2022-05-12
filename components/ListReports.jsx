@@ -27,8 +27,8 @@ const ListReports = ({ currentUser, userID }) => {
 	const [squads, setSquads] = useState([]);
 	const [selectedSquad, setSelectedSquad] = useState("");
 
-	const [filterType, setFilterType] = useState("none");
-	const [sortType, setSortType] = useState("newest");
+	const [verified, setVerified] = useState(null);
+	const [sortType, setSortType] = useState(null);
 
 	const [filterDropdown, setFilterDropdown] = useState(false);
 	const [sortDropdown, setSortDropdown] = useState(false);
@@ -76,7 +76,12 @@ const ListReports = ({ currentUser, userID }) => {
 		try {
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/all`,
-				{ userId: currentUser._id, targetId: userTarget._id },
+				{
+					userId: currentUser._id,
+					targetId: userTarget._id,
+					verified,
+					sort: sortType,
+				},
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -95,7 +100,7 @@ const ListReports = ({ currentUser, userID }) => {
 		try {
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/all`,
-				{ userId: currentUser._id },
+				{ userId: currentUser._id, verified, sort: sortType },
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -151,7 +156,7 @@ const ListReports = ({ currentUser, userID }) => {
 		}
 
 		setLoading(false);
-	}, [userSpecific, selectedSquad]);
+	}, [userSpecific, selectedSquad, verified]);
 
 	useEffect(async () => {
 		setLoading(true);
@@ -265,10 +270,9 @@ const ListReports = ({ currentUser, userID }) => {
 		};
 	}, [filterRef, sortRef, filterDropdown, sortDropdown]);
 
-	const filter = (e) => {
-		let val = e.target.name;
+	const filter = (val) => {
 		setFilterDropdown(false);
-		setFilterType(val);
+		setVerified(val);
 
 		setCurrentPage(1);
 
@@ -370,45 +374,36 @@ const ListReports = ({ currentUser, userID }) => {
 								<Button
 									compact
 									emphasis={
-										filterType === "none"
-											? "primary"
-											: "none"
+										verified === null ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="none"
-									onClick={filter}
+									onClick={() => filter(null)}
 								>
 									None
 								</Button>
 								<Button
 									compact
 									emphasis={
-										filterType === "verified"
-											? "primary"
-											: "none"
+										verified === true ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="verified"
-									onClick={filter}
+									onClick={() => filter(true)}
 								>
 									Verified
 								</Button>
 								<Button
 									compact
 									emphasis={
-										filterType === "unverified"
-											? "primary"
-											: "none"
+										verified === false ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="unverified"
-									onClick={filter}
+									onClick={() => filter(false)}
 								>
 									Unverified
 								</Button>
