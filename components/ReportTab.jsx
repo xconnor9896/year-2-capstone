@@ -14,11 +14,17 @@ const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 		},
 		caseNumber,
 		_id,
+		submittedAt,
 	} = report;
 
-	if (!name) return null;
+	console.log(report);
 
-	// console.log(report);
+	const [date, time] = submittedAt.split("T");
+
+	const [year, month, day] = date.split("-");
+	const [hour, minute, second] = time.split(":");
+
+	if (!name) return null;
 
 	const routeToReport = () => {
 		router.push(`/report/${_id}`);
@@ -74,6 +80,11 @@ const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 								<FaQuestionCircle />
 							</span>
 						)}
+
+						<span className={styles.date}>
+							{month}/{day}/{year} {hour}:{minute}:
+							{second.split(".")[0]}
+						</span>
 					</span>
 				)}
 

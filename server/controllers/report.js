@@ -229,16 +229,12 @@ const getAllReports = async (req, res) => {
 		if (!targetId) {
 			if (user.rank === "captain") {
 				let reports = await ReportModel.find({}).sort({
-					createdAt: -1,
+					submittedAt: -1,
 				});
 
-				if (sort === 1 || !sort) {
+				if (sort === 2) {
 					reports = await ReportModel.find({}).sort({
-						createdAt: -1,
-					});
-				} else if (sort === 2) {
-					reports = await ReportModel.find({}).sort({
-						createdAt: 1,
+						submittedAt: 1,
 					});
 				} else if (sort === 3) {
 					reports = reports.sort(
@@ -250,22 +246,6 @@ const getAllReports = async (req, res) => {
 						(a, b) =>
 							b.basicInfo.importance - a.basicInfo.importance
 					);
-				} else if (sort === 5) {
-					let temp = reports.filter(
-						(report) => report.basicInfo.importance === 2
-					);
-					temp.push(
-						...reports
-							.filter(
-								(report) => report.basicInfo.importance !== 2
-							)
-							.sort(
-								(a, b) =>
-									a.basicInfo.importance -
-									b.basicInfo.importance
-							)
-					);
-					reports = temp;
 				}
 
 				if (verified === true) {
@@ -288,18 +268,18 @@ const getAllReports = async (req, res) => {
 			}
 		} else {
 			if (user.rank === "captain" || targetId === user._id) {
-				let reports = ReportModel.find({
+				let reports = await ReportModel.find({
 					responsibleOfficer: { targetId },
-				}).sort({ createdAt: -1 });
+				}).sort({
+					submittedAt: -1,
+				});
 
-				if (sort === 1 || !sort) {
+				if (sort === 2) {
 					reports = await ReportModel.find({
 						responsibleOfficer: { targetId },
-					}).sort({ createdAt: -1 });
-				} else if (sort === 2) {
-					reports = await ReportModel.find({
-						responsibleOfficer: { targetId },
-					}).sort({ createdAt: 1 });
+					}).sort({
+						submittedAt: 1,
+					});
 				} else if (sort === 3) {
 					reports = reports.sort(
 						(a, b) =>
@@ -310,31 +290,15 @@ const getAllReports = async (req, res) => {
 						(a, b) =>
 							b.basicInfo.importance - a.basicInfo.importance
 					);
-				} else if (sort === 5) {
-					let temp = reports.filter(
-						(report) => report.basicInfo.importance === 2
-					);
-					temp.push(
-						...reports
-							.filter(
-								(report) => report.basicInfo.importance !== 2
-							)
-							.sort(
-								(a, b) =>
-									a.basicInfo.importance -
-									b.basicInfo.importance
-							)
-					);
-					reports = temp;
 				}
 
 				if (verified === true) {
 					reports = reports.filter(
-						(report) => report.verified === true
+						(report) => report.basicInfo.verified === true
 					);
 				} else if (verified === false) {
 					reports = reports.filter(
-						(report) => report.verified === false
+						(report) => report.basicInfo.verified === false
 					);
 				}
 
