@@ -1,112 +1,190 @@
 import styles from "../styles/components/ListReports.module.scss";
 import { Button, Card, Pagination } from "../proton";
 import Input from "../components/Input";
-import {
-	FaFilter,
-	FaSort,
-	FaCheckCircle,
-	FaTimesCircle,
-	FaSortUp,
-	FaSortDown,
-	FaCalendar,
-} from "react-icons/fa";
+import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import ReportTab from "./ReportTab";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
+import Cookies from "js-cookie";
+
+import axios from "axios";
+
+import getSquad from "../pages/util/getSquad";
+
 import { Select, Option } from "./Select";
 
-const randString = () => {
-	let l = "qwertyuiopasdfghjklzxcvbnm1234567890";
+const ListReports = ({ currentUser, userID }) => {
+	const router = useRouter();
+	const token = Cookies.get("token");
 
-	let e = "";
-	for (let i = 0; i < 10; i++) {
-		e += l.split("")[Math.floor(Math.random() * l.length)];
-	}
+	const [loading, setLoading] = useState(false);
+	const [title, setTitle] = useState("Loading...");
 
-	return e;
-};
+	const userSpecific = userID ? true : false;
 
-const genExRep = () => {
-	const exRep = {
-		caseId: randString(),
-		reportingOfficer: {
-			name: "Officer John Doe",
-			squad: `Squad #86${Math.ceil(Math.random() * 800) + 100}`,
-		},
-		verified: [true, false][Math.floor(Math.random() * 2)],
-		tag: Math.ceil(Math.random() * 3),
-		createdAt: Date.now(),
-	};
+	const [reports, setReports] = useState([]);
+	const [paginatedReports, setPaginatedReports] = useState([]);
 
-	return exRep;
-};
+	const [squads, setSquads] = useState([]);
+	const [selectedSquad, setSelectedSquad] = useState("");
 
-const exampleReports = [
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-	genExRep(),
-];
-
-const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
-	const [search, setSearch] = useState("");
 	const [filterType, setFilterType] = useState("none");
 	const [sortType, setSortType] = useState("newest");
+
 	const [filterDropdown, setFilterDropdown] = useState(false);
 	const [sortDropdown, setSortDropdown] = useState(false);
+
 	const [currentPage, setCurrentPage] = useState(1);
-	const [itemsPerPage, setItemsPerPage] = useState(10);
-	const router = useRouter();
-	const [reports, setReports] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [itemsPerPage, setItemsPerPage] = useState(5);
+
+	const getUser = async (userId) => {
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/user/${userId}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			return res.data;
+		} catch (err) {
+			console.error(`Failed to get user with ID:`, userId, err);
+			return null;
+		}
+	};
+
+	const propogateReports = async (reports) => {
+		let newReps = [...reports];
+
+		for (let report of newReps) {
+			const newResponsibleOfficer =
+				typeof report.basicInfo.responsibleOfficer === "string"
+					? await getUser(report.basicInfo.responsibleOfficer)
+					: report.basicInfo.responsibleOfficer;
+
+			report.basicInfo.responsibleOfficer = newResponsibleOfficer;
+		}
+
+		return newReps;
+	};
+
+	const getUsersReports = async (userTarget) => {
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/all`,
+				{ userId: currentUser._id, targetId: userTarget._id },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			return res.data;
+		} catch (err) {
+			console.error("Failed to get user's reports.", err);
+			return null;
+		}
+	};
+
+	const getAllReports = async () => {
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/report/all`,
+				{ userId: currentUser._id },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			return res.data;
+		} catch (err) {
+			console.error("Failed to get all reports.", err);
+			return null;
+		}
+	};
+
+	useEffect(async () => {
+		setLoading(true);
+
+		if (userSpecific) {
+			// If we want to list one users reports.
+			const userTarget = await getUser(userID);
+
+			if (userTarget) {
+				if (userTarget._id === currentUser._id) {
+					// If you are the user who's reports are being accessed.
+					setTitle("Your Reports");
+				} else {
+					setTitle(`${userTarget.name.firstName}'s Reports`);
+				}
+
+				const gottenReports = await getUsersReports(userTarget);
+
+				setReports(gottenReports);
+			}
+		} else {
+			// If we want to list all users reports under a certain squad.
+			const gottenReports = await getAllReports();
+			setReports(gottenReports);
+
+			let squadSelection = [];
+
+			for (let squadNumber of currentUser.squadNumber) {
+				const squad = await getSquad(squadNumber);
+
+				if (squad) {
+					const { squadName, squadNumber } = squad;
+					squadSelection.push({ squadName, squadNumber });
+				}
+			}
+
+			setSquads(squadSelection);
+
+			setTitle("All Reports");
+		}
+
+		setLoading(false);
+	}, [userSpecific, selectedSquad]);
+
+	useEffect(async () => {
+		setLoading(true);
+
+		const paginatedReps = paginateReports(reports);
+		const propogatedReports = await propogateReports(paginatedReps);
+
+		console.log(propogatedReports);
+
+		setPaginatedReports(propogatedReports);
+
+		setLoading(false);
+	}, [reports, currentPage]);
+
+	const paginateReports = (reps) => {
+		setLoading(true);
+
+		let reportsGrabbed = [...reps];
+
+		if (!reportsGrabbed || reportsGrabbed.length < 1) return [];
+
+		reportsGrabbed = reportsGrabbed.slice(
+			(currentPage - 1) * itemsPerPage,
+			(currentPage - 1) * itemsPerPage + itemsPerPage
+		);
+
+		setLoading(false);
+
+		return reportsGrabbed;
+	};
+
+	// Old code needs to be implemented below VVV
+
+	const [search, setSearch] = useState("");
 
 	const [filterIcon, setFilterIcon] = useState(<FaFilter />);
 	const [sortIcon, setSortIcon] = useState(<FaSort />);
@@ -118,65 +196,6 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 			search.slice(search.length - 5, search.length),
 			"... connect search to server"
 		);
-	};
-
-	const pullReportsFromServer = () => {
-		setLoading(true);
-		if (userID && userID !== null) {
-			// PULL FOR SPECIFIC USER
-			setTitle("#USER's Reports");
-			setReports([]);
-		} else if (groupID && groupID !== null) {
-			// PULL FOR SPECIFIC GROUP
-			setTitle("#GROUP's Reports");
-			setReports([]);
-		} else {
-			// PULL ALL REPORTS
-			setTitle("All Reports");
-			setReports(exampleReports);
-		}
-		setLoading(false);
-	};
-
-	useEffect(() => {
-		pullReportsFromServer();
-	}, [search]);
-
-	const filterAndSortReports = () => {
-		let reportsGrabbed = [...reports];
-
-		if (!reportsGrabbed || reportsGrabbed.length < 1) return [];
-
-		// FILTER AND SORT SHOULD BE SERVERSIDE
-		switch (filterType) {
-			case "verified":
-				reportsGrabbed = reportsGrabbed.filter(
-					(report) => report.verified === true
-				);
-				break;
-			case "unverified":
-				reportsGrabbed = reportsGrabbed.filter(
-					(report) => report.verified !== true
-				);
-				break;
-			default:
-				break;
-		}
-
-		return reportsGrabbed;
-	};
-
-	const paginateReports = () => {
-		let reportsGrabbed = [...filterAndSortReports()];
-
-		if (!reportsGrabbed || reportsGrabbed.length < 1) return [];
-
-		reportsGrabbed = reportsGrabbed.slice(
-			currentPage * itemsPerPage,
-			currentPage * itemsPerPage + itemsPerPage
-		);
-
-		return reportsGrabbed;
 	};
 
 	const openFilter = () => {
@@ -269,21 +288,35 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 				{!loading && (
 					<>
 						<Card.Header>
-							{canSwitchGroups ? (
+							{!userSpecific ? (
 								<>
-									<Select
-										absolutely
-										placeholder="Select Group"
-										value={title}
+									<select
+										placeholder="Select Squad"
+										value={selectedSquad}
 										onChange={(e) => {
-											setTitle(e.selectTarget.value);
+											setSelectedSquad(e.target.value);
 										}}
 									>
-										<Option value={"1"}>All Reports</Option>
-										<Option value={"2"}>HOOK</Option>
-										<Option value={"3"}>ME</Option>
-										<Option value={"4"}>UP</Option>
-									</Select>
+										<option value={""}>All Reports</option>
+
+										{squads &&
+											squads.length > 0 &&
+											squads.map((squad) => {
+												const {
+													squadName,
+													squadNumber,
+												} = squad;
+
+												return (
+													<option
+														key={squadNumber}
+														value={squadNumber}
+													>
+														{squadName}
+													</option>
+												);
+											})}
+									</select>
 								</>
 							) : (
 								<h1>{title}</h1>
@@ -306,7 +339,9 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 									{filterIcon}
 									Filter
 								</Button>
+							</div>
 
+							<div className={styles.inputs}>
 								<Input
 									maxLength={60}
 									value={search}
@@ -316,7 +351,6 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 								/>
 							</div>
 						</Card.Header>
-
 						{filterDropdown && (
 							<div
 								ref={filterRef}
@@ -370,7 +404,6 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 								</Button>
 							</div>
 						)}
-
 						{sortDropdown && (
 							<div ref={sortRef} className={styles.sortDropdown}>
 								<h1>Sort</h1>
@@ -439,10 +472,11 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 
 						<div className={styles.content}>
 							<div className={styles.reportList}>
-								{paginateReports().map((report) => {
+								{paginatedReports.map((report) => {
 									return (
 										<ReportTab
-											{...{ report }}
+											key={report._id}
+											report={report}
 											showOfficer={true}
 											showExtraInfo={true}
 										/>
@@ -454,9 +488,10 @@ const ListReports = ({ canSwitchGroups, userID, groupID, title, setTitle }) => {
 								jumpArrows
 								activePage={currentPage}
 								totalPages={Math.floor(
-									filterAndSortReports().length / itemsPerPage
+									reports.length / itemsPerPage
 								)}
 								onPageChange={(page) => {
+									console.log(page);
 									setCurrentPage(page);
 								}}
 							/>

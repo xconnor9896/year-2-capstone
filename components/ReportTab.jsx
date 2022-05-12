@@ -6,44 +6,56 @@ import { useRouter } from "next/dist/client/router";
 const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 	const router = useRouter();
 
-	const { reportingOfficer, caseId, verified, tag } = report;
-	const { squad, name } = reportingOfficer;
+	const {
+		basicInfo: {
+			verified,
+			importance,
+			responsibleOfficer: { name, squadNumber },
+		},
+		caseNumber,
+		_id,
+	} = report;
+
+	if (!name) return null;
+
+	console.log(report);
 
 	const routeToReport = () => {
-		router.push(`/report/${caseId}`);
+		router.push(`/report/${_id}`);
 	};
 
 	return (
 		<div className={styles.reportTab}>
 			<span className={styles.info}>
-				Case #{caseId}
-				{showOfficer && (
+				Case #{caseNumber}
+				{showOfficer && name && squadNumber && (
 					<span>
-						{name}, {squad}
+						Officer {name.lastName}, {name.firstName} &ndash; Squad
+						#{squadNumber[0]}
 					</span>
 				)}
 			</span>
 			<span className={styles.end}>
 				{showExtraInfo && (
 					<span className={styles.info}>
-						{tag && (
+						{importance && !verified && (
 							<span className={styles.urgency}>
 								Urgency:
-								{tag === 1 ? (
+								{importance === 1 ? (
 									<span
-										className={`${styles.tag} ${styles.tag1}`}
+										className={`${styles.importance} ${styles.importance1}`}
 									>
 										Urgent
 									</span>
-								) : tag === 2 ? (
+								) : importance === 2 ? (
 									<span
-										className={`${styles.tag} ${styles.tag2}`}
+										className={`${styles.importance} ${styles.importance2}`}
 									>
 										Important
 									</span>
 								) : (
 									<span
-										className={`${styles.tag} ${styles.tag3}`}
+										className={`${styles.importance} ${styles.importance3}`}
 									>
 										Normal
 									</span>

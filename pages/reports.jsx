@@ -36,7 +36,7 @@ export default function Reports({ user }) {
 				>
 					<FaChevronLeft />
 				</Button>
-				<ListReports userID={null} />
+				<ListReports currentUser={user} userID={null} />
 			</article>
 		</main>
 	);

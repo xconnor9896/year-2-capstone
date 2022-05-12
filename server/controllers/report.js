@@ -214,34 +214,32 @@ const getReport = async (req, res) => {
 GET ALL REPORT
 .get('/') 
 req.body {user, userId, verified, sort} 
-//? user - your user object
-//? userId - targets reports - leave blank to get all reports (captains only)
+//? userId - your user object
+//? targetId - targets reports - leave blank to get all reports (captains only)
 //? verified - filters out verified and unverified based on true and false - optional
 //? sort - sorts based on a number given - 1 : newest to oldest (default) - 2 : oldest to newest - 3 : urgent to least urgent - 4 : least urgent to urgent - 5 : medium urgent first - optional
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getAllReports = async (req, res) => {
-	const { user, userId, verified, sort } = req.body;
+	const { userId, targetId, verified, sort } = req.body;
 
 	try {
-		if (!userId) {
-			if (user.rank === "captain") {
-				let reports = await ReportModel.find().sort({ createAt: -1 });
+		const user = await UserModel.findById(userId);
 
-				if (verified === true) {
-					reports = reports.filter(
-						(report) => report.verified === true
-					);
-				} else if (verified === false) {
-					reports = reports.filter(
-						(report) => report.verified === false
-					);
-				}
+		if (!targetId) {
+			if (user.rank === "captain") {
+				let reports = await ReportModel.find({}).sort({
+					createdAt: -1,
+				});
 
 				if (sort === 1 || !sort) {
-					reports = reports.sort({ createAt: -1 });
+					reports = await ReportModel.find({}).sort({
+						createdAt: -1,
+					});
 				} else if (sort === 2) {
-					reports = reports.sort({ createAt: 1 });
+					reports = await ReportModel.find({}).sort({
+						createdAt: 1,
+					});
 				} else if (sort === 3) {
 					reports = reports.sort(
 						(a, b) => a.importance - b.importance
@@ -262,6 +260,16 @@ const getAllReports = async (req, res) => {
 							.sort((a, b) => a.importance - b.importance)
 					);
 					reports = temp;
+				}
+
+				if (verified === true) {
+					reports = reports.filter(
+						(report) => report.verified === true
+					);
+				} else if (verified === false) {
+					reports = reports.filter(
+						(report) => report.verified === false
+					);
 				}
 
 				return res.status(200).json(reports);
@@ -273,25 +281,19 @@ const getAllReports = async (req, res) => {
 					);
 			}
 		} else {
-			if (user.rank === "captain" || userId === user._id) {
+			if (user.rank === "captain" || targetId === user._id) {
 				let reports = ReportModel.find({
-					responsibleOfficer: { userId },
-				}).sort({ createAt: -1 });
-
-				if (verified === true) {
-					reports = reports.filter(
-						(report) => report.verified === true
-					);
-				} else if (verified === false) {
-					reports = reports.filter(
-						(report) => report.verified === false
-					);
-				}
+					responsibleOfficer: { targetId },
+				}).sort({ createdAt: -1 });
 
 				if (sort === 1 || !sort) {
-					reports = reports.sort({ createAt: -1 });
+					reports = await ReportModel.find({
+						responsibleOfficer: { targetId },
+					}).sort({ createdAt: -1 });
 				} else if (sort === 2) {
-					reports = reports.sort({ createAt: 1 });
+					reports = await ReportModel.find({
+						responsibleOfficer: { targetId },
+					}).sort({ createdAt: 1 });
 				} else if (sort === 3) {
 					reports = reports.sort(
 						(a, b) => a.importance - b.importance
@@ -312,6 +314,16 @@ const getAllReports = async (req, res) => {
 							.sort((a, b) => a.importance - b.importance)
 					);
 					reports = temp;
+				}
+
+				if (verified === true) {
+					reports = reports.filter(
+						(report) => report.verified === true
+					);
+				} else if (verified === false) {
+					reports = reports.filter(
+						(report) => report.verified === false
+					);
 				}
 
 				return res.status(200).json(reports);
@@ -325,7 +337,7 @@ const getAllReports = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error);
-		return res.status(400).send("error at getReport controller");
+		return res.status(400).send("error at getAllReports controller");
 	}
 };
 
