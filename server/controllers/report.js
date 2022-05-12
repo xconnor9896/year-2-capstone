@@ -242,11 +242,13 @@ const getAllReports = async (req, res) => {
 					});
 				} else if (sort === 3) {
 					reports = reports.sort(
-						(a, b) => a.importance - b.importance
+						(a, b) =>
+							a.basicInfo.importance - b.basicInfo.importance
 					);
 				} else if (sort === 4) {
 					reports = reports.sort(
-						(a, b) => b.importance - a.importance
+						(a, b) =>
+							b.basicInfo.importance - a.basicInfo.importance
 					);
 				} else if (sort === 5) {
 					let temp = reports.filter(
@@ -257,7 +259,11 @@ const getAllReports = async (req, res) => {
 							.filter(
 								(report) => report.basicInfo.importance !== 2
 							)
-							.sort((a, b) => a.importance - b.importance)
+							.sort(
+								(a, b) =>
+									a.basicInfo.importance -
+									b.basicInfo.importance
+							)
 					);
 					reports = temp;
 				}
@@ -296,11 +302,13 @@ const getAllReports = async (req, res) => {
 					}).sort({ createdAt: 1 });
 				} else if (sort === 3) {
 					reports = reports.sort(
-						(a, b) => a.importance - b.importance
+						(a, b) =>
+							a.basicInfo.importance - b.basicInfo.importance
 					);
 				} else if (sort === 4) {
 					reports = reports.sort(
-						(a, b) => b.importance - a.importance
+						(a, b) =>
+							b.basicInfo.importance - a.basicInfo.importance
 					);
 				} else if (sort === 5) {
 					let temp = reports.filter(
@@ -311,7 +319,11 @@ const getAllReports = async (req, res) => {
 							.filter(
 								(report) => report.basicInfo.importance !== 2
 							)
-							.sort((a, b) => a.importance - b.importance)
+							.sort(
+								(a, b) =>
+									a.basicInfo.importance -
+									b.basicInfo.importance
+							)
 					);
 					reports = temp;
 				}

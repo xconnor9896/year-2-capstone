@@ -156,7 +156,7 @@ const ListReports = ({ currentUser, userID }) => {
 		}
 
 		setLoading(false);
-	}, [userSpecific, selectedSquad, verified]);
+	}, [userSpecific, selectedSquad, verified, sortType]);
 
 	useEffect(async () => {
 		setLoading(true);
@@ -288,8 +288,7 @@ const ListReports = ({ currentUser, userID }) => {
 				return;
 		}
 	};
-	const sort = (e) => {
-		let val = e.target.name;
+	const sort = (val) => {
 		setSortDropdown(false);
 		setSortType(val);
 
@@ -415,60 +414,48 @@ const ListReports = ({ currentUser, userID }) => {
 								<Button
 									compact
 									emphasis={
-										sortType === "newest"
-											? "primary"
-											: "none"
+										sortType === 1 ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="newest"
-									onClick={sort}
+									onClick={() => sort(1)}
 								>
 									Newest
 								</Button>
 								<Button
 									compact
 									emphasis={
-										sortType === "oldest"
-											? "primary"
-											: "none"
+										sortType === 2 ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="oldest"
-									onClick={sort}
+									onClick={() => sort(2)}
 								>
 									Oldest
 								</Button>
 								<Button
 									compact
 									emphasis={
-										sortType === "urgency"
-											? "primary"
-											: "none"
+										sortType === 3 ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="urgency"
-									onClick={sort}
+									onClick={() => sort(3)}
 								>
 									Urgency
 								</Button>
 								<Button
 									compact
 									emphasis={
-										sortType === "nonurgency"
-											? "primary"
-											: "none"
+										sortType === 4 ? "primary" : "none"
 									}
 									hollow
 									outline
 									noborder
-									name="nonurgency"
-									onClick={sort}
+									onClick={() => sort(4)}
 								>
 									Nonurgency
 								</Button>
