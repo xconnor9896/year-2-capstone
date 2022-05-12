@@ -18,7 +18,7 @@ const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 
 	if (!name) return null;
 
-	console.log(report);
+	// console.log(report);
 
 	const routeToReport = () => {
 		router.push(`/report/${_id}`);

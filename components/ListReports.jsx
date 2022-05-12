@@ -1,18 +1,16 @@
 import styles from "../styles/components/ListReports.module.scss";
-import { Button, Card, Pagination } from "../proton";
-import Input from "../components/Input";
-import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import ReportTab from "./ReportTab";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
 import Cookies from "js-cookie";
-
 import axios from "axios";
-
 import getSquad from "../pages/util/getSquad";
 
-import { Select, Option } from "./Select";
+import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { Button, Card, Pagination } from "../proton";
+import Input from "../components/Input";
+import ReportTab from "./ReportTab";
 
 const ListReports = ({ currentUser, userID }) => {
 	const router = useRouter();
@@ -37,6 +35,9 @@ const ListReports = ({ currentUser, userID }) => {
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(5);
+	const [totalPages, setTotalPages] = useState(
+		Math.floor(reports.length / itemsPerPage)
+	);
 
 	const getUser = async (userId) => {
 		try {
@@ -155,12 +156,21 @@ const ListReports = ({ currentUser, userID }) => {
 	useEffect(async () => {
 		setLoading(true);
 
-		const paginatedReps = paginateReports(reports);
-		const propogatedReports = await propogateReports(paginatedReps);
+		let propogatedReports = await propogateReports(reports);
 
-		console.log(propogatedReports);
+		if (selectedSquad !== "") {
+			propogatedReports = propogatedReports.filter(
+				(report) =>
+					report.basicInfo.responsibleOfficer.squadNumber[0].toString() ===
+					selectedSquad.toString()
+			);
+		}
 
-		setPaginatedReports(propogatedReports);
+		setTotalPages(Math.floor(propogatedReports.length / itemsPerPage));
+
+		const paginatedReps = paginateReports(propogatedReports);
+
+		setPaginatedReports(paginatedReps);
 
 		setLoading(false);
 	}, [reports, currentPage]);
@@ -487,9 +497,7 @@ const ListReports = ({ currentUser, userID }) => {
 								arrows
 								jumpArrows
 								activePage={currentPage}
-								totalPages={Math.floor(
-									reports.length / itemsPerPage
-								)}
+								totalPages={totalPages}
 								onPageChange={(page) => {
 									console.log(page);
 									setCurrentPage(page);
