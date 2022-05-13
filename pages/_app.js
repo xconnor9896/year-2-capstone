@@ -105,9 +105,11 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
       // 	}
       // }
 
-      return { pageProps };
-    }catch (err) {
+      console.log(pageProps)
 
+      return { yes: 'test' };
+    }catch (err) {
+      console.log(err)
     }
   }
 }
