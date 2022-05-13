@@ -19,6 +19,7 @@
 
     .name {
       height: 10%;
+      text-transform: capitalize;
     }
 
     .iconC {
@@ -44,6 +45,7 @@
       height: 5%;
       border-bottom: 3px solid $em-primary;
       font-size: 1.3rem;
+      text-transform: capitalize;
     }
     
     .buttons {

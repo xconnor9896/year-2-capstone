@@ -15,6 +15,9 @@ import {
 const Dashboard = ({ user }) => {
   console.log(user)
 
+  const { email, rank, name: {firstName: name} } = user
+
+
 	const router = useRouter();
 
 	const authCheck = () => {
@@ -53,7 +56,7 @@ const Dashboard = ({ user }) => {
 						</div>
 						<div className={styles.btn}>
 							<FaRegIdBadge className={styles.label} />
-							<button className={styles.profileBtn}>
+							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${email}`)}}>
 								{" "}
 								My Profile
 							</button>
