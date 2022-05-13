@@ -13,32 +13,42 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-  const {
-    user,
-    user: { email, password },
-  } = req.body;
+  const { email, password, badgenumber, name, profileImage } = req.body;
 
-  let { profilePicUrl } = user;
+  const user = {
+    email,
+    password,
+    badgeNumber: badgenumber,
+    name,
+    profileImage,
+  };
+
+  let profilePicUrl;
 
   try {
-    if (!isEmail(email)) return res.status(401).send("Invalid Email");
+    const emailRegex =
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
+    if (!emailRegex.test(email))
+      return res.status(401).send("Email is not in proper format.");
     if (password.length < 8) {
       return res
         .status(401)
-        .send("Password must be at least 8 characters long");
+        .send("Password must be at least 8 characters long.");
     }
-    if (password.length > 100) {
-      return res
-        .status(401)
-        .send("Password must be less than 100 characters long");
-    }
+    // if (password.length > 100) {
+    // 	return res
+    // 		.status(401)
+    // 		.send("Password must be less than 100 characters long");
+    // }
 
     let checkUser;
     checkUser = await UserModel.findOne({ email: email.toLowerCase() });
-    if (checkUser) return res.status(401).send("Email already used");
+    if (checkUser) return res.status(401).send("Email already in use.");
 
-    if (!profilePicUrl) {
+    if (!profileImage) {
       profilePicUrl = defaultProfilePic;
+
+      console.log("Implement profile picture data.");
     }
 
     let newUser = new UserModel({
@@ -49,19 +59,22 @@ const createUser = async (req, res) => {
     newUser.password = await bcrypt.hash(password, 10);
     newUser = await newUser.save();
 
-    const payload = { userID: user._id };
+    const payload = { userId: newUser._id };
+
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
       { expiresIn: "1w" },
       (err, token) => {
         if (err) throw err;
-        res.status(201).json(token);
+        res.status(200).json(token);
       }
     );
   } catch (error) {
     console.log(error);
-    return res.status(400).send("error at createUser controller");
+    return res
+      .status(400)
+      .send("Unknown serverside error. Please try again later.");
   }
 };
 
@@ -204,18 +217,22 @@ const authUser = async (req, res) => {
     headers: { authorization },
   } = req;
 
+  console.log(userId);
+
   try {
     let id = userId;
 
     const token = authorization.split(" ")[1];
 
-    if (!userId && !token) return res.status(404).send("User Not Found");
+    if (!userId && !token) return res.status(404).send("Invalid ID or Token");
 
     if (!userId && token) {
       id = jwt.verify(token, process.env.JWT_SECRET).userId;
     }
 
     const user = await UserModel.findById(id);
+
+    if (!user) return res.status(404).send("User not found.");
 
     return res.status(200).json({ user });
   } catch (error) {
@@ -231,7 +248,10 @@ req.params {userId} //? Targets userId
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getUser = async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.userId;
+
+  if (!userId) return res.status(400).send("No userID");
+
   try {
     const user = await UserModel.findById(userId);
     if (user) {
@@ -250,6 +270,20 @@ GET USER
 .get('/user/:username') 
 req.params {username} //? Targets username
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+
+    return res
+      .status(200)
+      .json(users.filter((user) => user.squadNumber.length < 1));
+    // return res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("error at getAllUsers controller");
+  }
+};
 
 const getEmail = async (req, res) => {
   try {
@@ -276,5 +310,6 @@ module.exports = {
   changePassword,
   authUser,
   getUser,
-  getEmail
+  getAllUsers,
+  getEmail,
 };

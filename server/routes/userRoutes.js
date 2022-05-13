@@ -7,15 +7,21 @@ const {
 	updateUser,
 	authUser,
 	getUser,
-	getEmail
+	getEmail,
+	getAllUsers,
 } = require("../controllers/user");
 
 const { authMiddleware } = require("../middleware/authMidware");
 
 router.route("/signup").post(createUser);
 router.post("/login", loginUser);
-router.route("/:userId").delete(authMiddleware, deleteUser).post(authMiddleware, updateUser)
-router.route("/:email").get(getEmail);
-router.get("/", authUser);
+router.get("/all", authMiddleware, getAllUsers);
+router
+	.route("/:userId")
+	.delete(authMiddleware, deleteUser)
+	.post(authMiddleware, updateUser)
+	.get(authMiddleware);
+	router.route("/:email").get(getEmail)
+router.get("/", authMiddleware, authUser);
 
 module.exports = router;

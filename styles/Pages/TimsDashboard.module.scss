@@ -88,9 +88,13 @@
 					height: 100%;
 					width: 100%;
 
-					.noMsg {
+					h3.noMsg {
 						color: $background-dark;
 						margin-bottom: $margin;
+					}
+
+					h4.noMsg {
+						color: lighten($background-light, 10%);
 					}
 
 					overflow-y: auto;
@@ -245,6 +249,98 @@
 											gap: $padding;
 											padding: $padding;
 											width: 100%;
+
+											.officers {
+												display: flex;
+												flex-direction: column;
+												gap: $padding;
+
+												width: 100%;
+
+												.officer {
+													width: 100%;
+
+													display: flex;
+													flex-direction: row;
+													align-items: center;
+													justify-content: space-between;
+
+													padding: $padding;
+
+													background: $background-light;
+													border-radius: $border-radius;
+
+													transition: $transition-fast;
+
+													border: $border;
+
+													&:hover {
+														border-color: darken(
+															$background-dark,
+															25%
+														);
+														border-radius: 0;
+														cursor: pointer;
+													}
+
+													.info {
+														display: flex;
+														flex-direction: row;
+														align-items: center;
+														gap: $padding;
+
+														flex-grow: 2;
+
+														.pfp {
+															width: 2rem;
+															height: 2rem;
+															background-color: red;
+															border-radius: 50%;
+
+															border: $border;
+															border-color: darken(
+																$background-dark,
+																25%
+															);
+
+															background-image: url(../../util//templatepfp.png);
+															background-size: cover;
+															background-position: center;
+															background-size: 125%;
+															background-repeat: no-repeat;
+														}
+
+														.data {
+															display: flex;
+															flex-direction: column;
+
+															span {
+																&:last-child {
+																	font-size: 0.75rem;
+																	color: darken(
+																		$text,
+																		25%
+																	);
+																}
+															}
+														}
+													}
+
+													nav {
+														display: flex;
+														flex-direction: row;
+														align-items: center;
+														justify-content: space-evenly;
+														flex-grow: 2;
+														gap: $padding;
+
+														button {
+															width: max-content;
+															border-radius: $border-radius-fancy !important;
+														}
+													}
+												}
+											}
 										}
 
 										ul {
@@ -339,94 +435,6 @@
 											.content {
 												height: max-content;
 												padding: $padding;
-											}
-										}
-									}
-
-									.students {
-										.content {
-											width: 100%;
-
-											display: flex;
-											flex-direction: column;
-											gap: $padding;
-
-											.student {
-												width: 100%;
-
-												display: flex;
-												flex-direction: row;
-												align-items: center;
-												justify-content: space-between;
-
-												padding: $padding;
-
-												background: $background-light;
-												border-radius: $border-radius;
-
-												transition: $transition-fast;
-
-												border: $border;
-
-												&:hover {
-													border-color: darken(
-														$background-dark,
-														25%
-													);
-													border-radius: 0;
-													cursor: pointer;
-												}
-
-												.info {
-													display: flex;
-													flex-direction: row;
-													align-items: center;
-													gap: $padding;
-
-													flex-grow: 2;
-
-													.pfp {
-														width: 2rem;
-														height: 2rem;
-														background-color: red;
-														border-radius: 50%;
-
-														border: $border;
-														border-color: darken(
-															$background-dark,
-															25%
-														);
-
-														background-image: url(../../util//templatepfp.png);
-														background-size: cover;
-														background-position: center;
-														background-size: 125%;
-														background-repeat: no-repeat;
-													}
-
-													.data {
-														display: flex;
-														flex-direction: column;
-
-														span {
-															&:last-child {
-																font-size: 0.75rem;
-																color: darken(
-																	$text,
-																	25%
-																);
-															}
-														}
-													}
-												}
-
-												> div {
-													width: max-content;
-
-													button {
-														border-radius: $border-radius-fancy !important;
-													}
-												}
 											}
 										}
 									}

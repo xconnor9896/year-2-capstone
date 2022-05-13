@@ -1,4 +1,4 @@
-import styles from "../styles/Pages/TimsDashboard.module.scss";
+import styles from "../styles/Pages/NickDashboard.module.scss";
 
 import { useEffect } from "react";
 
@@ -13,9 +13,10 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = ({ user }) => {
-	const name = "John";
-	const rank = "Lt.";
-	const caseId = "1992197";
+  console.log(user)
+
+  const { email, rank, name: {firstName: name} } = user
+
 
 	const router = useRouter();
 
@@ -55,7 +56,7 @@ const Dashboard = ({ user }) => {
 						</div>
 						<div className={styles.btn}>
 							<FaRegIdBadge className={styles.label} />
-							<button className={styles.profileBtn}>
+							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${email}`)}}>
 								{" "}
 								My Profile
 							</button>
@@ -76,131 +77,7 @@ const Dashboard = ({ user }) => {
 						/>
 					</div>
 					<div className={styles.recent}>
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
+						
 					</div>
 
 					<div className={`${styles.top} ${styles.top2}`}>
@@ -214,203 +91,7 @@ const Dashboard = ({ user }) => {
 					</div>
 
 					<div className={styles.archived}>
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
-
-						<div className={styles.case}>
-							<div className={styles.left}>
-								<span className={styles.title}>{caseId}</span>
-							</div>
-							<div className={styles.right}>
-								<button
-									className={`${styles.view} ${styles.btn}`}
-								>
-									<FaEye /> View
-								</button>
-								<button
-									className={`${styles.print} ${styles.btn}`}
-								>
-									<FaPrint /> Print
-								</button>
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>
