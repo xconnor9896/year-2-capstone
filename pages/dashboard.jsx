@@ -13,9 +13,10 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = ({ user }) => {
-	const name = "John";
-	const rank = "Lt.";
-	const caseId = "1992197";
+  console.log(user)
+
+  const { email, rank, name: {firstName: name} } = user
+
 
 	const router = useRouter();
 
@@ -55,7 +56,7 @@ const Dashboard = ({ user }) => {
 						</div>
 						<div className={styles.btn}>
 							<FaRegIdBadge className={styles.label} />
-							<button className={styles.profileBtn}>
+							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${email}`)}}>
 								{" "}
 								My Profile
 							</button>
