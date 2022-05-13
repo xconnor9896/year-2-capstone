@@ -14,6 +14,9 @@ const authMiddleware = (req, res, next) => {
 
 		const { userId } = jwt.verify(auth, process.env.JWT_SECRET);
 
+		if (!userId)
+			return res.status(401).send("No userID attached to cookie.");
+
 		req.userId = userId;
 		next();
 	} catch (error) {

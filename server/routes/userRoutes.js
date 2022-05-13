@@ -20,6 +20,6 @@ router
 	.delete(authMiddleware, deleteUser)
 	.post(authMiddleware, updateUser)
 	.get(authMiddleware, getUser);
-router.get("/", authUser);
+router.get("/", authMiddleware, authUser);
 
 module.exports = router;

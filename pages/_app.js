@@ -83,9 +83,11 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		try {
 			const res = await axios.get(`http://localhost:3000/api/v1/user`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					authorization: `Bearer ${token}`,
 				},
 			});
+
+			console.log(res);
 
 			const { user } = res.data;
 
@@ -94,8 +96,8 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 			pageProps.token = token;
 
 			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-			if (!user || !token)
-				throw new Error("No user or token. Deleting bad cookie.");
+			if (!token) throw new Error("No token. Deleting bad cookie.");
+			if (!user) throw new Error("No user. Deleting bad cookie.");
 		} catch (err) {
 			console.error(err);
 			destroyCookie(ctx, "token");

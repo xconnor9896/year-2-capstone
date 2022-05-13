@@ -211,7 +211,8 @@
 								-moz-appearance: textfield;
 							}
 
-							.prefix {
+							.prefix,
+							.squad {
 								width: 100%;
 								max-width: 300px;
 								// width: max-content;
@@ -238,7 +239,8 @@
 									}
 								}
 
-								.prefixSelect {
+								.prefixSelect,
+								.squadSelect {
 									outline: none;
 									border: none;
 									background: $background-light;
@@ -321,6 +323,47 @@
 						&.filled {
 							background: $text;
 						}
+					}
+				}
+			}
+
+			.signupError {
+				background: $error;
+				box-shadow: $light-shadow;
+				padding: $padding;
+				border-radius: $border-radius-fancy;
+				width: 100%;
+
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: $padding / 2;
+				flex-wrap: wrap;
+
+				position: absolute;
+				top: -5rem;
+				left: 50%;
+				transform: translateX(-50%);
+
+				margin-bottom: $margin * 2;
+				max-width: 90vw;
+
+				z-index: 999;
+
+				animation: flyupward 0.8s ease-in-out;
+				animation-fill-mode: both;
+
+				@keyframes flyupward {
+					0% {
+						top: -5rem;
+					}
+
+					75% {
+						top: 1.7rem;
+					}
+
+					100% {
+						top: 1rem;
 					}
 				}
 			}
