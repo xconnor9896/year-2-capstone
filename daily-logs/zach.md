@@ -25,3 +25,7 @@ Made a random number gen so i can kinda enecrypt the urls for verf email and cha
 5/6/22
 
 i compently finshed the send verfiy email controller now to finsh up the password reset which should be easyish because the bulk of it is the same
+
+5/10/22
+
+Figureing out how to connect my controllers tp the backend
