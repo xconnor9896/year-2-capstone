@@ -1,16 +1,46 @@
-import {sendVerfEmail } from "../server/controllers/emailCon"
-import {axios} from "axios"
+import React, { useState, useEffect } from "react";
 
+import axios from 'axios';
+
+let baseURL = "http://localhost:3000";
 const emailVefPage = () => {
-        axios.post("http://localhost:3000/api/v1/email/verf")
-    return(
-        <>
-            <div>
-                <h1>This Button Will send you a Button to Verfiy Your Email</h1>
-                <h4>Make Sure to Check Your Spam</h4>
-                <button onClick={{sendVerfEmail}}>Verfiy Your Email</button>
-            </div>
-        </>
-    )
-}
+  const [inputEmail, setEmail] = useState("");
+  const handleChange = async (e) => {
+    const { value } = e.target;
+
+    setEmail(value);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    axios
+    .post(`${baseURL}/api/v1/email/verf`,{
+      inputEmail : inputEmail
+    })
+    .then(response => {
+      if(response.data != null){
+        alert("The email has been sent go and check your spam")
+
+      }else{
+        alert("Sorry Something has gone wrong make sure you put in the right email")
+      }
+    })
+
+
+  }
+
+  return (
+    <>
+      <div>
+        <h1>Put your email in so that we can send you a email to Verfiy it</h1>
+        <h4>Make Sure to Check Your Spam</h4>
+        <form onSubmit={handleSubmit}>
+          <input type="text"  placeholder= "email" value={inputEmail} onChange={handleChange} style={{background: "black"}} />
+          <button type="submit">
+            Verfiy Your Email
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
 export default emailVefPage;

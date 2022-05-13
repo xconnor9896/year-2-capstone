@@ -5,29 +5,6 @@ const userModel = require("../models/UserModel");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// const getUserEmail = async (req, res) => {
-//   try {
-//     //us
-//     const {inputEmail} = req.body
-//     const user = await userModel.find({});
-//     const userEmail = user.find(({email}) => {
-//       return email == inputEmail
-//     })
-//     if(userEmail){
-//       //return no email
-//     }
-
-// console.log(inputEmail)
-
-//     res.json(  {email:userEmail.email});
-//   } catch (err) {
-//     res.send(err);
-//   }
-// };
-
-// red
-
-// console.log(sgMail)
 let emailUrl = "";
 
 const sendVerfEmail = async (req, res) => {
