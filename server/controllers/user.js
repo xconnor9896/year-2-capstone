@@ -15,8 +15,12 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-	const { email, password, badgenumber, name, profileImage, teacherCode } =
+	const { email, password, badgenumber, name, teacherCode, profileImage } =
 		req.body;
+
+	// const profileImage = req.body.profileImage
+	// 	? JSON.parse(req.body.profileImage)
+	// 	: null;
 
 	const user = {
 		email,
@@ -25,6 +29,8 @@ const createUser = async (req, res) => {
 		name,
 		profilePicUrl: defaultProfilePic,
 	};
+
+	console.log(req.body);
 
 	try {
 		const emailRegex =
@@ -99,7 +105,7 @@ const createUser = async (req, res) => {
 		console.error("Error at createUser", error);
 		return res
 			.status(400)
-			.send("Unknown serverside error. Please try again later. (3)");
+			.send("Unknown server-side error. Please try again later. (3)");
 	}
 };
 

@@ -271,6 +271,10 @@ const SignUpPage = ({ setState }) => {
 			name,
 		} = formData;
 
+		profileImage = JSON.stringify(profileImage);
+
+		console.log(formData);
+
 		// Validate the form clientside.
 
 		// Validate email.
