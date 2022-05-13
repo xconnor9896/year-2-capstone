@@ -12,7 +12,7 @@ const Profile = ({ user }) => {
   const badgeNum = user.badgeNumber;
   const email = user.email;
   const rank = user.rank;
-  console.log(user.name.firstName);
+  console.log(user.name.lastName);
 
   return (
     <main className={styles.container}>

@@ -6,7 +6,7 @@ const {
 	deleteUser,
 	updateUser,
 	authUser,
-	// getUser,
+	getUser,
 	getEmail
 } = require("../controllers/user");
 

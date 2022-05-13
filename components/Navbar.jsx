@@ -19,10 +19,6 @@ const Navbar = ({ user }) => {
 
 	const dropdownRef = useRef();
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 	const clickHandler = (e) => {
 		if (!dropdownRef.current) {
 			console.warn(
@@ -63,14 +59,6 @@ const Navbar = ({ user }) => {
 			>
 				<section>
 					{user && (
-<<<<<<< HEAD
-						<Link href={`/profile/${user._id}`}>
-							<button>
-								<FaUser />
-								Profile
-							</button>
-						</Link>
-=======
 						<>
 							<Link href={user.rank === "captain" ? "/captain/dashboard" : "/dashboard"}>
 								<button>
@@ -93,7 +81,6 @@ const Navbar = ({ user }) => {
 								</Link>
 							)}
 						</>
->>>>>>> master
 					)}
 				</section>
 

@@ -258,7 +258,7 @@ const getEmail = async (req, res) => {
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      return res.status(400).send("user not found");
+      return res.status(400).send("email not found");
     }
 
     return res.status(200).json(user);
@@ -276,6 +276,5 @@ module.exports = {
   changePassword,
   authUser,
   getUser,
-	getAllUsers,
   getEmail
 };
