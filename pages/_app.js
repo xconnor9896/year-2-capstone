@@ -60,6 +60,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 
 	const protectedRoutes = [
 		"/dashboard",
+		"/captain/dashboard",
 		"/reports",
 		"/profile",
 		"/report",

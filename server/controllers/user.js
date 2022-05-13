@@ -1,4 +1,6 @@
 const defaultProfilePic = require("../util/defaultPic");
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -21,7 +23,6 @@ const createUser = async (req, res) => {
 		password,
 		badgeNumber: badgenumber,
 		name,
-		profileImage,
 		profilePicUrl: defaultProfilePic,
 	};
 
@@ -47,6 +48,22 @@ const createUser = async (req, res) => {
 
 		if (profileImage) {
 			console.log("Profile pic provided.");
+			console.log(profileImage);
+
+			// try {
+			// 	const src = await cloudinary.uploader.upload(
+			// 		req.files.image.tempFilePath,
+			// 		{
+			// 			use_filename: true,
+			// 			folder: "Profile Pics",
+			// 		}
+			// 	);
+			// 	fs.unlinkSync(req.files.image.tempFilePath);
+			// 	console.log(src.secure_url);
+			// } catch (error) {
+			// 	console.error(error);
+			// 	return res.status(500).send("Image Upload Error. (2)");
+			// }
 		}
 
 		if (teacherCode && teacherCode.length > 0) {
@@ -79,7 +96,7 @@ const createUser = async (req, res) => {
 			}
 		);
 	} catch (error) {
-		console.log(error);
+		console.error("Error at createUser", error);
 		return res
 			.status(400)
 			.send("Unknown serverside error. Please try again later. (3)");
@@ -123,7 +140,7 @@ const loginUser = async (req, res) => {
 			}
 		);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at loginUser controller");
 	}
 };
@@ -158,7 +175,7 @@ const deleteUser = async (req, res) => {
 			return res.status(404).send("User Not Found");
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at deleteUser controller");
 	}
 };
@@ -190,7 +207,7 @@ const updateUser = async (req, res) => {
 			);
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at updateUser controller");
 	}
 };
@@ -211,7 +228,7 @@ const changePassword = async (req, res) => {
 
 		return res.status(200).json(user);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at changePassword controller");
 	}
 };
@@ -249,7 +266,7 @@ const authUser = async (req, res) => {
 
 		return res.status(200).json({ user });
 	} catch (error) {
-		console.log("error at authUser controller");
+		console.error("error at authUser controller");
 		console.error(error);
 	}
 };
@@ -273,7 +290,7 @@ const getUser = async (req, res) => {
 			return res.status(404).send("No user with given Id");
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at getUser controller");
 	}
 };
@@ -292,7 +309,7 @@ const getAllUsers = async (req, res) => {
 			.json(users.filter((user) => user.squadNumber.length < 1));
 		// return res.status(200).json(users);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at getAllUsers controller");
 	}
 };
