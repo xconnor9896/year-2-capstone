@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import Input from "../../components/Input";
 import Cookies from "js-cookie";
 
+import getSquad from "../util/getSquad";
+
 import axios from "axios";
 
 import Modal from "../../components/Modal";
@@ -44,24 +46,6 @@ const Dashboard = ({ user }) => {
 	useEffect(() => {
 		authCheck();
 	}, [user]);
-
-	const getSquad = async (squadNumber) => {
-		try {
-			const res = await axios.get(
-				`http://localhost:3000/api/v1/squad/${squadNumber}`,
-				{
-					headers: {
-						authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			return res.data;
-		} catch (err) {
-			console.error("Failed to get squad.", err);
-			return null;
-		}
-	};
 
 	const getUser = async (userId) => {
 		try {
@@ -274,9 +258,9 @@ const Dashboard = ({ user }) => {
 
 			if (!res || !res.data) throw new Error("No result returned.");
 
-			await reloadSquads(user);
+			await reloadSquads(await getUser(user._id));
 
-			console.log(res);
+			// console.log(res);
 		} catch (err) {
 			console.error("Failed to add officer to squad.", err);
 		}
@@ -302,9 +286,9 @@ const Dashboard = ({ user }) => {
 
 			if (!res || !res.data) throw new Error("No result returned.");
 
-			await reloadSquads(user);
+			await reloadSquads(await getUser(user._id));
 
-			console.log(res);
+			// console.log(res);
 		} catch (err) {
 			console.error("Failed to add officer to squad.", err);
 		}
@@ -312,9 +296,9 @@ const Dashboard = ({ user }) => {
 		setLoading(false);
 	};
 
-	useEffect(() => {
+	useEffect(async () => {
 		// Get squads
-		reloadSquads(user);
+		reloadSquads(await getUser(user._id));
 		getAddableOfficers();
 	}, []);
 

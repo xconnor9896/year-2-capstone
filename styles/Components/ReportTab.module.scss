@@ -31,19 +31,24 @@
 
 			.urgency {
 				color: $text;
-				.tag {
+				.importance {
 					color: $text;
 
-					&.tag1 {
+					&.importance1 {
 						color: $error;
 					}
-					&.tag2 {
+					&.importance2 {
 						color: $em-primary;
 					}
-					&.tag3 {
+					&.importance3 {
 						color: $success;
 					}
 				}
+			}
+
+			.date {
+				color: $background-light;
+				font-size: 0.5rem;
 			}
 
 			span {

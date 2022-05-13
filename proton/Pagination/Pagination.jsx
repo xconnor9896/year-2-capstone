@@ -61,10 +61,14 @@ const Pagination = (props) => {
 		...extraAttributes,
 	});
 
-	useEffect(() => {
-		if (activePage > totalPages) onPageChange(totalPages);
-		if (activePage < 1) onPageChange(1);
-	}, [activePage, totalPages]);
+	// useEffect(() => {
+	// if (activePage > totalPages) onPageChange(totalPages);
+	// if (activePage < 1) onPageChange(1);
+	// }, [activePage, totalPages]);
+
+	const handlePageChange = (page) => {
+		if (page > 0 && page <= totalPages) onPageChange(page);
+	};
 
 	const [pageButtons, setPageButtons] = useState([]);
 
@@ -125,7 +129,7 @@ const Pagination = (props) => {
 					underline={underline && +underline ? "1" : undefined}
 					compact={compact && +compact ? "1" : undefined}
 					icon
-					onClick={() => onPageChange(1)}
+					onClick={() => handlePageChange(1)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +159,7 @@ const Pagination = (props) => {
 					underline={underline && +underline ? "1" : undefined}
 					compact={compact && +compact ? "1" : undefined}
 					icon
-					onClick={() => onPageChange(activePage - 1)}
+					onClick={() => handlePageChange(activePage - 1)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +192,7 @@ const Pagination = (props) => {
 								? "1"
 								: undefined
 						}
-						onClick={() => onPageChange(key)}
+						onClick={() => handlePageChange(key)}
 					>
 						{overrideButtonContent
 							? overrideButtonContent(key)
@@ -211,7 +215,7 @@ const Pagination = (props) => {
 					underline={underline && +underline ? "1" : undefined}
 					compact={compact && +compact ? "1" : undefined}
 					icon
-					onClick={() => onPageChange(activePage + 1)}
+					onClick={() => handlePageChange(activePage + 1)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -239,7 +243,7 @@ const Pagination = (props) => {
 					underline={underline && +underline ? "1" : undefined}
 					compact={compact && +compact ? "1" : undefined}
 					icon
-					onClick={() => onPageChange(totalPages)}
+					onClick={() => handlePageChange(totalPages)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

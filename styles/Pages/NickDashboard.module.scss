@@ -1,0 +1,220 @@
+@use "../vars.scss" as *;
+
+.dashboard {
+  display: flex;
+  color: white;
+  align-items: center;
+  height: 90vh;
+  width: 100vw;
+  overflow: hidden;
+  
+  .profile {
+    text-align: center;
+    width: 40%;
+    height: 80%;
+
+    .title {
+      height: 10%;
+    }
+
+    .name {
+      height: 10%;
+      text-transform: capitalize;
+    }
+
+    .iconC {
+      width: 7.5rem;
+      height: 7.5rem;
+      margin: 0 auto .8rem;
+      border-radius: 50%;
+      background-color: $em-default;
+      box-shadow: -3px 3px 16px $dark-shadow-color;
+
+      .icon {
+        height: 7rem;
+        width: 7rem;
+        color: $em-primary;
+        padding: 1rem;
+      }
+    }
+
+
+    .name2 {
+      margin: 0 auto;
+      margin-top: 1.5rem;
+      height: 5%;
+      border-bottom: 3px solid $em-primary;
+      font-size: 1.3rem;
+      text-transform: capitalize;
+    }
+    
+    .buttons {
+      height: 40%;
+      display: flex;
+      flex-direction: column;
+      gap: 5rem;
+      margin: {
+        top: 2rem
+      }
+
+      .btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $em-primary;
+        background-color: $em-default;
+        width: 15rem;
+        height: 5rem;
+        font-size: 1.8rem;
+        margin: 0 auto;
+        padding: {
+          left: .5rem;
+          right: 1.2rem;
+        }
+        border-top-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+
+        .label {
+          width: 20%;
+        }
+
+        button {
+          width: 80%;
+          font-size: 1.2rem;
+          text-align: center;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .divider {
+    background-color: $em-default;
+    width: 10px;
+    height: 80vh;
+    border-radius: 10px;
+    box-shadow: -2px 1px $dark-shadow-color;
+  }
+
+  .cases {
+    width: 60%;
+    height: 90%;
+    margin: 0;
+    padding: {
+      left: 3rem;
+      right: 5rem;
+    }
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: $background-light;
+      width: 20px;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: darken($color: $background-dark, $amount: 0);
+      border-radius: 10px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: darken($color: $background-dark, $amount: 10); 
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+    
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .search {
+        display: flex;
+        height: 60%;
+      }
+    }
+
+    .top2 {
+      margin-top: 2rem;
+    }
+    
+    .recent, .archived {
+      width: 100%;
+      height: 80%;
+      margin: 0 auto;
+      background-color: $background-light;
+      border-radius: 10px;
+      padding: 1rem;
+      padding-bottom: 0;
+      overflow: scroll;
+      overflow-x: hidden;
+
+      /* width */
+      &::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: $background-light;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: darken($color: $background-dark, $amount: 5);
+        border-radius: 10px;
+      }
+
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: darken($color: $background-dark, $amount: 15); 
+      }
+
+      .case {
+        display: flex;
+        height: 10%;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        background-color: lighten($color: $background-light, $amount: 20);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        margin-bottom: 1.5rem;
+
+        .left {
+          width: 30%;
+          font-size: 1.2rem;
+        }
+
+        .right {
+          display: flex;
+          width: 30%;
+          justify-content: space-around;
+
+          .btn {
+            background-color: lighten($color: $background-light, $amount: 40);
+            width: 4.5rem;
+            height: 1.5rem;
+            border-radius: 10px;
+            color: white;
+          }
+        }
+      }
+    }
+
+    .archived {
+      margin-bottom: 2rem;
+    }
+  }
+}
