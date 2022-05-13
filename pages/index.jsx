@@ -1,7 +1,7 @@
 // import {sendPassResetEmail} from "../server/controllers/emailCon"
 import styles from "../styles/pages/Home.module.scss";
 import { Button } from "../proton";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	FaSignInAlt,
 	FaUserPlus,
@@ -12,7 +12,6 @@ import {
 	FaArrowRight,
 	FaUser,
 	FaTimes,
-	FaUserShield,
 	FaRegIdCard,
 	FaUserGraduate,
 	FaUserLock,
@@ -146,7 +145,6 @@ const RecoveryPage = ({ setState }) => {
 			<form onSubmit={handleSubmit}>
 				<h1>RECOVER PASSWORD</h1>
 				<Input
-					required
 					icon={<FaEnvelope />}
 					type="email"
 					name="email"
@@ -180,83 +178,165 @@ const RecoveryPage = ({ setState }) => {
 };
 
 const SignUpPage = ({ setState }) => {
+	const router = useRouter();
 	const [step, setStep] = useState(1);
 	const [loading, setLoading] = useState(false);
-	const form = useRef(null);
+	const formRef = useRef(null);
 	const fileMenu = useRef(null);
 	const [filePreview, setFilePreview] = useState(null);
+	const [file, setFile] = useState(null);
 	const [isTeacher, setIsTeacher] = useState(false);
+
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	const [captchaState, setCaptchaState] = useState(false);
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	useEffect(() => {
+		window.addEventListener("keydown", (e) => {
+			if (e.key === "Tab") e.preventDefault();
+		});
+	}, []);
+
+	const getFormData = () => {
+		const formSteps = formRef.current.children[0].children;
+
+		const [step1, step2, step3] = formSteps;
+
+		let formInputs = [
+			...step1.children,
+			...step2.children,
+			...step3.children,
+		];
+
+		const formData = {
+			profileImage: file ? file : null,
+			captchaState,
+		};
+
+		// Get just form elements.
+		for (let htmlElement of formInputs) {
+			if (htmlElement.classList.contains("custom-input")) {
+				const children = htmlElement.children;
+
+				if (children.length === 2) {
+					// The input is just a standard input.
+					formData[children[1].id] = children[1].value;
+
+					if (typeof children[1].value === "number")
+						formData[children[1].id] = children[1].value.toString();
+
+					continue;
+				} else if (children.length === 4) {
+					formData[children[3].getAttribute("for")] =
+						children[1].getAttribute("ischecked");
+					continue;
+				} else {
+					// The input is unknown, or unsupported.
+					continue;
+				}
+			} else {
+				formInputs[formInputs.indexOf(htmlElement)] = undefined;
+			}
+		}
+
+		return formData;
+	};
+
+	const setErr = (val, stepC) => {
+		setErrorMessage(val);
+		setLoading(false);
+
+		if (stepC) setStep(stepC);
+	};
+
+	const handleSubmit = async () => {
+		if (!formRef || !formRef.current || loading) return;
 
 		setLoading(true);
 
-		// gets the form data
-		const form = e.target;
-		const data = new FormData(form);
+		// Reset the error message.
+		setErrorMessage(null);
 
-		// get the email and password
+		// Get form data.
+		const formData = getFormData();
+		const {
+			email,
+			password,
+			passwordConfirm,
+			profileImage,
+			badgenumber,
+			isTeacher,
+			teacherCode,
+			captchaState,
+			name,
+		} = formData;
 
-		if (!captchaState) {
-			// THE CAPTCHA IS INCOMPLETE
-			// show an error message to the user
-			console.log("captcha is incomplete");
-			setLoading(false);
+		// Validate the form clientside.
+
+		// Validate email.
+		const emailRegex =
+			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
+		if (!email || email.length < 1) return setErr("No email provided.", 1);
+		if (!emailRegex.test(email)) return setErr("Invalid email.", 1);
+
+		// Validate password.
+		if (!password || password.length < 1)
+			return setErr("No password provided.", 1);
+		if (password.length < 8)
+			return setErr("Password must be at least 8 characters.", 1);
+
+		// Validate password confirmation.
+		if (!passwordConfirm || passwordConfirm.length < 1)
+			return setErr("No password confirmation provided.", 1);
+		if (password !== passwordConfirm)
+			return setErr("Passwords don't match.", 1);
+
+		// Validate badge number.
+		const badgeNumRegex = /^\d{3}$/g;
+		if (!badgenumber || badgenumber.length < 1)
+			return setErr("No badge number provided.", 2);
+		if (badgenumber.length < 3)
+			return setErr("Badge number must be three characters long.", 2);
+		if (!badgeNumRegex.test(badgenumber))
+			return setErr("Badge number can only contain digits.", 2);
+
+		// Validate name.
+		const nameRegex = /\w+ \w+/gi;
+		if (!name || name.length < 1) return setErr("No name provided.", 2);
+		if (!nameRegex.test(name))
+			return setErr("Name not in proper format.", 2);
+
+		// Validate teacher code.
+		if (isTeacher === "true" && (!teacherCode || teacherCode.length < 1))
+			return setErr("No teacher code provided.", 3);
+
+		// Check that the captcha has been completed.
+		if (captchaState !== "completed")
+			return setErr(
+				"You must complete the captcha before signing up.",
+				3
+			);
+
+		const [firstName, lastName] = name.split(" ");
+
+		formData.name = { firstName, lastName };
+
+		// Send the data to the server.
+		try {
+			const res = await axios.post(
+				"http://localhost:3000/api/v1/user/signup",
+				formData
+			);
+
+			console.log(res.data);
+
+			setToken(res.data);
+		} catch (err) {
+			console.error("Error at sign up form submission.", err);
+			return setErr(err.response.data, 1);
 		}
-		const firstName = data.get("firstName");
-		const lastName = data.get("lastName");
-		// breaks the name into first and last within an object
-		const nameObject = {
-			firstName: firstName,
-			lastName: lastName,
-		};
 
-		// check if the user password is the same as the confirm password
-		if (data.get("password") !== data.get("password-confirm")) {
-			// passwords do not match
-			// show an error message to the user
-			console.log("passwords do not match");
-			setLoading(false);
-		} else {
-			// passwords match
-			// send the data to the server
-
-			// since the password and confirm password match, we can remove the confirm password from the data
-			data.delete("password-confirm");
-
-			// remove the prefix from the data
-			data.delete("prefix");
-
-			// replace name with name in  the data
-			data.set("name", nameObject);
-
-			// console.log the form data individually
-			for (let [key, value] of data.entries()) {
-				console.log(`${key}: ${value}`);
-			}
-
-			// the only thing we need to send to the server is the email, password, name, badgeNumber, and rank
-
-			// send the data to the server
-			const response = axios
-				.post("http://localhost:3000/api/v1/user/signup", data, {
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				})
-				.then((res) => {
-					console.log(res);
-					setLoading(false);
-					// setState(res.data);
-				})
-				.catch((err) => {
-					console.log(err);
-					// setLoading(false);
-				});
-		}
+		setLoading(false);
 	};
 
 	// FILE MENU
@@ -286,6 +366,7 @@ const SignUpPage = ({ setState }) => {
 			fileMenu.current.files = files;
 
 			const droppedFile = fileMenu.current.files[0];
+			setFile(droppedFile);
 			setFilePreview(URL.createObjectURL(droppedFile));
 		}
 	};
@@ -313,7 +394,14 @@ const SignUpPage = ({ setState }) => {
 		<>
 			<div className={`${styles.section} ${styles.formContainer}`}>
 				<h1>SIGN UP</h1>
-				<form ref={form} className={styles.row} onSubmit={handleSubmit}>
+				<form
+					ref={formRef}
+					className={styles.row}
+					onSubmit={(e) => {
+						e.preventDefault();
+						// console.log("Canceled out form submission.");
+					}}
+				>
 					<div step={step} className={styles.steps}>
 						<div
 							className={`${styles.step} ${
@@ -322,7 +410,7 @@ const SignUpPage = ({ setState }) => {
 						>
 							<Input
 								icon={<FaEnvelope />}
-								type="email"
+								type="string"
 								name="email"
 								id="email"
 								placeholder="Email"
@@ -338,8 +426,8 @@ const SignUpPage = ({ setState }) => {
 							<Input
 								icon={<FaCheckDouble />}
 								type="text"
-								name="password-confirm"
-								id="password-confirm"
+								name="passwordConfirm"
+								id="passwordConfirm"
 								placeholder="Confirm Password"
 							/>
 
@@ -418,7 +506,7 @@ const SignUpPage = ({ setState }) => {
 								)}
 							</div>
 
-							<div className={styles.prefix}>
+							{/* <div className={styles.prefix}>
 								<FaUserShield />
 								<select
 									id="prefix"
@@ -433,15 +521,41 @@ const SignUpPage = ({ setState }) => {
 										Police Officer
 									</option>
 								</select>
-							</div>
+							</div> */}
+
+							{/* <div className={styles.squad}>
+								<FaUserShield />
+								<select
+									id="prefix"
+									className={styles.squadSelect}
+									name="prefix"
+								>
+									<option selected disabled>
+										Select Squad
+									</option>
+
+									<option value="IMPLEMENT">IMPLEMENT</option>
+									<option value="ME">ME</option>
+								</select>
+							</div> */}
 
 							<Input
 								className={styles.badgeNumber}
 								icon={<FaRegIdCard />}
-								type="number"
+								type="string"
 								name="badgenumber"
 								id="badgenumber"
+								maxLength={3}
 								placeholder="Badge Number"
+							/>
+
+							<Input
+								className={styles.name}
+								icon={<FaRegIdCard />}
+								type="string"
+								name="name"
+								id="name"
+								placeholder="FirstName LastName"
 							/>
 
 							<Button.Group>
@@ -471,21 +585,6 @@ const SignUpPage = ({ setState }) => {
 								step === 3 ? styles.active : styles.inactive
 							} ${styles.step3}`}
 						>
-							<div className={styles.prefix}>
-								<FaUserShield />
-								<select
-									id="prefix"
-									className={styles.prefixSelect}
-									name="prefix"
-								>
-									<option selected disabled>
-										Select Squad
-									</option>
-
-									<option value="IMPLEMENT">IMPLEMENT</option>
-									<option value="ME">ME</option>
-								</select>
-							</div>
 							<Input
 								icon={<FaUserGraduate />}
 								type="checkbox"
@@ -497,14 +596,14 @@ const SignUpPage = ({ setState }) => {
 								checked={isTeacher}
 								label={
 									<label htmlFor="isTeacher">
-										Are you a teacher?
+										Are you a captain?
 									</label>
 								}
 							/>
 							{isTeacher && (
 								<Input
 									icon={<FaUserLock />}
-									type="number"
+									type="string"
 									name="teacherCode"
 									id="teacherCode"
 									placeholder="Teacher Code"
@@ -524,7 +623,8 @@ const SignUpPage = ({ setState }) => {
 							</Button.Group>
 							<Button
 								loading={loading}
-								type="submit"
+								type="button"
+								onClick={handleSubmit}
 								emphasis="primary"
 								className="fancy"
 							>
@@ -584,6 +684,12 @@ const SignUpPage = ({ setState }) => {
 					</Button.Group>
 				</div>
 			</div>
+
+			{errorMessage && (
+				<p className={styles.signupError}>
+					<FaExclamationTriangle /> {errorMessage}
+				</p>
+			)}
 
 			<div className={styles.reRoute}>
 				<p>Already a user?</p>

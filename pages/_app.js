@@ -11,53 +11,52 @@ import { destroyCookie, parseCookies } from "nookies";
 import { redirectUser } from "./util/authUser";
 
 function MyApp({ Component, pageProps }) {
-  const [loading, setLoading] = useState(false);
-  const [canShowNav, setCanShowNav] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [canShowNav, setCanShowNav] = useState(true);
 
-  const router = useRouter();
+	const router = useRouter();
 
-  const { user } = pageProps;
+	const { user } = pageProps;
 
-  useEffect(() => {
-    console.log(pageProps.user);
-    setCanShowNav(true);
+	useEffect(() => {
+		setCanShowNav(true);
 
 		// console.log(router.pathname);
 
-    let noNavs = ["/", "/404", "/500", "/report/print/[id]"];
+		let noNavs = ["/", "/404", "/500", "/report/print/[id]"];
 
-    if (noNavs.includes(router.pathname)) {
-      setCanShowNav(false);
-    }
-  }, [router.pathname]);
+		if (noNavs.includes(router.pathname)) {
+			setCanShowNav(false);
+		}
+	}, [router.pathname]);
 
-  Router.events.on("routeChangeStart", () => {
-    setLoading(true);
-  });
-  Router.events.on("routeChangeComplete", () => {
-    setLoading(false);
-  });
-  Router.events.on("routeChangeError", () => {
-    setLoading(false);
-  });
+	Router.events.on("routeChangeStart", () => {
+		setLoading(true);
+	});
+	Router.events.on("routeChangeComplete", () => {
+		setLoading(false);
+	});
+	Router.events.on("routeChangeError", () => {
+		setLoading(false);
+	});
 
-  return (
-    <>
-      <HeadTags />
-      {canShowNav && <Navbar user={user} />}
-      <Component {...pageProps} />
-      {loading && <Loading />}
-    </>
-  );
+	return (
+		<>
+			<HeadTags />
+			{canShowNav && <Navbar user={user} />}
+			<Component {...pageProps} />
+			{loading && <Loading />}
+		</>
+	);
 }
 
 MyApp.getInitialProps = async ({ ctx, Component }) => {
-  const { token } = parseCookies(ctx);
-  let pageProps = {};
+	const { token } = parseCookies(ctx);
+	let pageProps = {};
 
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
+	if (Component.getInitialProps) {
+		pageProps = await Component.getInitialProps(ctx);
+	}
 
 	const protectedRoutes = [
 		"/dashboard",
@@ -84,34 +83,27 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		try {
 			const res = await axios.get(`http://localhost:3000/api/v1/user`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					authorization: `Bearer ${token}`,
 				},
 			});
 
-      const { user } = res.data;
-      console.log(user);
-      // if (user) !isProtectedRoute && redirectUser(ctx, "/");
-      pageProps.user = user;
-      console.log(pageProps.user);
+			console.log(res);
 
-      if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-      if (!user || !token) redirectUser(ctx, "/");
-    } catch (err) {
-      console.error(err);
-      destroyCookie(ctx, "token");
-      redirectUser(ctx, "/");
-    }
-  }
+			const { user } = res.data;
 
-	// 		if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-	// 		if (!user || !token)
-	// 			throw new Error("No user or token. Deleting bad cookie.");
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		destroyCookie(ctx, "token");
-	// 		redirectUser(ctx, "/");
-	// 	}
-	// }
+			// if (user) !isProtectedRoute && redirectUser(ctx, "/");
+			pageProps.user = user;
+			pageProps.token = token;
+
+			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+			if (!token) throw new Error("No token. Deleting bad cookie.");
+			if (!user) throw new Error("No user. Deleting bad cookie.");
+		} catch (err) {
+			console.error(err);
+			destroyCookie(ctx, "token");
+			redirectUser(ctx, "/");
+		}
+	}
 
 	return { pageProps };
 };
