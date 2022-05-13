@@ -38,7 +38,7 @@ i'll format this readme later
 
 04-14-2022 - Studied for CIW test, did not work on project
 
-04-15-2022 - 
+04-15-2022 - Did some extra configuring to mongo, changed password so others could use it
 
 04-18-2022 - 
 
@@ -56,11 +56,11 @@ i'll format this readme later
 
 04-27-2022 - 
 
-04-28-2022 -
+04-28-2022 -cx
 
 04-29-2022 -
 
-05-02-2022 -
+05-02-2022 - Granted david, sean, zach, ethaniel access to the mongo
 
 05-03-2022 -
 
