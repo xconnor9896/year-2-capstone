@@ -87,7 +87,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 				},
 			});
 
-			console.log(res);
+			// console.log(res);
 
 			const { user } = res.data;
 

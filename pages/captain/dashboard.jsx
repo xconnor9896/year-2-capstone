@@ -60,7 +60,7 @@ const Dashboard = ({ user }) => {
 
 			return res.data;
 		} catch (err) {
-			console.error("Failed to get user.", err);
+			console.error(`Failed to get user with id ${userId}`, err);
 			return null;
 		}
 	};

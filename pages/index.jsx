@@ -333,7 +333,10 @@ const SignUpPage = ({ setState }) => {
 			setToken(res.data);
 		} catch (err) {
 			console.error("Error at sign up form submission.", err);
-			return setErr(err.response.data, 1);
+
+			const [message, event] = err.response.data.split(" (");
+
+			return setErr(message, Number(event.split(")")[0]));
 		}
 
 		setLoading(false);
