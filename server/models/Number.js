@@ -11,4 +11,4 @@ const NumberSchema = new mongoose.Schema(
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
 module.exports =
-	mongoose.models.Number || mongoose.model("Number", NumberSchema);
+	mongoose.models?.Number || mongoose.model("Number", NumberSchema);
