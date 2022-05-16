@@ -126,7 +126,11 @@ const verifyController = async (req, res) => {
     user.verfiy = "true";
     user.save();
     // console.log(user.verfiy)
-    return res.status(202).send("Your Email Is Verfiyed");
+    return res.status(202).send(
+      `<div classname="emailVerfied" style="background-color: black; border: solid orange 0.5rem; ">
+          <h1 style="color: whitesmoke; text-align: center;">Your Email has been Verfied Thank U and enjoy the site we worked hard on for you</h1>
+      </div>`
+    );
   } catch (err) {
     console.log(err);
     return res.status(401).send(err);
@@ -270,4 +274,9 @@ const passwordChange = async (req, res) => {
   }
 };
 
-module.exports = { sendVerfEmail, sendPassResetEmail, verifyController, passwordChange };
+module.exports = {
+  sendVerfEmail,
+  sendPassResetEmail,
+  verifyController,
+  passwordChange,
+};

@@ -1,8 +1,8 @@
 import styles from "../styles/pages/EmailVerifiedPg.module.scss";
 import {FaCheckCircle} from "react-icons/fa"
-import axios from (`axios`)
+// import axios from (`axios`)
 const emailVerifiedPg = () => {
-  axios.post()
+  // axios.post()
   return (
     <div className={styles.container}>
         <FaCheckCircle/>
