@@ -9,6 +9,9 @@ import { FaUser, FaFileSignature } from "react-icons/fa";
 
 import { Card, Button } from "../proton";
 
+import Cookies from "js-cookie";
+import axios from "axios";
+
 const Dashboard = ({ user }) => {
 	const {
 		name: { firstName, lastName },
@@ -19,6 +22,10 @@ const Dashboard = ({ user }) => {
 	const [loading, setLoading] = useState(false);
 
 	const router = useRouter();
+
+	const route = (pathname) => {
+		router.push(pathname);
+	};
 
 	const authCheck = () => {
 		setLoading(true);
@@ -33,6 +40,34 @@ const Dashboard = ({ user }) => {
 	useEffect(() => {
 		authCheck();
 	}, [user]);
+
+	const createReport = async () => {
+		setLoading(true);
+
+		try {
+			const token = Cookies.get("token");
+
+			// Creating the report.
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/report/${user._id}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			const reportID = res.data;
+
+			route(`/report/${reportID}/edit`);
+		} catch (err) {
+			console.error(err);
+		}
+
+		setLoading(false);
+	};
 
 	return (
 		<main className={styles.container}>
@@ -52,6 +87,9 @@ const Dashboard = ({ user }) => {
 									rank.slice(1, rank.length)}{" "}
 								{lastName}!
 							</h1>
+							<p>
+								All your reports are accessible on your profile.
+							</p>
 						</div>
 
 						<div className={styles.inputs}>

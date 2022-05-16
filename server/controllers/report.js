@@ -15,7 +15,7 @@ req.body {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-	const { userId } = req.body;
+	const { userId } = req.params;
 
 	try {
 		const user = await UserModel.findById(userId);
@@ -39,7 +39,7 @@ const createReport = async (req, res) => {
 		await curNum.save();
 		await report.save();
 
-		return res.status(200).json(report);
+		return res.status(200).json(report._id);
 	} catch (error) {
 		console.log(error);
 		return res.status(400).send("Error at createReport controller");
