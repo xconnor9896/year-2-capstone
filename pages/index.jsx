@@ -285,7 +285,11 @@ const SignUpPage = ({ setState }) => {
       name,
     } = formData;
 
-    // Validate the form clientside.
+		profileImage = JSON.stringify(profileImage);
+
+		console.log(formData);
+
+		// Validate the form clientside.
 
     // Validate email.
     const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
@@ -339,11 +343,14 @@ const SignUpPage = ({ setState }) => {
 
       console.log(res.data);
 
-      setToken(res.data);
-    } catch (err) {
-      console.error("Error at sign up form submission.", err);
-      return setErr(err.response.data, 1);
-    }
+			setToken(res.data);
+		} catch (err) {
+			console.error("Error at sign up form submission.", err);
+
+			const [message, event] = err.response.data.split(" (");
+
+			return setErr(message, Number(event.split(")")[0]));
+		}
 
     setLoading(false);
   };

@@ -28,3 +28,4 @@
 | `5/10` | Finished dashboard hookup.                                                                                                                                   |
 | `5/11` | Fixed pagination bugs. Hooked up /reports page. Hooked up ReportTab components and hooked up most of the features for the ReportsList component.             |
 | `5/12` | Finalized ReportsList hookup with some serverside modifications. Hooked up signup user clientside.                                                           |
+| `5/13` | Signup/General bugfixes serverside and clientside. Began work on pfp hookup but turned it over to David.                                                     |

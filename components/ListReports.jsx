@@ -464,6 +464,12 @@ const ListReports = ({ currentUser, userID }) => {
 
 						<div className={styles.content}>
 							<div className={styles.reportList}>
+								{!paginatedReports ||
+									(paginatedReports.length < 1 && (
+										<span style={{ margin: "auto auto" }}>
+											No reports to display...
+										</span>
+									))}
 								{paginatedReports.map((report) => {
 									return (
 										<ReportTab

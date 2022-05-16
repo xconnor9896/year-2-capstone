@@ -1,4 +1,6 @@
 const defaultProfilePic = require("../util/defaultPic");
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -13,27 +15,32 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-	const { email, password, badgenumber, name, profileImage } = req.body;
+	const { email, password, badgenumber, name, teacherCode, profileImage } =
+		req.body;
+
+	// const profileImage = req.body.profileImage
+	// 	? JSON.parse(req.body.profileImage)
+	// 	: null;
 
 	const user = {
 		email,
 		password,
 		badgeNumber: badgenumber,
 		name,
-		profileImage,
+		profilePicUrl: defaultProfilePic,
 	};
 
-	let profilePicUrl;
+	console.log(req.body);
 
 	try {
 		const emailRegex =
 			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
 		if (!emailRegex.test(email))
-			return res.status(401).send("Email is not in proper format.");
+			return res.status(401).send("Email is not in proper format. (1)");
 		if (password.length < 8) {
 			return res
 				.status(401)
-				.send("Password must be at least 8 characters long.");
+				.send("Password must be at least 8 characters long. (1)");
 		}
 		// if (password.length > 100) {
 		// 	return res
@@ -43,17 +50,41 @@ const createUser = async (req, res) => {
 
 		let checkUser;
 		checkUser = await UserModel.findOne({ email: email.toLowerCase() });
-		if (checkUser) return res.status(401).send("Email already in use.");
+		if (checkUser) return res.status(401).send("Email already in use. (1)");
 
-		if (!profileImage) {
-			profilePicUrl = defaultProfilePic;
+		if (profileImage) {
+			console.log("Profile pic provided.");
+			console.log(profileImage);
 
-			console.log("Implement profile picture data.");
+			// try {
+			// 	const src = await cloudinary.uploader.upload(
+			// 		req.files.image.tempFilePath,
+			// 		{
+			// 			use_filename: true,
+			// 			folder: "Profile Pics",
+			// 		}
+			// 	);
+			// 	fs.unlinkSync(req.files.image.tempFilePath);
+			// 	console.log(src.secure_url);
+			// } catch (error) {
+			// 	console.error(error);
+			// 	return res.status(500).send("Image Upload Error. (2)");
+			// }
+		}
+
+		if (teacherCode && teacherCode.length > 0) {
+			// Validate teacher code.
+			if (teacherCode === "1234567890") {
+				user.rank = "captain";
+			} else {
+				return res.status(401).send("Invalid teacher code. (3)");
+			}
+		} else {
+			user.rank = "officer";
 		}
 
 		let newUser = new UserModel({
 			...user,
-			profilePicUrl,
 		});
 
 		newUser.password = await bcrypt.hash(password, 10);
@@ -71,10 +102,10 @@ const createUser = async (req, res) => {
 			}
 		);
 	} catch (error) {
-		console.log(error);
+		console.error("Error at createUser", error);
 		return res
 			.status(400)
-			.send("Unknown serverside error. Please try again later.");
+			.send("Unknown server-side error. Please try again later. (3)");
 	}
 };
 
@@ -115,7 +146,7 @@ const loginUser = async (req, res) => {
 			}
 		);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at loginUser controller");
 	}
 };
@@ -150,7 +181,7 @@ const deleteUser = async (req, res) => {
 			return res.status(404).send("User Not Found");
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at deleteUser controller");
 	}
 };
@@ -182,7 +213,7 @@ const updateUser = async (req, res) => {
 			);
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at updateUser controller");
 	}
 };
@@ -203,7 +234,7 @@ const changePassword = async (req, res) => {
 
 		return res.status(200).json(user);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at changePassword controller");
 	}
 };
@@ -241,7 +272,7 @@ const authUser = async (req, res) => {
 
 		return res.status(200).json({ user });
 	} catch (error) {
-		console.log("error at authUser controller");
+		console.error("error at authUser controller");
 		console.error(error);
 	}
 };
@@ -253,7 +284,7 @@ req.params {userId} //? Targets userId
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getUser = async (req, res) => {
-	const { userId } = req.userId;
+	const { userId } = req.params;
 
 	if (!userId) return res.status(400).send("No userID");
 
@@ -265,7 +296,7 @@ const getUser = async (req, res) => {
 			return res.status(404).send("No user with given Id");
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at getUser controller");
 	}
 };
@@ -284,7 +315,7 @@ const getAllUsers = async (req, res) => {
 			.json(users.filter((user) => user.squadNumber.length < 1));
 		// return res.status(200).json(users);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(400).send("error at getAllUsers controller");
 	}
 };

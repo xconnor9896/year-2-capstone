@@ -60,6 +60,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 
 	const protectedRoutes = [
 		"/dashboard",
+		"/captain/dashboard",
 		"/reports",
 		"/profile",
 		"/report",
@@ -87,6 +88,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
         },
       });
 
+			// console.log(res);
       const { user } = res.data;
 
       // if (user) !isProtectedRoute && redirectUser(ctx, "/");
