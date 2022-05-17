@@ -35,9 +35,7 @@ const ListReports = ({ currentUser, userID }) => {
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(5);
-	const [totalPages, setTotalPages] = useState(
-		Math.floor(reports.length / itemsPerPage)
-	);
+	const [totalPages, setTotalPages] = useState(999);
 
 	const getUser = async (userId) => {
 		try {
@@ -73,6 +71,7 @@ const ListReports = ({ currentUser, userID }) => {
 	};
 
 	const getUsersReports = async (userTarget) => {
+		// console.log(currentUser._id, userTarget._id);
 		try {
 			const res = await axios.post(
 				`http://localhost:3000/api/v1/report/all`,
@@ -197,21 +196,8 @@ const ListReports = ({ currentUser, userID }) => {
 		return reportsGrabbed;
 	};
 
-	// Old code needs to be implemented below VVV
-
-	const [search, setSearch] = useState("");
-
 	const [filterIcon, setFilterIcon] = useState(<FaFilter />);
 	const [sortIcon, setSortIcon] = useState(<FaSort />);
-
-	const handleSearch = (e) => {
-		setSearch(e.target.value);
-
-		console.log(
-			search.slice(search.length - 5, search.length),
-			"... connect search to server"
-		);
-	};
 
 	const openFilter = () => {
 		setFilterDropdown(true);
@@ -353,16 +339,6 @@ const ListReports = ({ currentUser, userID }) => {
 									Filter
 								</Button>
 							</div>
-
-							<div className={styles.inputs}>
-								<Input
-									maxLength={60}
-									value={search}
-									onChange={handleSearch}
-									type="text"
-									placeholder="Search"
-								/>
-							</div>
 						</Card.Header>
 						{filterDropdown && (
 							<div
@@ -487,7 +463,6 @@ const ListReports = ({ currentUser, userID }) => {
 								activePage={currentPage}
 								totalPages={totalPages}
 								onPageChange={(page) => {
-									console.log(page);
 									setCurrentPage(page);
 								}}
 							/>

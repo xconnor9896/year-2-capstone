@@ -211,7 +211,7 @@ const getReport = async (req, res) => {
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-GET ALL REPORT
+GET ALL REPORTS
 .get('/') 
 req.body {user, userId, verified, sort} 
 //? userId - your user object
@@ -225,6 +225,11 @@ const getAllReports = async (req, res) => {
 
 	try {
 		const user = await UserModel.findById(userId);
+
+		if (!user)
+			return res
+				.status(404)
+				.send("The user requesting the data does not exist.");
 
 		if (!targetId) {
 			if (user.rank === "captain") {
@@ -267,7 +272,7 @@ const getAllReports = async (req, res) => {
 					);
 			}
 		} else {
-			if (user.rank === "captain" || targetId === user._id) {
+			if (user.rank === "captain" || targetId === userId) {
 				let reports = await ReportModel.find({
 					responsibleOfficer: { targetId },
 				}).sort({

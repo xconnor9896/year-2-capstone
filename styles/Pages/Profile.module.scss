@@ -1,31 +1,105 @@
 @use "../vars.scss" as *;
 
 .container {
-  display: flex;
-  .user {
-    background-color: $background-light;
-    border-top-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    margin: 0 auto;
-    overflow: hidden;
-    .pfp {
-      font-size: 4rem;
-      display: flex;
-      align-items: center;
-      height: min-content;
-      width: min-content;
-      padding: 40px;
-      border-radius: 50%;
-      background-color: $background-light;
-    }
-    ul {
-      list-style: none;
-      li {
-        margin: 8px;
-        background-color: $background-dark;
-        border-top-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-      }
-    }
-  }
+	flex-grow: 2;
+
+	overflow-y: auto;
+
+	gap: $padding;
+
+	padding: $padding;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+
+	justify-content: space-evenly;
+
+	.userInfo {
+		display: flex;
+		flex-direction: column;
+
+		background: $background-light;
+		height: 100%;
+		max-height: 500px;
+		max-width: 75vw;
+		border-radius: $border-radius / 2;
+		overflow: hidden;
+		box-shadow: 0px 4px 16px rgb(0 0 0 / 12%);
+
+		width: min-content;
+
+		flex-grow: 2;
+
+		header {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: flex-start;
+			background: darken($background-dark, 25%);
+			gap: $padding;
+			padding: $padding;
+
+			margin-bottom: 2rem;
+
+			position: relative;
+
+			padding-left: $padding * 8;
+
+			img {
+				border-radius: 50%;
+				box-shadow: $light-shadow;
+
+				width: 3rem;
+				height: 3rem;
+
+				position: absolute;
+				left: $padding;
+				bottom: -50%;
+			}
+		}
+
+		section {
+			padding: $padding;
+			display: flex;
+			flex-direction: row;
+			flex-grow: 2;
+			gap: $padding;
+
+			.content {
+				display: flex;
+				flex-direction: column;
+				gap: $padding / 2;
+
+				align-items: flex-start;
+
+				header {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+
+					margin-bottom: 0;
+
+					padding: $padding;
+					gap: 0;
+
+					border-radius: $border-radius / 2;
+
+					h1 {
+						font-size: 1rem;
+					}
+
+					h2 {
+						font-size: 0.8rem;
+					}
+				}
+
+				p {
+					border-radius: $border-radius / 2;
+					background: darken($background-dark, 25%);
+					padding: $padding;
+				}
+			}
+		}
+	}
 }
