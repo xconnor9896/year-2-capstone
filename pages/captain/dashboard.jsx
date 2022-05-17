@@ -28,6 +28,7 @@ const Dashboard = ({ user }) => {
 	};
 
 	const [loading, setLoading] = useState(false);
+	const [teacherCodeLoading, setTeacherCodeLoading] = useState(false);
 
 	const [squadNumber, setSquadNumber] = useState(
 		user.squadNumber ? user.squadNumber : null
@@ -86,6 +87,27 @@ const Dashboard = ({ user }) => {
 			setTeacherCode("Failed to load... Please try again later.");
 		}
 		setLoading(false);
+	};
+
+	const updateTeacherCode = async (userId, newCode) => {
+		setTeacherCodeLoading(true);
+		try {
+			const res = await axios.post(
+				`http://localhost:3000/api/v1/user/code/${userId}`,
+				{ newCode },
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			setTeacherCode(res.data.teacherCode);
+		} catch (err) {
+			setTeacherCode(err.response.data);
+			console.error(`Failed to get user with id ${userId}`, err);
+		}
+		setTeacherCodeLoading(false);
 	};
 
 	const [addableOfficers, setAddableOfficers] = useState(null);
@@ -833,7 +855,44 @@ const Dashboard = ({ user }) => {
 									<FaPlus /> Add Squad
 								</Button>
 							</div>
-							<p>Super secret teacher code: {teacherCode}</p>
+							<div className={styles.teacherCodeForm}>
+								<p>
+									<span>Teacher Code</span>
+									<span>{teacherCode}</span>
+								</p>
+								<p>
+									Change the teacher code:
+									<span>
+										<input
+											type="text"
+											placeholder="New Code"
+											name="teacherCode"
+											id="teacherCode"
+										/>
+										<Button
+											emphasis="primary"
+											compact
+											type="button"
+											loading={teacherCodeLoading}
+											onClick={() => {
+												const newCode =
+													document.getElementById(
+														"teacherCode"
+													).value;
+
+												if (newCode.length < 1) return;
+
+												updateTeacherCode(
+													user._id,
+													newCode
+												);
+											}}
+										>
+											Submit
+										</Button>
+									</span>
+								</p>
+							</div>
 						</div>
 					</div>
 				</Card>

@@ -75,7 +75,9 @@ const createUser = async (req, res) => {
 
 		if (teacherCode && teacherCode.length > 0) {
 			// Validate teacher code.
-			if (teacherCode === "1234567890") {
+			let checkCode = await Code.find({});
+			checkCode = checkCode[0];
+			if (teacherCode === checkCode) {
 				user.rank = "captain";
 			} else {
 				return res.status(401).send("Invalid teacher code. (3)");
@@ -253,8 +255,6 @@ const authUser = async (req, res) => {
 		headers: { authorization },
 	} = req;
 
-	console.log(userId);
-
 	try {
 		let id = userId;
 
@@ -370,15 +370,25 @@ const updateCode = async (req, res) => {
 
 		if (!user) return res.status(400).send("No user with that ID.");
 
+		if (!newCode) return res.status(400).send("That is an invalid code.");
+
+		if (newCode.length < 8)
+			return res.status(400).send("Code must be at least 8 characters.");
+
+		if (newCode.length > 32)
+			return res
+				.status(400)
+				.send("Code cannot be longer than 32 characters.");
+
 		if (user.rank === "captain") {
 			let teacherCode = await Code.find({});
 			teacherCode = teacherCode[0];
 
 			teacherCode.code = newCode;
 
-			await teacherCode.save;
+			await teacherCode.save();
 
-			return res.status(200).send("Teacher code updated.");
+			return res.status(200).json({ teacherCode: teacherCode.code });
 		} else {
 			if (!user)
 				return res

@@ -480,5 +480,75 @@
 				}
 			}
 		}
+
+		.teacherCodeForm {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			border: $border;
+
+			width: 100%;
+
+			p {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: $padding;
+				padding: $padding;
+
+				&:first-child {
+					border-bottom: $border;
+					width: 100%;
+
+					gap: 0;
+					padding: 0;
+
+					span {
+						padding: $padding;
+
+						&:first-child {
+							border-right: $border;
+							height: 100%;
+						}
+
+						&:last-child {
+							color: $em-secondary;
+						}
+					}
+				}
+
+				&:last-child {
+					font-weight: normal;
+					flex-wrap: wrap;
+				}
+
+				span {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+
+					input {
+						outline: none;
+						border: $border;
+						border-radius: $border-radius-fancy;
+						padding: $padding;
+						background: none;
+
+						transition: $transition-fast;
+
+						&::placeholder {
+							color: $border-color;
+						}
+
+						&:focus,
+						&:hover {
+							color: $em-primary;
+							border-color: $em-primary;
+						}
+					}
+				}
+			}
+		}
 	}
 }
