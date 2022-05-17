@@ -15,7 +15,7 @@ req.body {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-	const { userId } = req.body;
+	const { userId } = req.params;
 
 	try {
 		const user = await UserModel.findById(userId);
@@ -39,7 +39,7 @@ const createReport = async (req, res) => {
 		await curNum.save();
 		await report.save();
 
-		return res.status(200).json(report);
+		return res.status(200).json(report._id);
 	} catch (error) {
 		console.log(error);
 		return res.status(400).send("Error at createReport controller");
@@ -211,7 +211,7 @@ const getReport = async (req, res) => {
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-GET ALL REPORT
+GET ALL REPORTS
 .get('/') 
 req.body {user, userId, verified, sort} 
 //? userId - your user object
@@ -225,6 +225,11 @@ const getAllReports = async (req, res) => {
 
 	try {
 		const user = await UserModel.findById(userId);
+
+		if (!user)
+			return res
+				.status(404)
+				.send("The user requesting the data does not exist.");
 
 		if (!targetId) {
 			if (user.rank === "captain") {
@@ -267,7 +272,7 @@ const getAllReports = async (req, res) => {
 					);
 			}
 		} else {
-			if (user.rank === "captain" || targetId === user._id) {
+			if (user.rank === "captain" || targetId === userId) {
 				let reports = await ReportModel.find({
 					responsibleOfficer: { targetId },
 				}).sort({

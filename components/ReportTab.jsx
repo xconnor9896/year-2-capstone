@@ -17,8 +17,6 @@ const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 		submittedAt,
 	} = report;
 
-	console.log(report);
-
 	const [date, time] = submittedAt.split("T");
 
 	const [year, month, day] = date.split("-");
@@ -36,8 +34,12 @@ const ReportTab = ({ report, showOfficer, showExtraInfo }) => {
 				Case #{caseNumber}
 				{showOfficer && name && squadNumber && (
 					<span>
-						Officer {name.lastName}, {name.firstName} &ndash; Squad
-						#{squadNumber[0]}
+						Officer {name.lastName}, {name.firstName} &ndash;{" "}
+						{squadNumber[0] ? (
+							<>Squad #{squadNumber[0]}</>
+						) : (
+							"No Squad"
+						)}
 					</span>
 				)}
 			</span>

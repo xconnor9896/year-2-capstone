@@ -1,4 +1,4 @@
-import styles from "../../styles/Pages/TimsDashboard.module.scss";
+import styles from "../../styles/Pages/AdminDashboard.module.scss";
 import { Button, Card } from "../../proton";
 import { useState, useEffect } from "react";
 import {

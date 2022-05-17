@@ -1,101 +1,118 @@
-import styles from "../styles/Pages/NickDashboard.module.scss";
+import styles from "../styles/Pages/Dashboard.module.scss";
 
 import { useEffect } from "react";
 
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-import {
-	FaRegUser,
-	FaUpload,
-	FaRegIdBadge,
-	FaEye,
-	FaPrint,
-} from "react-icons/fa";
+import { FaUser, FaFileSignature } from "react-icons/fa";
+
+import { Card, Button } from "../proton";
+
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const Dashboard = ({ user }) => {
-  console.log(user)
+	const {
+		name: { firstName, lastName },
+		rank,
+		_id,
+	} = user;
 
-  const { email, rank, name: {firstName: name} } = user
-
+	const [loading, setLoading] = useState(false);
 
 	const router = useRouter();
 
+	const route = (pathname) => {
+		router.push(pathname);
+	};
+
 	const authCheck = () => {
+		setLoading(true);
 		if (!user) router.push("/");
 		if (user.rank === "captain") {
 			// Re-route if they aren't.
 			router.push("/captain/dashboard");
 		}
+		setLoading(false);
 	};
 
 	useEffect(() => {
 		authCheck();
 	}, [user]);
 
+	const createReport = async () => {
+		setLoading(true);
+
+		try {
+			const token = Cookies.get("token");
+
+			// Creating the report.
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/report/${user._id}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (!res || !res.data) throw new Error("No result returned.");
+
+			const reportID = res.data;
+
+			route(`/report/${reportID}/edit`);
+		} catch (err) {
+			console.error(err);
+		}
+
+		setLoading(false);
+	};
+
 	return (
-		<>
-			<div className={styles.dashboard}>
-				<div className={styles.profile}>
-					<h1 className={styles.title}>Welcome Back!</h1>
-					<h2 className={styles.name}>
-						{rank} {name}!
-					</h2>
-					<div className={styles.iconC}>
-						<FaRegUser className={styles.icon} />
-					</div>
-					<span className={styles.name2}>
-						{rank} {name}
-					</span>
-					<div className={styles.buttons}>
-						<div className={styles.btn}>
-							<FaUpload className={styles.label} />
-							<button className={styles.newReport}>
-								{" "}
-								Make a new report
-							</button>
+		<main className={styles.container}>
+			<article className={styles.main}>
+				<Card dropshadow noborder loading={loading}>
+					<Card.Header>
+						<div className={styles.header}>
+							<h1>Your Dashboard</h1>
 						</div>
-						<div className={styles.btn}>
-							<FaRegIdBadge className={styles.label} />
-							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${email}`)}}>
-								{" "}
+					</Card.Header>
+
+					<div className={styles.content}>
+						<div className={styles.message}>
+							<h1>
+								Welcome back,{" "}
+								{rank[0].toUpperCase() +
+									rank.slice(1, rank.length)}{" "}
+								{lastName}!
+							</h1>
+							<p>
+								All your reports are accessible on your profile.
+							</p>
+						</div>
+
+						<div className={styles.inputs}>
+							<Button
+								onClick={() => route(`/profile/${_id}`)}
+								emphasis="primary"
+							>
+								<FaUser />
 								My Profile
-							</button>
+							</Button>
+
+							<Button
+								onClick={() => createReport()}
+								emphasis="primary"
+							>
+								<FaFileSignature />
+								Create New Report
+							</Button>
 						</div>
 					</div>
-				</div>
-
-				<div className={styles.divider}></div>
-
-				<div className={styles.cases}>
-					<div className={styles.top}>
-						<h1>Recent Cases</h1>
-						<input
-							className={styles.search}
-							type="search"
-							name="case"
-							id="case"
-						/>
-					</div>
-					<div className={styles.recent}>
-						
-					</div>
-
-					<div className={`${styles.top} ${styles.top2}`}>
-						<h1>Archived Cases</h1>
-						<input
-							className={styles.search}
-							type="search"
-							name="case"
-							id="case"
-						/>
-					</div>
-
-					<div className={styles.archived}>
-						
-					</div>
-				</div>
-			</div>
-		</>
+				</Card>
+			</article>
+		</main>
 	);
 };
 
