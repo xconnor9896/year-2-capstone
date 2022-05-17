@@ -349,7 +349,7 @@ const getCode = async (req, res) => {
 		}
 	} catch (error) {
 		console.error(error);
-		return res.status(400).send("error at getAllUsers controller");
+		return res.status(400).send("error at getCode controller");
 	}
 };
 
@@ -387,7 +387,7 @@ const updateCode = async (req, res) => {
 		}
 	} catch (error) {
 		console.error(error);
-		return res.status(400).send("error at getAllUsers controller");
+		return res.status(400).send("error at updateCode controller");
 	}
 };
 

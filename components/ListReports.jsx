@@ -9,7 +9,6 @@ import getSquad from "../pages/util/getSquad";
 
 import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { Button, Card, Pagination } from "../proton";
-import Input from "../components/Input";
 import ReportTab from "./ReportTab";
 
 const ListReports = ({ currentUser, userID }) => {

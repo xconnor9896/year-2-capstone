@@ -29,7 +29,9 @@ const Dashboard = ({ user }) => {
 
 	const [loading, setLoading] = useState(false);
 
-	const [squadNumber, setSquadNumber] = useState(user.squadNumber);
+	const [squadNumber, setSquadNumber] = useState(
+		user.squadNumber ? user.squadNumber : null
+	);
 	const [squads, setSquads] = useState([]);
 
 	const token = Cookies.get("token");
@@ -63,6 +65,27 @@ const Dashboard = ({ user }) => {
 			console.error(`Failed to get user with id ${userId}`, err);
 			return null;
 		}
+	};
+
+	const [teacherCode, setTeacherCode] = useState("Loading...");
+	const getTeacherCode = async (userId) => {
+		setLoading(true);
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/v1/user/code/${userId}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			setTeacherCode(res.data.teacherCode);
+		} catch (err) {
+			console.error(`Failed to get user with id ${userId}`, err);
+			setTeacherCode("Failed to load... Please try again later.");
+		}
+		setLoading(false);
 	};
 
 	const [addableOfficers, setAddableOfficers] = useState(null);
@@ -229,17 +252,6 @@ const Dashboard = ({ user }) => {
 		setLoading(false);
 	};
 
-	// const updateSquad = async (e, id) => {
-	// 	e.preventDefault();
-
-	// 	setLoading(true);
-
-	// 	console.log("Hook up squad management", id);
-	// 	// reloadSquads();
-
-	// 	setLoading(false);
-	// };
-
 	const addOfficerToSquad = async (squadNumber, officerId) => {
 		setLoading(true);
 
@@ -300,6 +312,10 @@ const Dashboard = ({ user }) => {
 		// Get squads
 		reloadSquads(await getUser(user._id));
 		getAddableOfficers();
+	}, []);
+
+	useEffect(() => {
+		getTeacherCode(user._id);
 	}, []);
 
 	return (
@@ -817,6 +833,7 @@ const Dashboard = ({ user }) => {
 									<FaPlus /> Add Squad
 								</Button>
 							</div>
+							<p>Super secret teacher code: {teacherCode}</p>
 						</div>
 					</div>
 				</Card>

@@ -18,7 +18,10 @@ router.route("/signup").post(createUser);
 router.post("/login", loginUser);
 router.get("/all", authMiddleware, getAllUsers);
 router.get("/", authMiddleware, authUser);
-router.route("/code/:userId").get(getCode).post(authMiddleware, updateCode);
+router
+	.route("/code/:userId")
+	.get(authMiddleware, getCode)
+	.post(authMiddleware, updateCode);
 
 router
 	.route("/:userId")
