@@ -32,6 +32,7 @@ const Profile = ({ user }) => {
           <h1>Tammy</h1>
         </div>
       </div>
+      <a href="http://localhost:3000/emailVefPage">Verfiy Your Email</a>
     </main>
   );
 };
