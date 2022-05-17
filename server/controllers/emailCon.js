@@ -121,6 +121,7 @@ const verifyController = async (req, res) => {
     const user = users.find((user) => {
       return user.verfiy == urlNumber;
     });
+    console.log(user);
     // console.log(`This is the choosen user`)
     // console.log(urlNumber)
     user.verfiy = "true";
@@ -248,21 +249,33 @@ const sendPassResetEmail = async (req, res) => {
 
 const passwordChange = async (req, res) => {
   try {
-    let params = req.query;
-    console.log(params);
-    let urlNumber = params.pass;
-    const users = await userModel.find({});
-
-    const user = users.find((user) => {
-      return user.pass == urlNumber;
-    });
-    let newPassword = req.body;
+    let inputEmail = req.body;
+    if (!inputEmail) {
+      alert("Please Enter A Email");
+    }
+		const user = await UserModel.findOne({
+			email: email.toLowerCase(),
+    }).select("+password");
+    
+    let inputPassword = req.body;
     let confirmPassword = req.body;
 
-    if (newPassword == confirmPassword) {
-      user.password = newPassword;
-      user.save();
-      return user;
+    if (!inputPassword && !confirmPassword) {
+      alert("Please make sure you put the same password in each");
+    }
+
+    console.log(`This is the email ${user.email}`);
+    if (inputPassword == confirmPassword) {
+      // console.log(user.password);
+      bcrypt.genSalt(10, (err, salt) =>
+        bcrypt.hash(newPassword, salt, (err, hash) => {
+          if (err) throw err;
+          user.password = hash;
+          user.save();
+        })
+      );
+      req.flash("success_msg", "Password successfully updated!");
+      res.redirect("/dashboard");
     } else {
       alert("Please Make sure the passwords match");
       console.log("Password didnt match at emailCon line 285");
