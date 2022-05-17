@@ -8,6 +8,8 @@ const {
 	authUser,
 	getUser,
 	getAllUsers,
+	getCode,
+	updateCode,
 } = require("../controllers/user");
 
 const { authMiddleware } = require("../middleware/authMidware");
@@ -15,11 +17,13 @@ const { authMiddleware } = require("../middleware/authMidware");
 router.route("/signup").post(createUser);
 router.post("/login", loginUser);
 router.get("/all", authMiddleware, getAllUsers);
+router.get("/", authMiddleware, authUser);
+router.route("/code/:userId").get(getCode).post(authMiddleware, updateCode);
+
 router
 	.route("/:userId")
 	.delete(authMiddleware, deleteUser)
 	.post(authMiddleware, updateUser)
 	.get(authMiddleware, getUser);
-router.get("/", authMiddleware, authUser);
 
 module.exports = router;

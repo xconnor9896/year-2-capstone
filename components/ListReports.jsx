@@ -165,8 +165,10 @@ const ListReports = ({ currentUser, userID }) => {
 		if (selectedSquad !== "") {
 			propogatedReports = propogatedReports.filter(
 				(report) =>
+					report.basicInfo.responsibleOfficer.squadNumber.length >
+						0 &&
 					report.basicInfo.responsibleOfficer.squadNumber[0].toString() ===
-					selectedSquad.toString()
+						selectedSquad.toString()
 			);
 		}
 
