@@ -248,21 +248,21 @@ req.params {userId} //? Targets userId
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getUser = async (req, res) => {
-  const { userId } = req.userId;
+	const { userId } = req.params;
 
-  if (!userId) return res.status(400).send("No userID");
+	if (!userId) return res.status(400).send("No userID");
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (user) {
-      return res.status(200).json(user);
-    } else {
-      return res.status(404).send("No user with given Id");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at getUser controller");
-  }
+	try {
+		const user = await UserModel.findById(userId);
+		if (user) {
+			return res.status(200).json(user);
+		} else {
+			return res.status(404).send("No user with given Id");
+		}
+	} catch (error) {
+		console.error(error);
+		return res.status(400).send("error at getUser controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -284,6 +284,76 @@ const getAllUsers = async (req, res) => {
     console.log(error);
     return res.status(400).send("error at getAllUsers controller");
   }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GET TEACHER CODE USERS
+.get('/code') 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const getCode = async (req, res) => {
+	const { userId } = req.params;
+
+	if (!userId) return res.status(400).send("No userID");
+
+	try {
+		const user = await UserModel.findById(userId);
+
+		if (!user) return res.status(400).send("No user with that ID");
+
+		if (user.rank === "captain") {
+			let teacherCode = await Code.find({});
+			teacherCode = teacherCode[0];
+
+			return res.status(200).json({ teacherCode: teacherCode.code });
+		} else {
+			if (!user)
+				return res
+					.status(403)
+					.send("Only captains can access the teacher code.");
+		}
+	} catch (error) {
+		console.error(error);
+		return res.status(400).send("error at getCode controller");
+	}
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+UPDATE TEACHER CODE USERS
+.post('/code') 
+req.body {newCode} //? new code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const updateCode = async (req, res) => {
+	const { newCode } = req.body;
+	const { userId } = req.params;
+
+	if (!userId) return res.status(400).send("No userID");
+
+	try {
+		const user = await UserModel.findById(userId);
+
+		if (!user) return res.status(400).send("No user with that ID.");
+
+		if (user.rank === "captain") {
+			let teacherCode = await Code.find({});
+			teacherCode = teacherCode[0];
+
+			teacherCode.code = newCode;
+
+			await teacherCode.save;
+
+			return res.status(200).send("Teacher code updated.");
+		} else {
+			if (!user)
+				return res
+					.status(403)
+					.send("Only captains can access the teacher code.");
+		}
+	} catch (error) {
+		console.error(error);
+		return res.status(400).send("error at updateCode controller");
+	}
 };
 
 const getEmail = async (req, res) => {
@@ -313,4 +383,6 @@ module.exports = {
   getUser,
   getAllUsers,
   getEmail,
+  getCode,
+  updateCode
 };

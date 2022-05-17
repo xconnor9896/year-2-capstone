@@ -7,8 +7,10 @@ const {
 	updateUser,
 	authUser,
 	getUser,
-	getEmail,
 	getAllUsers,
+	getEmail,
+	getCode,
+	updateCode,
 } = require("../controllers/user");
 
 const { authMiddleware } = require("../middleware/authMidware");
@@ -16,12 +18,17 @@ const { authMiddleware } = require("../middleware/authMidware");
 router.route("/signup").post(createUser);
 router.post("/login", loginUser);
 router.get("/all", authMiddleware, getAllUsers);
-router
-	.route("/:userId")
-	.delete(authMiddleware, deleteUser)
-	.post(authMiddleware, updateUser)
-	.get(authMiddleware);
-	router.route("/:email").get(getEmail)
 router.get("/", authMiddleware, authUser);
+router
+  .route("/code/:userId")
+  .get(authMiddleware, getCode)
+  .post(authMiddleware, updateCode);
+
+router
+  .route("/:userId")
+  .delete(authMiddleware, deleteUser)
+  .post(authMiddleware, updateUser)
+  .get(authMiddleware, getUser);
+router.route("/:email").get(getEmail);
 
 module.exports = router;
