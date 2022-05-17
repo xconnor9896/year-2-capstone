@@ -1,6 +1,7 @@
 import { FaRegUser, FaStar } from "react-icons/fa";
 import { baseURL } from "../util/baseURL";
 import { parseCookies } from "nookies";
+import { useState, useEffect } from "react";
 import Tabs from "../../components/Tabs";
 import axios from "axios";
 // import getUser from "../../server/controllers/user"
@@ -23,12 +24,7 @@ const Profile = ({ user }) => {
         <div className={styles.banner}>
           <img />
         </div>
-        <Tabs
-          lastName={lName}
-          badgeNum={badgeNum}
-          email={email}
-          rank={rank}
-        />
+        <Tabs lastName={lName} badgeNum={badgeNum} email={email} rank={rank} />
       </div>
 
       <div className={styles.display}>
@@ -43,12 +39,17 @@ const Profile = ({ user }) => {
 Profile.getInitialProps = async (ctx) => {
   try {
     const { email: email } = ctx.query;
+    
     const { token } = parseCookies(ctx);
     const res = await axios.get(`${baseURL}/api/v1/user/${email}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const user  = res.data;
+    const wok = await axios.get(`${baseURL}/api/v1/user/all`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const user = res.data;
     return { user };
   } catch (error) {
     return { errorLoading: true };

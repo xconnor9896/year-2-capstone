@@ -272,6 +272,7 @@ req.params {username} //? Targets username
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getAllUsers = async (req, res) => {
+
   try {
     const users = await UserModel.find({});
 
