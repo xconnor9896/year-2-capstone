@@ -93,7 +93,16 @@ export default function Profile({ user: { _id } }) {
 														(squad) => {
 															return (
 																<li>
-																	#{squad},
+																	#{squad}
+																	{user.squadNumber.indexOf(
+																		squad
+																	) <
+																		user
+																			.squadNumber
+																			.length -
+																			1 && (
+																		<>,</>
+																	)}
 																</li>
 															);
 														}

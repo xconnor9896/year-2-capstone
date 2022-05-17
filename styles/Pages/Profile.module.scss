@@ -98,6 +98,14 @@
 					border-radius: $border-radius / 2;
 					background: darken($background-dark, 25%);
 					padding: $padding;
+
+					ul {
+						list-style: none;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						gap: $padding / 2;
+					}
 				}
 			}
 		}
