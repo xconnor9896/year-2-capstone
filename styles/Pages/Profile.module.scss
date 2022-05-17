@@ -27,9 +27,8 @@
 		overflow: hidden;
 		box-shadow: 0px 4px 16px rgb(0 0 0 / 12%);
 
-		width: min-content;
-
-		flex-grow: 2;
+		width: max-content;
+		min-width: 400px;
 
 		header {
 			display: flex;
