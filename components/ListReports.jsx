@@ -9,7 +9,6 @@ import getSquad from "../pages/util/getSquad";
 
 import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { Button, Card, Pagination } from "../proton";
-import Input from "../components/Input";
 import ReportTab from "./ReportTab";
 
 const ListReports = ({ currentUser, userID }) => {
@@ -165,8 +164,10 @@ const ListReports = ({ currentUser, userID }) => {
 		if (selectedSquad !== "") {
 			propogatedReports = propogatedReports.filter(
 				(report) =>
+					report.basicInfo.responsibleOfficer.squadNumber.length >
+						0 &&
 					report.basicInfo.responsibleOfficer.squadNumber[0].toString() ===
-					selectedSquad.toString()
+						selectedSquad.toString()
 			);
 		}
 

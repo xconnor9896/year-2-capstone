@@ -10,7 +10,7 @@ import { FaInfoCircle, FaUsers } from "react-icons/fa";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export default function Profile({ user: { _id } }) {
+export default function Profile({ user: currentUser, user: { _id } }) {
 	const router = useRouter();
 	const { id } = router.query;
 	const token = Cookies.get("token");
@@ -128,7 +128,10 @@ export default function Profile({ user: { _id } }) {
 				</article>
 			)}
 
-			<ListReports currentUser={user} userID={id} />
+			<ListReports
+				currentUser={currentUser}
+				userID={user.rank === "captain" ? null : id}
+			/>
 		</main>
 	);
 }
