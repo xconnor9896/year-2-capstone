@@ -3,6 +3,7 @@ const app = require("express")();
 const { connectDB } = require("./server/util/connect");
 const express = require("express");
 require("dotenv").config();
+const fileUpload = require("express-fileupload");
 
 // const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,19 @@ const handler = nextApp.getRequestHandler();
 
 //middlewares
 app.use(express.json());
+app.use(
+	fileUpload({
+		useTempFiles: true,
+	})
+);
+
+// cloudinary
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.CLOUD_KEY,
+	api_secret: process.env.CLOUD_SECRET,
+});
 
 //routerss
 const userRoutes = require("./server/routes/userRoutes");

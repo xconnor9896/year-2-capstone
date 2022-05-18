@@ -16,8 +16,9 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-	const { email, password, badgenumber, name, teacherCode, profileImage } =
-		req.body;
+	const { email, password, badgenumber, name, teacherCode } = req.body;
+
+	const { profileImage } = req.files;
 
 	// const profileImage = req.body.profileImage
 	// 	? JSON.parse(req.body.profileImage)
@@ -27,11 +28,11 @@ const createUser = async (req, res) => {
 		email,
 		password,
 		badgeNumber: badgenumber,
-		name,
-		profilePicUrl: defaultProfilePic,
+		name: {
+			firstName: name.split(" ")[0],
+			lastName: name.split(" ")[1],
+		},
 	};
-
-	console.log(req.body);
 
 	try {
 		const emailRegex =
@@ -53,24 +54,25 @@ const createUser = async (req, res) => {
 		checkUser = await UserModel.findOne({ email: email.toLowerCase() });
 		if (checkUser) return res.status(401).send("Email already in use. (1)");
 
+		let pfpurl = defaultProfilePic;
 		if (profileImage) {
 			console.log("Profile pic provided.");
 			console.log(profileImage);
 
-			// try {
-			// 	const src = await cloudinary.uploader.upload(
-			// 		req.files.image.tempFilePath,
-			// 		{
-			// 			use_filename: true,
-			// 			folder: "Profile Pics",
-			// 		}
-			// 	);
-			// 	fs.unlinkSync(req.files.image.tempFilePath);
-			// 	console.log(src.secure_url);
-			// } catch (error) {
-			// 	console.error(error);
-			// 	return res.status(500).send("Image Upload Error. (2)");
-			// }
+			try {
+				const src = await cloudinary.uploader.upload(
+					profileImage.tempFilePath,
+					{
+						use_filename: true,
+						folder: "Profile Pics",
+					}
+				);
+
+				pfpurl = src.secure_url;
+			} catch (error) {
+				console.error(error);
+				return res.status(500).send("Image Upload Error. (2)");
+			}
 		}
 
 		if (teacherCode && teacherCode.length > 0) {
@@ -88,6 +90,7 @@ const createUser = async (req, res) => {
 
 		let newUser = new UserModel({
 			...user,
+			profilePicURL: pfpurl,
 		});
 
 		newUser.password = await bcrypt.hash(password, 10);

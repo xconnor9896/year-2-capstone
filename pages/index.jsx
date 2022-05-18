@@ -252,7 +252,7 @@ const SignUpPage = ({ setState }) => {
 	const handleSubmit = async () => {
 		if (!formRef || !formRef.current || loading) return;
 
-		setLoading(true);
+		// setLoading(true);
 
 		// Reset the error message.
 		setErrorMessage(null);
@@ -272,8 +272,6 @@ const SignUpPage = ({ setState }) => {
 		} = formData;
 
 		profileImage = JSON.stringify(profileImage);
-
-		console.log(formData);
 
 		// Validate the form clientside.
 
@@ -323,13 +321,24 @@ const SignUpPage = ({ setState }) => {
 
 		const [firstName, lastName] = name.split(" ");
 
-		formData.name = { firstName, lastName };
+		formData.name = name;
+
+		const tempFormData = new FormData();
+
+		for (let key of Object.entries(formData)) {
+			tempFormData.append(key[0], key[1]);
+		}
 
 		// Send the data to the server.
 		try {
 			const res = await axios.post(
 				"http://localhost:3000/api/v1/user/signup",
-				formData
+				tempFormData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
 			);
 
 			console.log(res.data);
