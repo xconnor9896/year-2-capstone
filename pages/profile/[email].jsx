@@ -11,12 +11,8 @@ import styles from "../../styles/Pages/Profile.module.scss";
 
 const Profile = ({ user }) => {
   const token = Cookies.get("token");
-
-  const lName = user.name.lastName;
-  const badgeNum = user.badgeNumber;
-  const email = user.email;
-  const rank = user.rank;
-  console.log(user.name.lastName);
+  const {name: {firstName, lastName}, badgeNumber, email, rank} = user
+  console.log(`Welcome back ${rank} ${lastName}!`);
 
   const [squads, setSquads] = useState([]);
 
@@ -70,13 +66,20 @@ const Profile = ({ user }) => {
   return (
     <main className={styles.container}>
       <div className={styles.user}>
-        <div className={styles.pfp}>
-          <FaRegUser />
+        <div
+          className={styles.pfp}
+          style={
+            user.profilePicURL && {
+              backgroundImage: `url("${user.profilePicURL}")`,
+            }
+          }
+        >
+          {/* <FaRegUser /> */}
         </div>
         <div className={styles.banner}>
           <img />
         </div>
-        <Tabs lastName={lName} badgeNum={badgeNum} email={email} rank={rank} />
+        <Tabs lastName={lastName} badgeNum={badgeNumber} email={email} rank={rank} />
       </div>
 
       <div className={styles.display}>
