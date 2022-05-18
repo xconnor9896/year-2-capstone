@@ -28,6 +28,8 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 				}
 			);
 
+			console.log(res.data);
+
 			return res.data;
 		} catch (err) {
 			console.error(`Failed to get user with ID:`, userId, err);
@@ -51,13 +53,7 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 			{user && (
 				<article className={styles.userInfo}>
 					<header>
-						<img
-							src={
-								user.profilePicURL ||
-								"https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
-							}
-							alt="PFP"
-						/>
+						<img src={user.profilePicURL} alt="PFP" />
 						<h1>
 							{user.rank[0].toUpperCase() +
 								user.rank.slice(1, user.rank.length)}{" "}
@@ -130,7 +126,7 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 
 			<ListReports
 				currentUser={currentUser}
-				userID={user.rank === "captain" ? null : id}
+				userID={currentUser.rank === "captain" ? null : id}
 			/>
 		</main>
 	);

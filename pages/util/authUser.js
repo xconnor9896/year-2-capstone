@@ -4,9 +4,7 @@ import Router from "next/router";
 
 export const logoutUser = () => {
 	cookie.remove("token");
-	Router.push("/");
-
-	// Router.reload();
+	Router.reload();
 };
 
 export const setToken = (token) => {

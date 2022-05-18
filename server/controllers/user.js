@@ -16,8 +16,9 @@ req.body {user} //? The new user in a user object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createUser = async (req, res) => {
-	const { email, password, badgenumber, name, teacherCode, profileImage } =
-		req.body;
+	const { email, password, badgenumber, name, teacherCode } = req.body;
+
+	const { profileImage } = req.files;
 
 	// const profileImage = req.body.profileImage
 	// 	? JSON.parse(req.body.profileImage)
@@ -27,11 +28,11 @@ const createUser = async (req, res) => {
 		email,
 		password,
 		badgeNumber: badgenumber,
-		name,
-		profilePicUrl: defaultProfilePic,
+		name: {
+			firstName: name.split(" ")[0],
+			lastName: name.split(" ")[1],
+		},
 	};
-
-	console.log(req.body);
 
 	try {
 		const emailRegex =
@@ -53,29 +54,32 @@ const createUser = async (req, res) => {
 		checkUser = await UserModel.findOne({ email: email.toLowerCase() });
 		if (checkUser) return res.status(401).send("Email already in use. (1)");
 
+		let pfpurl = defaultProfilePic;
 		if (profileImage) {
 			console.log("Profile pic provided.");
 			console.log(profileImage);
 
-			// try {
-			// 	const src = await cloudinary.uploader.upload(
-			// 		req.files.image.tempFilePath,
-			// 		{
-			// 			use_filename: true,
-			// 			folder: "Profile Pics",
-			// 		}
-			// 	);
-			// 	fs.unlinkSync(req.files.image.tempFilePath);
-			// 	console.log(src.secure_url);
-			// } catch (error) {
-			// 	console.error(error);
-			// 	return res.status(500).send("Image Upload Error. (2)");
-			// }
+			try {
+				const src = await cloudinary.uploader.upload(
+					profileImage.tempFilePath,
+					{
+						use_filename: true,
+						folder: "Profile Pics",
+					}
+				);
+
+				pfpurl = src.secure_url;
+			} catch (error) {
+				console.error(error);
+				return res.status(500).send("Image Upload Error. (2)");
+			}
 		}
 
 		if (teacherCode && teacherCode.length > 0) {
 			// Validate teacher code.
-			if (teacherCode === "1234567890") {
+			let checkCode = await Code.find({});
+			checkCode = checkCode[0];
+			if (teacherCode === checkCode) {
 				user.rank = "captain";
 			} else {
 				return res.status(401).send("Invalid teacher code. (3)");
@@ -86,6 +90,7 @@ const createUser = async (req, res) => {
 
 		let newUser = new UserModel({
 			...user,
+			profilePicURL: pfpurl,
 		});
 
 		newUser.password = await bcrypt.hash(password, 10);
@@ -253,8 +258,6 @@ const authUser = async (req, res) => {
 		headers: { authorization },
 	} = req;
 
-	console.log(userId);
-
 	try {
 		let id = userId;
 
@@ -370,15 +373,25 @@ const updateCode = async (req, res) => {
 
 		if (!user) return res.status(400).send("No user with that ID.");
 
+		if (!newCode) return res.status(400).send("That is an invalid code.");
+
+		if (newCode.length < 8)
+			return res.status(400).send("Code must be at least 8 characters.");
+
+		if (newCode.length > 32)
+			return res
+				.status(400)
+				.send("Code cannot be longer than 32 characters.");
+
 		if (user.rank === "captain") {
 			let teacherCode = await Code.find({});
 			teacherCode = teacherCode[0];
 
 			teacherCode.code = newCode;
 
-			await teacherCode.save;
+			await teacherCode.save();
 
-			return res.status(200).send("Teacher code updated.");
+			return res.status(200).json({ teacherCode: teacherCode.code });
 		} else {
 			if (!user)
 				return res
