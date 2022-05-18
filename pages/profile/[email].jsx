@@ -4,7 +4,6 @@ import { parseCookies } from "nookies";
 import { useState, useEffect } from "react";
 import Tabs from "../../components/Tabs";
 import axios from "axios";
-import { useRouter } from "next/router";
 import Input from "../../components/Input";
 import Cookies from "js-cookie";
 import getSquad from "../util/getSquad";
@@ -12,7 +11,6 @@ import styles from "../../styles/Pages/Profile.module.scss";
 
 const Profile = ({ user }) => {
   const token = Cookies.get("token");
-  let i = 0
 
   const lName = user.name.lastName;
   const badgeNum = user.badgeNumber;
@@ -67,7 +65,6 @@ const Profile = ({ user }) => {
 
   useEffect(async () => {
     reloadSquads(await getUser(user._id));
-    console.log("this is somewhat running");
   }, []);
 
   return (
@@ -83,25 +80,29 @@ const Profile = ({ user }) => {
       </div>
 
       <div className={styles.display}>
-        <div className={styles.classmate}>
-          <h1>Tammy</h1>
-        </div>
         {squads.length < 1 && (
           <h3 className={styles.noMsg}>No Squads to Display</h3>
         )}
         {squads.map((squad) => {
           const { _id, squadName, squadNumber, officers } = squad;
 
-          if (user.squadNumber[0] === squadNumber) {
-            return (
-              <div className={styles.classmate}>
-                <h1>{officers[0]}</h1>
-              </div>
-            );
-          } else {
-            return (
-              <div>{officers}</div>
-            )
+          if (officers[0] && squadNumber == user.squadNumber[0]) {
+            return officers.map((officer) => {
+              const {
+                name: { firstName, lastName },
+                rank,
+                badgeNumber,
+                _id,
+                profilePicURL,
+                email,
+              } = officer;
+
+              return (
+                <div className={styles.classmate}>
+                  <h1>{`${firstName} ${lastName}, email: ${squadNumber}`}</h1>
+                </div>
+              );
+            });
           }
         })}
       </div>
