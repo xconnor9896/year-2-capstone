@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 let baseURL = "http://localhost:3000";
+// let navigate = useNavigate();
+
 const changePassword = () => {
   const [inputEmail, setEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
@@ -33,7 +35,8 @@ const changePassword = () => {
       })
       .then((response) => {
         if (response.data != null) {
-          alert("Your Passsword Has Been Changed :)");
+          // alert("Your Passsword Has Been Changed :)");
+          window.location = "/"
         } else {
           alert(
             "Sorry Something has gone wrong make sure you put in the right email"

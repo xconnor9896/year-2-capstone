@@ -2,6 +2,7 @@
 const sgMail = require("@sendgrid/mail");
 const { getMaxListeners } = require("../models/UserModel");
 const userModel = require("../models/UserModel");
+const bcrypt = require("bcryptjs");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -127,11 +128,7 @@ const verifyController = async (req, res) => {
     user.verfiy = "true";
     user.save();
     // console.log(user.verfiy)
-    return res.status(202).send(
-      `<div classname="emailVerfied" style="background-color: black; border: solid orange 0.5rem; ">
-          <h1 style="color: whitesmoke; text-align: center;">Your Email has been Verfied Thank U and enjoy the site we worked hard on for you</h1>
-      </div>`
-    );
+    return res.status(202).redirect("/emailVerifiedPg")
   } catch (err) {
     console.log(err);
     return res.status(401).send(err);
@@ -248,42 +245,51 @@ const sendPassResetEmail = async (req, res) => {
 };
 
 const passwordChange = async (req, res) => {
-  try {
-    let inputEmail = req.body;
-    if (!inputEmail) {
-      alert("Please Enter A Email");
-    }
-		const user = await UserModel.findOne({
-			email: email.toLowerCase(),
-    }).select("+password");
-    
-    let inputPassword = req.body;
-    let confirmPassword = req.body;
+  const users = await userModel.find({});
 
-    if (!inputPassword && !confirmPassword) {
-      alert("Please make sure you put the same password in each");
-    }
+  let inputEmail = req.body.inputEmail;
+  let inputPassword = req.body.inputPassword;
+  let confirmPassword = req.body.confirmPassword;
+
+  const user = users.find((user) => {
+    return user.email == inputEmail;
+  });
+
+  if (!user || user == undefined || user.email == undefined || !inputEmail || inputEmail == undefined || !confirmPassword) {
+    return(
+    res.send("<h1>Im sorry we couldnt find that user<h1>")
+    )
+  }
+
+  try {
+
+    // console.log(`This is the inputed email ${inputEmail} and this is the users ${users}`)
+
+    console.log(user);
+    // if (user.email == undefined) {
+    //   alert(
+    //     "Im sorry that email doesnt exist in our website check if you mispelled or that you have signed up "
+    //   );
+    // }
 
     console.log(`This is the email ${user.email}`);
-    if (inputPassword == confirmPassword) {
-      // console.log(user.password);
+    console.log(`This is the password ${user.password}`);
+    if (inputPassword == confirmPassword && inputEmail == user.email) {
       bcrypt.genSalt(10, (err, salt) =>
-        bcrypt.hash(newPassword, salt, (err, hash) => {
+        bcrypt.hash(inputPassword, salt, (err, hash) => {
           if (err) throw err;
           user.password = hash;
           user.save();
+          res.redirect("/");
         })
       );
-      req.flash("success_msg", "Password successfully updated!");
-      res.redirect("/dashboard");
     } else {
-      alert("Please Make sure the passwords match");
       console.log("Password didnt match at emailCon line 285");
       return;
     }
   } catch (err) {
-    console.log(err);
-    return res.status(401).send(err);
+    // console.log(`This is the catch error ${err}`);
+    return res.status(401).send(` Im sorry something went wrong ${err}`);
   }
 };
 
