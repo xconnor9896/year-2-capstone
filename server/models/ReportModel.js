@@ -375,7 +375,7 @@ const ReportSchema = new mongoose.Schema(
 			},
 		},
 	},
+	{ timestamps: true }
 );
-module.exports = mongoose.model("Report", ReportSchema);
-
-module.exports = mongoose.models?.User || mongoose.model('Report', ReportSchema);
+module.exports =
+	mongoose.models.Report || mongoose.model("Report", ReportSchema);

@@ -279,7 +279,9 @@ const getAllReports = async (req, res) => {
 				});
 
 				reports = reports.filter(
-					(report) => report.basicInfo.responsibleOfficer.toString() === targetId
+					(report) =>
+						report.basicInfo.responsibleOfficer.toString() ===
+						targetId
 				);
 
 				console.log(reports);

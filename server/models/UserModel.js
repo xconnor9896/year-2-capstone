@@ -52,12 +52,7 @@ const UserSchema = new mongoose.Schema(
 			],
 			default: "officer",
 		},
-		verfiy:{
-			type:String,
-			default: "Non-Verfiy",
-		}
 	}
 	// {timestamps: true} |||| COMMENTING THIS OUT, NOT SURE IF WE INCLUDE OR NOT
 );
-
-module.exports = mongoose.models?.User ||  mongoose.model('User', UserSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);

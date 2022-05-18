@@ -57,6 +57,8 @@ const ListReports = ({ currentUser, userID }) => {
 	const propogateReports = async (reports) => {
 		let newReps = [...reports];
 
+		console.log(newReps);
+
 		for (let report of newReps) {
 			const newResponsibleOfficer =
 				typeof report.basicInfo.responsibleOfficer === "string"
