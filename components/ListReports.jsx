@@ -18,7 +18,7 @@ const ListReports = ({ currentUser, userID }) => {
 	const [loading, setLoading] = useState(false);
 	const [title, setTitle] = useState("Loading...");
 
-	const userSpecific = userID ? true : false;
+	const userSpecific = userID !== null ? true : false;
 
 	const [reports, setReports] = useState([]);
 	const [paginatedReports, setPaginatedReports] = useState([]);

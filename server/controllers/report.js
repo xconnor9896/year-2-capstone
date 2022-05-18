@@ -66,7 +66,8 @@ const deleteReport = async (req, res) => {
 		const report = await ReportModel.findById(reportId);
 		if (
 			user.rank === "captain" ||
-			(user._id === report.responsibleOfficer && !report.verified)
+			(user._id === report.basicInfo.responsibleOfficer &&
+				!report.verified)
 		) {
 			const deleted = await ReportModel.deleteOne({ reportId });
 
@@ -273,15 +274,29 @@ const getAllReports = async (req, res) => {
 			}
 		} else {
 			if (user.rank === "captain" || targetId === userId) {
-				let reports = await ReportModel.find({
-					responsibleOfficer: { targetId },
-				}).sort({
+				let reports = await ReportModel.find({}).sort({
 					submittedAt: -1,
+				});
+
+				reports = reports.filter(
+					(report) => report.basicInfo.responsibleOfficer.toString() === targetId
+				);
+
+				console.log(reports);
+				console.log(targetId, userId, targetId === userId);
+
+				reports.forEach((report) => {
+					console.log(
+						report.basicInfo.responsibleOfficer,
+						report.basicInfo.responsibleOfficer === targetId
+					);
 				});
 
 				if (sort === 2) {
 					reports = await ReportModel.find({
-						responsibleOfficer: { targetId },
+						basicInfo: {
+							responsibleOfficer: targetId,
+						},
 					}).sort({
 						submittedAt: 1,
 					});

@@ -126,7 +126,7 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 
 			<ListReports
 				currentUser={currentUser}
-				userID={user.rank === "captain" ? null : id}
+				userID={currentUser.rank === "captain" ? null : id}
 			/>
 		</main>
 	);
