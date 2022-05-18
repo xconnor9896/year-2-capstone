@@ -30,5 +30,5 @@
 | `5/12` | Finalized ReportsList hookup with some serverside modifications. Hooked up signup user clientside.                                                                                                                                |
 | `5/13` | Signup/General bugfixes serverside and clientside. Began work on pfp hookup but turned it over to David.                                                                                                                          |
 | `5/16` | Due to first session not working on it for weeks, I went ahead and created dashboard/profile pages for users and gave them the info so they can overwrite them if the finish theirs. Began work on teacher code system with Sean. |
-
-| `5/17` | Finalized implementation of teacher code. |
+| `5/17` | Finalized implementation of teacher code.                                                                                                                                                                                         |
+| `5/18` | Fixed loading screen bug.                                                                                                                                                                                                         |
