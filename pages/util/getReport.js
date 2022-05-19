@@ -12,7 +12,7 @@ const getReport = async (reportId, userId) => {
 		// console.log(userId);
 		// Getting the report data.
 		const res = await axios.get(
-			`${baseURL}/api/v1/report/${reportId}/${userId}`,
+			`/api/v1/report/${reportId}/${userId}`,
 
 			{
 				headers: {
@@ -30,7 +30,7 @@ const getReport = async (reportId, userId) => {
 		if (!officerId) throw new Error("No officer id provided.");
 
 		const officerRes = await axios.get(
-			`${baseURL}/api/v1/user/${officerId}`,
+			`/api/v1/user/${officerId}`,
 
 			{
 				headers: {

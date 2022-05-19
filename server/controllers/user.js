@@ -1,5 +1,5 @@
 const defaultProfilePic = require("../util/defaultPic");
-const fs = require("fs");
+// const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
 const jwt = require("jsonwebtoken");
