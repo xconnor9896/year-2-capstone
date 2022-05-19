@@ -45,7 +45,7 @@ const LoginPage = ({ setState }) => {
 
 			// send the data to the server
 			const response = await axios
-				.post("${baseURL}/api/v1/user/login", {
+				.post(`/api/v1/user/login`, {
 					email,
 					password,
 				})
