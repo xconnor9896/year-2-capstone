@@ -41,7 +41,7 @@ const ListReports = ({ currentUser, userID }) => {
 	const getUser = async (userId) => {
 		try {
 			const res = await axios.get(
-				`${baseURL}/api/v1/user/${userId}`,
+				`/api/v1/user/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ const ListReports = ({ currentUser, userID }) => {
 		// console.log(currentUser._id, userTarget._id);
 		try {
 			const res = await axios.post(
-				`${baseURL}/api/v1/report/all`,
+				`/api/v1/report/all`,
 				{
 					userId: currentUser._id,
 					targetId: userTarget._id,
@@ -101,7 +101,7 @@ const ListReports = ({ currentUser, userID }) => {
 	const getAllReports = async () => {
 		try {
 			const res = await axios.post(
-				`${baseURL}/api/v1/report/all`,
+				`/api/v1/report/all`,
 				{ userId: currentUser._id, verified, sort: sortType },
 				{
 					headers: {

@@ -90,7 +90,7 @@ const sendVerfEmail = async (req, res) => {
           font-size: 1rem;
         "
         method="post"
-        action="${baseURL}/api/v1/email/v1?verify=${emailUrl}"
+        action="/api/v1/email/v1?verify=${emailUrl}"
       >
         <button style="background-color: black; color: whitesmoke">
           Email Verify 
@@ -167,11 +167,9 @@ const sendPassResetEmail = async (req, res) => {
       return user.email == inputEmail;
     });
     console.log(user);
-    user.pass = randomNumberGen().toString();
-    await user.save();
-    console.log(user);
 
-    emailUrl = `${user.pass}`;
+    console.log(user);
+;
 
     if (user.email == inputEmail) {
       console.log(`We have ${inputEmail} as one of our users`);
@@ -226,7 +224,7 @@ const sendPassResetEmail = async (req, res) => {
             width: 10%;
             font-size: 1rem;
           "
-          action="${baseURL}/api/v1/email/v2?pass=${emailUrl}"
+          action="/api/v1/email/v2"
           method="post"
         >
           <button style="background-color: black; color: whitesmoke;  border: whitesmoke ">

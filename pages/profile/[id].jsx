@@ -21,7 +21,7 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 	const getUser = async (userId) => {
 		try {
 			const res = await axios.get(
-				`${baseURL}/api/v1/user/${userId}`,
+				`/api/v1/user/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
-require('dotenv').config();
+// require('dotenv').config();
 import {baseURL} from "../pages/util/authUser";
-// let navigate = useNavigate();
 
 const changePassword = () => {
   const [inputEmail, setEmail] = useState("");
@@ -28,7 +26,7 @@ const changePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post(`${baseURL}/api/v1/email/v2`, {
+      .post(`/api/v1/email/v2`, {
         inputEmail: inputEmail,
         inputPassword: inputPassword,
         confirmPassword: confirmPassword,

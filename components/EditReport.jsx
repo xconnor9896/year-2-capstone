@@ -195,7 +195,7 @@ const EditReport = ({
 
 			// Getting the report data.
 			const res = await axios.post(
-				`${baseURL}/api/v1/report/${activeReport._id}`,
+				`/api/v1/report/${activeReport._id}`,
 				{
 					userId: currentUserId,
 					report: activeReport,

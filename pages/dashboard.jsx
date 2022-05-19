@@ -9,7 +9,7 @@ import { FaUser, FaFileSignature } from "react-icons/fa";
 
 import { Card, Button } from "../proton";
 
-require('dotenv').config();
+// require('dotenv').config();
 
 import Cookies from "js-cookie";
 import axios from "axios";
