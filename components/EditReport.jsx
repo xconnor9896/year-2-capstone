@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 
 import { Select, Option } from "./Select";
 
+import {baseURL} from "../pages/util/authUser";
+
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -193,7 +195,7 @@ const EditReport = ({
 
 			// Getting the report data.
 			const res = await axios.post(
-				`http://localhost:3000/api/v1/report/${activeReport._id}`,
+				`${baseURL}/api/v1/report/${activeReport._id}`,
 				{
 					userId: currentUserId,
 					report: activeReport,

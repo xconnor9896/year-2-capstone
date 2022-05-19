@@ -20,7 +20,7 @@ import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
 import Captcha from "../components/Captcha";
 import axios from "axios";
-import { setToken } from "./util/authUser";
+import { setToken, baseURL } from "./util/authUser";
 import { useRouter } from "next/router";
 
 const LoginPage = ({ setState }) => {
@@ -45,7 +45,7 @@ const LoginPage = ({ setState }) => {
 
 			// send the data to the server
 			const response = await axios
-				.post("http://localhost:3000/api/v1/user/login", {
+				.post("${baseURL}/api/v1/user/login", {
 					email,
 					password,
 				})
@@ -332,7 +332,7 @@ const SignUpPage = ({ setState }) => {
 		// Send the data to the server.
 		try {
 			const res = await axios.post(
-				"http://localhost:3000/api/v1/user/signup",
+				`${baseURL}/api/v1/user/signup`,
 				tempFormData,
 				{
 					headers: {

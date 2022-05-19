@@ -8,7 +8,7 @@ import Navbar from "../components/Navbar";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { destroyCookie, parseCookies } from "nookies";
-import { redirectUser } from "./util/authUser";
+import { redirectUser, baseURL } from "./util/authUser";
 
 function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		isProtectedRoute && redirectUser(ctx, "/");
 	} else {
     try {
-      const res = await axios.get(`http://localhost:3000/api/v1/user`, {
+      const res = await axios.get(`${baseURL}/api/v1/user`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

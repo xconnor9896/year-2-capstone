@@ -1,6 +1,7 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
 import Cookies from "js-cookie";
+import {baseURL} from "./authUser";
 
 const getReport = async (reportId, userId) => {
 	try {
@@ -11,7 +12,7 @@ const getReport = async (reportId, userId) => {
 		// console.log(userId);
 		// Getting the report data.
 		const res = await axios.get(
-			`http://localhost:3000/api/v1/report/${reportId}/${userId}`,
+			`${baseURL}/api/v1/report/${reportId}/${userId}`,
 
 			{
 				headers: {
@@ -29,7 +30,7 @@ const getReport = async (reportId, userId) => {
 		if (!officerId) throw new Error("No officer id provided.");
 
 		const officerRes = await axios.get(
-			`http://localhost:3000/api/v1/user/${officerId}`,
+			`${baseURL}/api/v1/user/${officerId}`,
 
 			{
 				headers: {

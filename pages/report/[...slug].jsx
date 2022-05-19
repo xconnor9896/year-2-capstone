@@ -16,6 +16,7 @@ import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
 import getReport from "../util/getReport";
 import axios from "axios";
+import {baseURL} from "../util/authUser";
 
 export default function Report({
 	user,
@@ -100,7 +101,7 @@ export default function Report({
 			console.log(temporaryUrgency);
 
 			const res = await axios.delete(
-				`http://localhost:3000/api/v1/report/${report._id}`,
+				`${baseURL}/api/v1/report/${report._id}`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -126,7 +127,7 @@ export default function Report({
 
 		try {
 			const res = await axios.post(
-				`http://localhost:3000/api/v1/report/verify/${report._id}`,
+				`${baseURL}/api/v1/report/verify/${report._id}`,
 				{
 					userId: currentUserId,
 				},
@@ -152,7 +153,7 @@ export default function Report({
 
 		try {
 			const res = await axios.post(
-				`http://localhost:3000/api/v1/report/importance/${report._id}`,
+				`${baseURL}/api/v1/report/importance/${report._id}`,
 				{
 					userId: currentUserId,
 					importance: temporaryUrgency,

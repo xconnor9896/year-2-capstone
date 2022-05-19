@@ -9,6 +9,7 @@ import { FaInfoCircle, FaUsers } from "react-icons/fa";
 
 import axios from "axios";
 import Cookies from "js-cookie";
+import {baseURL} from "../util/authUser";
 
 export default function Profile({ user: currentUser, user: { _id } }) {
 	const router = useRouter();
@@ -20,7 +21,7 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 	const getUser = async (userId) => {
 		try {
 			const res = await axios.get(
-				`http://localhost:3000/api/v1/user/${userId}`,
+				`${baseURL}/api/v1/user/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,

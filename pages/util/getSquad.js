@@ -1,12 +1,13 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {baseURL} from "./authUser";
 
 const getSquad = async (squadNumber) => {
 	try {
 		const token = Cookies.get("token");
 
 		const res = await axios.get(
-			`http://localhost:3000/api/v1/squad/${squadNumber}`,
+			`${baseURL}/api/v1/squad/${squadNumber}`,
 			{
 				headers: {
 					authorization: `Bearer ${token}`,

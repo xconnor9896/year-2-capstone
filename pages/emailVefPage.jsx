@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import axios from 'axios';
 
-let baseURL = "http://localhost:3000";
+import {baseURL} from "../pages/util/authUser";
 const emailVefPage = () => {
   const [inputEmail, setEmail] = useState("");
   const handleChange = async (e) => {

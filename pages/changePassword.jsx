@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-
-let baseURL = "http://localhost:3000";
+require('dotenv').config();
+import {baseURL} from "../pages/util/authUser";
 // let navigate = useNavigate();
 
 const changePassword = () => {

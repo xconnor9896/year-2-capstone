@@ -1,8 +1,10 @@
 // require("dotenv").config();
+let baseURL = `http:localhost:${process.env.PORT || 3000}`;
 const sgMail = require("@sendgrid/mail");
 const { getMaxListeners } = require("../models/UserModel");
 const userModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
+
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -88,7 +90,7 @@ const sendVerfEmail = async (req, res) => {
           font-size: 1rem;
         "
         method="post"
-        action="http://localhost:3000/api/v1/email/v1?verify=${emailUrl}"
+        action="${baseURL}/api/v1/email/v1?verify=${emailUrl}"
       >
         <button style="background-color: black; color: whitesmoke">
           Email Verify 
@@ -224,7 +226,7 @@ const sendPassResetEmail = async (req, res) => {
             width: 10%;
             font-size: 1rem;
           "
-          action="http://localhost:3000/api/v1/email/v2?pass=${emailUrl}"
+          action="${baseURL}/api/v1/email/v2?pass=${emailUrl}"
           method="post"
         >
           <button style="background-color: black; color: whitesmoke;  border: whitesmoke ">

@@ -46,9 +46,9 @@ i'll format this readme later
 
 04-20-2022 -
 
-04-21-2022 -
+04-21-2022 - 
 
-04-22-2022 -
+04-22-2022 - Studied for CIW test, did not work on project
 
 04-25-2022 - District Assessment day, no work on project
 
@@ -56,13 +56,13 @@ i'll format this readme later
 
 04-27-2022 - 
 
-04-28-2022 -cx
+04-28-2022 - 
 
 04-29-2022 -
 
 05-02-2022 - Granted david, sean, zach, ethaniel access to the mongo
 
-05-03-2022 -
+05-03-2022 - Changed mongo password one last time, access fully working now :)
 
 05-04-2022 -
 
@@ -74,6 +74,12 @@ i'll format this readme later
 
 05-10-2022 - Began to update daily log, also converted SDLC into rudimentary markdown
 
-05-11-2022 - Changed README.md to have SDLC
+05-11-2022 - Changed README.md to have SDLC instead of placeholder
 
-05-12-2022 - 
+05-12-2022 - Reformatted the SDLC a little bit so the markdown looks nicer
+
+05-13-2022 - Fixed getInitialProps error
+
+05-16-2022 - Created Google account for transfer of database items
+
+05-17-2022 - 

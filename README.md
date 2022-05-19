@@ -114,7 +114,13 @@ Week 8
 
 
 
-* The final week of the project will most likely consist of finishing touches and creating a markdown-friendly version of the SDLC.
+* The SDLC was updated and converted to markdown. Images will be added later. Email verification is also active.
+
+Week 9 and a half
+
+
+
+*  The final week of the project. Expected export to Vercel and conversion from school mongo to other mongo so that database can be accessed after we leave
 
 _Testing_
 
