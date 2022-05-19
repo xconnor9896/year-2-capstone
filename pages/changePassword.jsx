@@ -51,6 +51,8 @@ const changePassword = () => {
         <h1>Put your email in so that we can send you a email to Verfiy it</h1>
         <h4>Make Sure to Check Your Spam</h4>
         <form onSubmit={handleSubmit}>
+          <label>
+            Email:
           <input
             type="text"
             placeholder="Email"
@@ -58,6 +60,9 @@ const changePassword = () => {
             onChange={handleChangeEmail}
             style={{ background: "black" }}
           />
+          </label>
+          <label>
+            New Password:
           <input
             type="password"
             placeholder="New Password"
@@ -65,6 +70,9 @@ const changePassword = () => {
             onChange={handleChangePass}
             style={{ background: "black" }}
           />
+          </label>
+          <label>
+            Confirm Password:
           <input
             type="password"
             placeholder="Confirm Password"
@@ -72,6 +80,7 @@ const changePassword = () => {
             onChange={handleChangeConfirm}
             style={{ background: "black" }}
           />
+          </label>
           <button type="submit">Change Your Password</button>
         </form>
       </div>
