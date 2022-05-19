@@ -131,6 +131,7 @@ const LoginPage = ({ setState }) => {
 
 const RecoveryPage = ({ setState }) => {
   const [loading, setLoading] = useState(false);
+  const [inputEmail, setEmail] = useState("");
   const handleChange = async (e) => {
     const { value } = e.target;
 
