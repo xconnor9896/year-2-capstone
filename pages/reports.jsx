@@ -1,33 +1,27 @@
-import styles from "../styles/pages/Reports.module.scss";
-import { useState, useEffect, useRef } from "react";
+import styles from "../styles/Pages/Reports.module.scss";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import ListReports from "../components/ListReports";
 import { Button } from "../proton";
 import { FaChevronLeft } from "react-icons/fa";
 
-export default function Reports() {
+export default function Reports({ user }) {
 	const router = useRouter();
 
-	const [groupID, setGroupID] = useState(null);
-	const [title, setTitle] = useState("All Reports");
-
-	// HOOK THIS UP TO BACKEND
 	const authCheck = () => {
-		let isAdmin = true;
-
-		if (!isAdmin) {
+		if (!user || user.rank !== "captain") {
 			// Re-route if they aren't.
-			router.route("/dashboard");
+			router.push("/dashboard");
 		}
-	};
-
-	const route = (path) => {
-		router.push(path);
 	};
 
 	useEffect(() => {
 		authCheck();
 	}, []);
+
+	const route = (path) => {
+		router.push(path);
+	};
 
 	return (
 		<main className={styles.container}>
@@ -38,17 +32,11 @@ export default function Reports() {
 					circular
 					icon
 					emphasis="primary"
-					onClick={() => route("/dashboard")}
+					onClick={() => route("/captain/dashboard")}
 				>
 					<FaChevronLeft />
 				</Button>
-				<ListReports
-					title={title}
-					setTitle={setTitle}
-					groupID={groupID}
-					userID={null}
-					canSwitchGroups={true}
-				/>
+				<ListReports currentUser={user} userID={null} />
 			</article>
 		</main>
 	);

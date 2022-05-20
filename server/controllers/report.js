@@ -1,8 +1,10 @@
 const ReportModel = require("../models/ReportModel");
 const UserModel = require("../models/UserModel");
-const Number = require("../models/Number")
+const Number = require("../models/Number");
+const jwt = require("jsonwebtoken"); // This isnt done just a structure
 
 const isEmail = require("validator/lib/isEmail");
+const PeopleModel = require("../models/PeopleModel");
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CREATE REPORT
@@ -13,39 +15,35 @@ req.body {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const createReport = async (req, res) => {
-  const { userId } = req.body;
+	const { userId } = req.params;
 
-  try {
-    const user = await UserModel.findById(userId);
+	try {
+		const user = await UserModel.findById(userId);
 
-    console.log(userId);
+		if (!user) {
+			return res.status(404).send("No user with the given Id");
+		}
 
-    if (!user) {
-      return res.status(404).send("No user with the given Id");
-    }
+		let curNum = await Number.find({});
+		curNum = curNum[0];
 
-    let curNum = await Number.find({})
-    curNum = curNum[0]
-    
-    console.log(curNum);
+		const report = new ReportModel({
+			caseNumber: curNum.number++,
+			basicInfo: {
+				responsibleOfficer: userId,
+				importance: 3,
+				verified: false,
+			},
+		});
 
-    const report = new ReportModel({
-      caseNumber: curNum.number++,
-      basicInfo: {
-        responsibleOfficer: userId,
-        importance: 3,
-        verified: false,
-      },
-    });
+		await curNum.save();
+		await report.save();
 
-    await curNum.save();
-    await report.save();
-
-    return res.status(200).json(report);
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("Error at createReport controller");
-  }
+		return res.status(200).json(report._id);
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("Error at createReport controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,36 +54,37 @@ req.body { userId }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const deleteReport = async (req, res) => {
-  const { reportId } = req.params;
-  const { userId } = req.body;
+	const { reportId } = req.params;
+	const { userId } = req.body;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
-    
-    const report = await ReportModel.findById(reportId);
-    if (
-      user.rank === "captain" ||
-      (user._id === report.responsibleOfficer && !report.verified)
-    ) {
-      const deleted = await ReportModel.deleteOne({ reportId });
+	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
 
-      if (deleted) {
-        return res.status(200).send("Report Deleted");
-      } else {
-        return res.status(404).send("Report Not Found");
-      }
-    } else {
-      return res
-        .status(403)
-        .send("Please contact a captain about deleting this report");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("Error at deleteReport");
-  }
+		const report = await ReportModel.findById(reportId);
+		if (
+			user.rank === "captain" ||
+			(user._id === report.basicInfo.responsibleOfficer &&
+				!report.verified)
+		) {
+			const deleted = await ReportModel.deleteOne({ reportId });
+
+			if (deleted) {
+				return res.status(200).send("Report Deleted");
+			} else {
+				return res.status(404).send("Report Not Found");
+			}
+		} else {
+			return res
+				.status(403)
+				.send("Please contact a captain about deleting this report");
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("Error at deleteReport");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,43 +95,85 @@ req.body {userId, keys, inputs} //? updates user based off the keys and inputs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const updateReport = async (req, res) => {
-  const { userId, keys, inputs } = req.body;
-  const { reportId } = req.params;
+	const { userId, report } = req.body;
+	// const { userId, keys, inputs } = req.body;
+	const { reportId } = req.params;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
+	// Check that necessary values exist.
+	if (!reportId) return res.status(400).send("No reportId in params.");
+	if (!userId) return res.status(400).send("No userID in body.");
+	if (!report) return res.status(400).send("No new report in body.");
 
-    let report = await ReportModel.findById(reportId);
-    const notInclude = ["verified", "responsibleOfficer", "importance"];
+	try {
+		// Confirm user exists.
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("User with that ID does not exist.");
+		}
 
-    if (user.rank === "captain" || report.createdBy === user._id) {
-      if (keys.length === inputs.length) {
-        for (let i = 0; i < keys.length; i++) {
-          if (!notInclude.includes(keys[i])) {
-            report[keys[i]] = inputs[i];
-            report = await report.save();
-          }
-        }
-        return res.status(200).json(report);
-      } else {
-        res
-          .status(400)
-          .send(
-            "Please make sure the number of keys matches the number of inputs"
-          );
-      }
-    } else {
-      return res
-        .status(403)
-        .send("You do not have authorization to change this report");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at updateReport controller");
-  }
+		// Confirm existing report.
+		const oldReport = await ReportModel.findById(reportId);
+
+		if (!oldReport) {
+			return res.status(404).send("Report with that ID does not exist.");
+		}
+
+		// Confirm user authorization.
+		if (user.rank === "captain")
+			return res.status(401).send("Officers cannot edit reports.");
+
+		if (oldReport.basicInfo.responsibleOfficer.toString() !== userId)
+			return res
+				.status(401)
+				.send("Only the creator of this report can edit it.");
+
+		// Update people.
+		const people = report.peopleInfo;
+		const validatedPeople = [];
+
+		for (let person of people) {
+			const juvenile = person.age < 18;
+			delete person._id;
+
+			const serverSupportedPerson = new PeopleModel({
+				...person,
+				juvenile,
+			});
+
+			// console.log(serverSupportedPerson);
+
+			const invalid = serverSupportedPerson.validateSync((err) => {
+				if (err) {
+				}
+				console.log("no error");
+			});
+
+			if (!!invalid === true)
+				return res.status(400).send("Fill out required fields.");
+
+			// (err) => {
+			// 	console.error(err);
+			// }
+
+			validatedPeople.push(serverSupportedPerson);
+		}
+
+		report.peopleInfo = validatedPeople;
+
+		// console.log(report.peopleInfo);
+
+		// Check new report against model.
+		// const newReportValid = await ReportModel.
+
+		await ReportModel.findByIdAndUpdate(reportId, report);
+
+		return res.status(200).send("Report saved!");
+
+		// Update existing report.
+	} catch (err) {
+		console.error(err);
+		return res.status(400).send("Unknown error at updateReport controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -142,121 +183,160 @@ req.params {reportId, userId} //? Targets Id, User
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getReport = async (req, res) => {
-  const { reportId, userId } = req.params;
+	const { reportId, userId } = req.params;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
+	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
 
-    const report = await ReportModel.findById(reportId);
+		const report = await ReportModel.findById(reportId);
 
-    if (
-      user.rank === "captain" ||
-      report.basicInfo.responsibleOfficer === user._id
-    ) {
-      return res.status(200).json(report);
-    } else {
-      return res
-        .status(403)
-        .send("You do not have authorization to view this report");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at getReport controller");
-  }
+		if (!report) return res.status(404).send("That report doesn't exist.");
+
+		if (
+			user.rank === "captain" ||
+			report.basicInfo.responsibleOfficer.toString() == userId
+		) {
+			return res.status(200).json(report);
+		} else {
+			return res
+				.status(403)
+				.send("You do not have authorization to view this report");
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("error at getReport controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-GET ALL REPORT
+GET ALL REPORTS
 .get('/') 
 req.body {user, userId, verified, sort} 
-//? user - your user object
-//? userId - targets reports - leave blank to get all reports (captains only)
+//? userId - your user object
+//? targetId - targets reports - leave blank to get all reports (captains only)
 //? verified - filters out verified and unverified based on true and false - optional
 //? sort - sorts based on a number given - 1 : newest to oldest (default) - 2 : oldest to newest - 3 : urgent to least urgent - 4 : least urgent to urgent - 5 : medium urgent first - optional
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const getAllReports = async (req, res) => {
-  const { user, userId, verified, sort } = req.body;
+	const { userId, targetId, verified, sort } = req.body;
 
-  try {
-    if (!userId) {
-      if (user.rank === "captain") {
-        let reports = await ReportModel.find().sort({ createAt: -1 });
+	try {
+		const user = await UserModel.findById(userId);
 
-        if (verified === true) {
-          reports = reports.filter((report) => report.verified === true);
-        } else if (verified === false) {
-          reports = reports.filter((report) => report.verified === false);
-        }
+		if (!user)
+			return res
+				.status(404)
+				.send("The user requesting the data does not exist.");
 
-        if (sort === 1 || !sort) {
-          reports = reports.sort({ createAt: -1 });
-        } else if (sort === 2) {
-          reports = reports.sort({ createAt: 1 });
-        } else if (sort === 3) {
-          reports = reports.sort((a, b) => a.importance - b.importance);
-        } else if (sort === 4) {
-          reports = reports.sort((a, b) => b.importance - a.importance);
-        } else if (sort === 5) {
-          let temp = reports.filter((report) => report.importance === 2);
-          temp.push(
-            ...reports
-              .filter((report) => report.importance !== 2)
-              .sort((a, b) => a.importance - b.importance)
-          );
-          reports = temp;
-        }
+		if (!targetId) {
+			if (user.rank === "captain") {
+				let reports = await ReportModel.find({}).sort({
+					submittedAt: -1,
+				});
 
-        return res.status(200).json(reports);
-      } else {
-        return res
-          .status(403)
-          .send("You do not have authorization to view these reports");
-      }
-    } else {
-      if (user.rank === "captain" || userId === user._id) {
-        let reports = ReportModel.find({ responsibleOfficer: { userId } }).sort(
-          { createAt: -1 }
-        );
+				if (sort === 2) {
+					reports = await ReportModel.find({}).sort({
+						submittedAt: 1,
+					});
+				} else if (sort === 3) {
+					reports = reports.sort(
+						(a, b) =>
+							a.basicInfo.importance - b.basicInfo.importance
+					);
+				} else if (sort === 4) {
+					reports = reports.sort(
+						(a, b) =>
+							b.basicInfo.importance - a.basicInfo.importance
+					);
+				}
 
-        if (verified === true) {
-          reports = reports.filter((report) => report.verified === true);
-        } else if (verified === false) {
-          reports = reports.filter((report) => report.verified === false);
-        }
+				if (verified === true) {
+					reports = reports.filter(
+						(report) => report.basicInfo.verified === true
+					);
+				} else if (verified === false) {
+					reports = reports.filter(
+						(report) => report.basicInfo.verified === false
+					);
+				}
 
-        if (sort === 1 || !sort) {
-          reports = reports.sort({ createAt: -1 });
-        } else if (sort === 2) {
-          reports = reports.sort({ createAt: 1 });
-        } else if (sort === 3) {
-          reports = reports.sort((a, b) => a.importance - b.importance);
-        } else if (sort === 4) {
-          reports = reports.sort((a, b) => b.importance - a.importance);
-        } else if (sort === 5) {
-          let temp = reports.filter((report) => report.importance === 2);
-          temp.push(
-            ...reports
-              .filter((report) => report.importance !== 2)
-              .sort((a, b) => a.importance - b.importance)
-          );
-          reports = temp;
-        }
+				return res.status(200).json(reports);
+			} else {
+				return res
+					.status(403)
+					.send(
+						"You do not have authorization to view these reports"
+					);
+			}
+		} else {
+			if (user.rank === "captain" || targetId === userId) {
+				let reports = await ReportModel.find({}).sort({
+					submittedAt: -1,
+				});
 
-        return res.status(200).json(reports);
-      } else {
-        return res
-          .status(403)
-          .send("You do not have authorization to view these reports");
-      }
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at getReport controller");
-  }
+				reports = reports.filter(
+					(report) =>
+						report.basicInfo.responsibleOfficer.toString() ===
+						targetId
+				);
+
+				console.log(reports);
+				console.log(targetId, userId, targetId === userId);
+
+				reports.forEach((report) => {
+					console.log(
+						report.basicInfo.responsibleOfficer,
+						report.basicInfo.responsibleOfficer === targetId
+					);
+				});
+
+				if (sort === 2) {
+					reports = await ReportModel.find({
+						basicInfo: {
+							responsibleOfficer: targetId,
+						},
+					}).sort({
+						submittedAt: 1,
+					});
+				} else if (sort === 3) {
+					reports = reports.sort(
+						(a, b) =>
+							a.basicInfo.importance - b.basicInfo.importance
+					);
+				} else if (sort === 4) {
+					reports = reports.sort(
+						(a, b) =>
+							b.basicInfo.importance - a.basicInfo.importance
+					);
+				}
+
+				if (verified === true) {
+					reports = reports.filter(
+						(report) => report.basicInfo.verified === true
+					);
+				} else if (verified === false) {
+					reports = reports.filter(
+						(report) => report.basicInfo.verified === false
+					);
+				}
+
+				return res.status(200).json(reports);
+			} else {
+				return res
+					.status(403)
+					.send(
+						"You do not have authorization to view these reports"
+					);
+			}
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("error at getAllReports controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,33 +347,47 @@ req.body {userId}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const verifyReport = async (req, res) => {
-  const {
-    params: { reportId },
-    body: { userId },
-  } = req;
+	const {
+		params: { reportId },
+		body: { userId },
+	} = req;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
+	try {
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			return res.status(404).send("user not found!");
+		}
 
-    if (user.rank === "captain") {
-      let report = await ReportModel.findById(reportId);
-      report.verified = !report.verified;
-      report.save();
-      res
-        .status(200)
-        .send(`Report ${report.verified ? "verified" : "unverified"}`);
-    } else {
-      return res
-        .status(403)
-        .send(`You do not have authorization to verify a report`);
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at verifyReport controller");
-  }
+		if (user.rank === "captain") {
+			let report = await ReportModel.findById(reportId);
+
+			if (!report)
+				return res.status(404).send(`That report doesn't exist.`);
+
+			report.basicInfo.verified = !report.basicInfo.verified;
+
+			if (report.basicInfo.verified) {
+				report.ApprovedBy = `${userId}`;
+			} else {
+				report.ApprovedBy = "";
+			}
+
+			await report.save();
+
+			res.status(200).send(
+				`Report ${
+					report.basicInfo.verified ? "verified" : "unverified"
+				}`
+			);
+		} else {
+			return res
+				.status(403)
+				.send(`You do not have authorization to verify a report`);
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("error at verifyReport controller");
+	}
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -304,71 +398,70 @@ req.body {user, importance}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 const importanceReport = async (req, res) => {
-  const {
-    params: { reportId },
-    body: { userId, importance },
-  } = req;
+	const {
+		params: { reportId },
+		body: { userId, importance },
+	} = req;
 
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send("user not found!");
-    }
+	try {
+		if (!userId || !importance)
+			return res.status(403).send("Required body data not sent.");
 
-    let report = await ReportModel.findById(reportId);
-    if (user.rank === "captain" || report.createdBy._id === user._id) {
-      switch (importance) {
-        case "normal":
-          report.importance = 3;
-          break;
-        case "important":
-          report.importance = 2;
-          break;
-        case "urgent":
-          report.importance = 1;
-          break;
-        case 3:
-          report.importance = 3;
-          break;
-        case 2:
-          report.importance = 2;
-          break;
-        case 1:
-          report.importance = 1;
-          break;
-        default:
-          report = null;
-      }
+		const user = await UserModel.findById(userId);
+		if (!user) return res.status(404).send("user not found!");
 
-      if (report !== null) {
-        report.save();
-        res
-          .status(200)
-          .send(`Report ${report.verified ? "verified" : "unverified"}`);
-      } else {
-        req
-          .status(400)
-          .send(`The level of importance ${importance} does not exist`);
-      }
-    } else {
-      return res
-        .status(403)
-        .send(`You do not have authorization to verify a report`);
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send("error at importanceReport controller");
-  }
+		let report = await ReportModel.findById(reportId);
+		if (user.rank === "captain" || report.createdBy._id === user._id) {
+			switch (importance) {
+				case "normal":
+					report.basicInfo.importance = 3;
+					break;
+				case "important":
+					report.basicInfo.importance = 2;
+					break;
+				case "urgent":
+					report.basicInfo.importance = 1;
+					break;
+				case "3":
+					report.basicInfo.importance = 3;
+					break;
+				case "2":
+					report.basicInfo.importance = 2;
+					break;
+				case "1":
+					report.basicInfo.importance = 1;
+					break;
+				default:
+					return res
+						.status(400)
+						.send(
+							`The level of importance ${importance} does not exist`
+						);
+			}
+
+			await report.save();
+			return res
+				.status(200)
+				.send(`Report urgency changed to ${report.basicInfo.urgency}`);
+		} else {
+			return res
+				.status(403)
+				.send(`You do not have authorization to verify a report`);
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(400).send("error at importanceReport controller");
+	}
 };
 
 module.exports = {
-  createReport,
-  deleteReport,
-  updateReport,
-  getReport,
-  getAllReports,
-  verifyReport,
-  importanceReport,
+	createReport,
+	deleteReport,
+	updateReport,
+	getReport,
+	getAllReports,
+	verifyReport,
+	importanceReport,
 };
 
 // test

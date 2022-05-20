@@ -13,9 +13,25 @@
 
 	overflow-y: scroll;
 
+	.errorMessage {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-bottom: $margin;
+
+		padding: $padding;
+		background: $error;
+		border-radius: $border-radius-fancy;
+	}
+
 	.saveButton {
-		margin-left: auto;
-		margin-top: auto;
+		// margin-left: auto;
+		// margin-top: auto;
+
+		position: absolute;
+		bottom: 0;
+		right: $padding;
 
 		button {
 			padding: 0.5rem;

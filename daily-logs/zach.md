@@ -21,3 +21,15 @@ Figured out how to get a user email and send a email to it and remade my emails 
 
 4/29/22 
 Made a random number gen so i can kinda enecrypt the urls for verf email and change password 
+
+5/6/22
+
+i compently finshed the send verfiy email controller now to finsh up the password reset which should be easyish because the bulk of it is the same
+
+5/10/22
+
+Figureing out how to connect my controllers tp the backend
+
+5/18/22
+
+I finshed all of the functionitlly of my controllers and page so the email controller which consits of the send Vefication is done the Controller that actually verfiys them and the send Change password email and the Change password functions all are working as i expect it too

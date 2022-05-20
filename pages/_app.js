@@ -8,7 +8,7 @@ import Navbar from "../components/Navbar";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { destroyCookie, parseCookies } from "nookies";
-import { redirectUser } from "./util/authUser";
+import { redirectUser, baseURL } from "../server/util/authUser";
 
 function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		setCanShowNav(true);
 
-		console.log(router.pathname);
+		// console.log(router.pathname);
 
 		let noNavs = ["/", "/404", "/500", "/report/print/[id]"];
 
@@ -58,33 +58,54 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 		pageProps = await Component.getInitialProps(ctx);
 	}
 
-	const protectedRoutes = ["/dashboard", "/reports", "/profile", "/report"];
+	const protectedRoutes = [
+		"/dashboard",
+		"/captain/dashboard",
+		"/reports",
+		"/profile",
+		"/report",
+		"/profile/[id]",
+		// "/report/[id]",
+		"/report/[...slug]",
+	];
 	const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
+
+	// let isProtectedRoute = false;
+
+	// for (let route of protectedRoutes) {
+	// 	if (ctx.pathname.includes(route)) isProtectedRoute = true;
+	// }
+
+	// console.log(ctx.pathname, isProtectedRoute);
 
 	if (!token) {
 		isProtectedRoute && redirectUser(ctx, "/");
 	} else {
-		try {
-			const res = await axios.get(`http://localhost:3000/api/v1/user`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
+    try {
+      const res = await axios.get(`/api/v1/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-			const { user } = res.data;
+			// console.log(res);
+      const { user } = res.data;
 
-			// if (user) !isProtectedRoute && redirectUser(ctx, "/");
-			pageProps.user = user;
+      // if (user) !isProtectedRoute && redirectUser(ctx, "/");
+      pageProps.user = user;
+      pageProps.token = token;
 
-			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-		} catch (err) {
-			console.error(err);
-			destroyCookie(ctx, "token");
-			redirectUser(ctx, "/");
-		}
-	}
+      		if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+      		if (!user || !token)
+      			throw new Error("No user or token. Deleting bad cookie.");
+      	} catch (err) {
+      		console.error(err);
+      		destroyCookie(ctx, "token");
+      		redirectUser(ctx, "/");
+      	}
+      }
 
-	return { pageProps };
-};
+      return { pageProps };
+    }
 
 export default MyApp;

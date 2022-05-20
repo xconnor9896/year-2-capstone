@@ -7,19 +7,26 @@ const {
 	updateUser,
 	authUser,
 	getUser,
-	getSquad
+	getAllUsers,
+	getCode,
+	updateCode,
 } = require("../controllers/user");
 
 const { authMiddleware } = require("../middleware/authMidware");
 
 router.route("/signup").post(createUser);
 router.post("/login", loginUser);
+router.get("/all", authMiddleware, getAllUsers);
+router.get("/", authMiddleware, authUser);
+router
+	.route("/code/:userId")
+	.get(authMiddleware, getCode)
+	.post(authMiddleware, updateCode);
+
 router
 	.route("/:userId")
 	.delete(authMiddleware, deleteUser)
-	.post(authMiddleware, updateUser);
-router.get("/", authUser);
-router.get("/:userId", getUser);
-router.get("/squad/:squadNumber", getSquad);
+	.post(authMiddleware, updateUser)
+	.get(authMiddleware, getUser);
 
 module.exports = router;
