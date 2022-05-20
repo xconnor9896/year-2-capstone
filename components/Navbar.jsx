@@ -11,7 +11,7 @@ import { Button } from "../proton";
 import Link from "next/link";
 import Image from "next/image";
 import logoImg from "../util/LPS Logo.svg";
-import { logoutUser } from "../pages/util/authUser";
+import { logoutUser } from "../server/util/authUser";
 import { Router } from "next/router";
 
 const Navbar = ({ user }) => {

@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import Input from "../../components/Input";
 import Cookies from "js-cookie";
 
-import {baseURL} from "../util/authUser";
+import {baseURL} from "../../server/util/authUser";
 
 import getSquad from "../util/getSquad";
 

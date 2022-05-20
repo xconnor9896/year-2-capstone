@@ -20,7 +20,7 @@ import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
 import Captcha from "../components/Captcha";
 import axios from "axios";
-import { setToken, baseURL } from "./util/authUser";
+import { setToken, baseURL } from "../server/util/authUser";
 import { useRouter } from "next/router";
 
 const LoginPage = ({ setState }) => {

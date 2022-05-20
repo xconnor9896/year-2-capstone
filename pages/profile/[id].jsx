@@ -9,7 +9,7 @@ import { FaInfoCircle, FaUsers } from "react-icons/fa";
 
 import axios from "axios";
 import Cookies from "js-cookie";
-import {baseURL} from "../util/authUser";
+import {baseURL} from "../../server/util/authUser";
 
 export default function Profile({ user: currentUser, user: { _id } }) {
 	const router = useRouter();
