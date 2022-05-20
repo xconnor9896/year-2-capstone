@@ -43,7 +43,7 @@ const Dashboard = ({ user }) => {
 	const authCheck = () => {
 		if (!user) router.push("/");
 		if (user.rank !== "captain") {
-			// Re-route if they aren't.
+			// Re-route if they are not.
 			router.push("/dashboard");
 		}
 	};
@@ -378,7 +378,7 @@ const Dashboard = ({ user }) => {
 						<div className={styles.header}>
 							<h1>
 								{user.name.firstName ? (
-									<>{user.name.firstName}'s</>
+									<>{user.name.firstName}&apos;s</>
 								) : (
 									"Your"
 								)}{" "}
