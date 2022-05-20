@@ -1,4 +1,4 @@
-import styles from "../styles/pages/Error.module.scss";
+import styles from "../styles/Pages/Error.module.scss";
 import { Button } from "../proton";
 import { useRouter } from "next/router";
 
@@ -15,7 +15,7 @@ export default function Custom500() {
 				<h1>500</h1>
 				<h2>Something went wrong on our end</h2>
 				<p>
-					Something broke server-side and it isn't your fault. Please
+					Something broke server-side and it is not your fault. Please
 					try again later.
 				</p>
 				<Button onClick={() => navTo("/dashboard")}>Dashboard</Button>

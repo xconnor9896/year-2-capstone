@@ -9,7 +9,7 @@ import { FaUser, FaFileSignature } from "react-icons/fa";
 
 import { Card, Button } from "../proton";
 
-// require('dotenv').config();
+
 
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -33,7 +33,7 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 		if (!user) router.push("/");
 		if (user.rank === "captain") {
-			// Re-route if they aren't.
+			// Re-route if they are not.
 			router.push("/captain/dashboard");
 		}
 		setLoading(false);

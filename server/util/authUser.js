@@ -1,4 +1,3 @@
-import axios from "axios";
 import cookie from "js-cookie";
 import Router from "next/router";
 

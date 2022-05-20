@@ -1,7 +1,7 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
 import Cookies from "js-cookie";
-import {baseURL} from "./authUser";
+import {baseURL} from "../../server/util/authUser";
 
 const getReport = async (reportId, userId) => {
 	try {
