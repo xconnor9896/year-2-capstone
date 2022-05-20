@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {baseURL} from "../pages/util/authUser";
 
-const [inputEmail, setEmail] = useState("");
-const [inputPassword, setInputPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
-const changePassword = () => {
+const ChangePassword = () => {
+
+  const [inputEmail, setEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleChangeEmail = async (e) => {
     const { value } = e.target;
@@ -84,4 +85,4 @@ const changePassword = () => {
     </>
   );
 };
-export default changePassword;
+export default ChangePassword;
