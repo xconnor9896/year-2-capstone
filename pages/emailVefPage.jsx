@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
 import {baseURL} from "../pages/util/authUser";
-const emailVefPage = () => {
+const EmailVefPage = () => {
   const [inputEmail, setEmail] = useState("");
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -43,4 +43,4 @@ const emailVefPage = () => {
     </>
   );
 };
-export default emailVefPage;
+export default EmailVefPage;
