@@ -87,9 +87,9 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 												Squads:
 												<ul>
 													{user.squadNumber.map(
-														(squad) => {
+														(squad, i) => {
 															return (
-																<li>
+																<li key={i}>
 																	#{squad}
 																	{user.squadNumber.indexOf(
 																		squad

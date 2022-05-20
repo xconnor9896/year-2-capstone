@@ -419,8 +419,8 @@ const ReportPrintout = ({ id, userId }) => {
 							} = person;
 
 							return (
-								<div className={styles.personInfo}>
-									<article key={_id}>
+								<div key={_id} className={styles.personInfo}>
+									<article >
 										<section>
 											<header>
 												Person{" "}
