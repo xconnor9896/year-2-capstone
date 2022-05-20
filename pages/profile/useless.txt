@@ -1,71 +1,87 @@
-import { FaRegUser, FaStar } from "react-icons/fa";
 import { baseURL } from "../util/baseURL";
-import { parseCookies } from "nookies";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Tabs from "../../components/Tabs";
 import axios from "axios";
-import Input from "../../components/Input";
 import Cookies from "js-cookie";
 import getSquad from "../util/getSquad";
 import styles from "../../styles/Pages/Profile.module.scss";
 
-const Profile = ({ user }) => {
-  const token = Cookies.get("token");
-  const {name: {firstName, lastName}, badgeNumber, email, rank} = user
-  console.log(`Welcome back ${rank} ${lastName}!`);
+const Profile = ({  user: { _id }, user: currentUser }) => {
 
+  const router = useRouter();
+	const { id } = router.query;
+	const token = Cookies.get("token");
+
+	const [loading, setLoading] = useState(false);
   const [squads, setSquads] = useState([]);
 
-  const getUser = async (userId) => {
-    try {
-      const res = await axios.get(`${baseURL}/api/v1/user/${userId}`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-      return res.data;
-    } catch (err) {
-      console.error(`Failed to get user with id ${userId}`, err);
-      return null;
-    }
-  };
+	const getUser = async (userId) => {
+		try {
+			const res = await axios.get(
+				`/api/v1/user/${userId}`,
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-  const reloadSquads = async (body) => {
-    if (!body || !body.squadNumber) return;
+			console.log(`This is whats returned: ${res.data}`);
 
-    const { squadNumber } = body;
-    if (squadNumber) {
-      // let squads = squadNumber;
-      let squads = [];
+			return res.data;
+		} catch (err) {
+			console.error(`Failed to get user with ID:`, userId, err);
 
-      for (let num of squadNumber) {
-        const squad = await getSquad(num);
+			return null;
+		}
+	};
 
-        let newOfficers = [];
+  getUser(id)
 
-        for (let officer of squad.officers) {
-          const newOfficer = await getUser(officer);
+  const [user, setUser] = useState(null);
 
-          newOfficers.push(newOfficer);
-        }
+  // const reloadSquads = async (body) => {
+  //   if (!body || !body.squadNumber) return;
 
-        squad.officers = newOfficers;
-        if (squad) squads.push(squad);
-      }
+  //   const { squadNumber } = body;
+  //   if (squadNumber) {
+  //     // let squads = squadNumber;
+  //     let squads = [];
 
-      setSquads(squads);
-    } else {
-      return;
-    }
-  };
+  //     for (let num of squadNumber) {
+  //       const squad = await getSquad(num);
+
+  //       let newOfficers = [];
+
+  //       for (let officer of squad.officers) {
+  //         const newOfficer = await getUser(officer);
+
+  //         newOfficers.push(newOfficer);
+  //       }
+
+  //       squad.officers = newOfficers;
+  //       if (squad) squads.push(squad);
+  //     }
+
+  //     setSquads(squads);
+  //   } else {
+  //     return;
+  //   }
+  // };
 
   useEffect(async () => {
-    reloadSquads(await getUser(user._id));
+    setLoading(true);
+    // reloadSquads(await getUser(id));
+		setUser(await getUser(id));
+		setLoading(false);
   }, []);
+
+  console.log(user);
 
   return (
     <main className={styles.container}>
-      <div className={styles.user}>
+      {/* <div className={styles.user}>
         <div
           className={styles.pfp}
           style={
@@ -74,15 +90,14 @@ const Profile = ({ user }) => {
             }
           }
         >
-          {/* <FaRegUser /> */}
         </div>
         <div className={styles.banner}>
           <img />
         </div>
         <Tabs lastName={lastName} badgeNum={badgeNumber} email={email} rank={rank} />
-      </div>
+      </div> */}
 
-      <div className={styles.display}>
+      {/* <div className={styles.display}>
         {squads.length < 1 && (
           <h3 className={styles.noMsg}>No Squads to Display</h3>
         )}
@@ -108,7 +123,7 @@ const Profile = ({ user }) => {
             });
           }
         })}
-      </div>
+      </div> */}
       <a href="http://localhost:3000/emailVefPage">Verfiy Your Email</a>
     </main>
   );

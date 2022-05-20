@@ -8,7 +8,6 @@ const {
 	authUser,
 	getUser,
 	getAllUsers,
-	getEmail,
 	getCode,
 	updateCode,
 } = require("../controllers/user");
@@ -29,6 +28,5 @@ router
   .delete(authMiddleware, deleteUser)
   .post(authMiddleware, updateUser)
   .get(authMiddleware, getUser);
-router.route("/:email").get(getEmail);
 
 module.exports = router;
