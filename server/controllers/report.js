@@ -27,6 +27,10 @@ const createReport = async (req, res) => {
 		let curNum = await Number.find({});
 		curNum = curNum[0];
 
+		if(!curNum){
+			curNum = new Number({})
+		}
+
 		const report = new ReportModel({
 			caseNumber: curNum.number++,
 			basicInfo: {

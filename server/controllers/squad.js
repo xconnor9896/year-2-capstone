@@ -36,6 +36,10 @@ const createSquad = async (req, res) => {
 	let curNum = await Number.find({});
 	curNum = curNum[1];
 
+	if(!curNum){
+		curNum = new Number({})
+	}
+
 	const squadNumber = curNum.number++;
 
 	squadName = `Unnamed Squad`;

@@ -79,6 +79,11 @@ const createUser = async (req, res) => {
 			// Validate teacher code.
 			let checkCode = await Code.find({});
 			checkCode = checkCode[0];
+
+			if(!checkCode){
+				checkCode = new Code({})
+			}
+
 			if (teacherCode === checkCode) {
 				user.rank = "captain";
 			} else {
@@ -343,6 +348,10 @@ const getCode = async (req, res) => {
 			let teacherCode = await Code.find({});
 			teacherCode = teacherCode[0];
 
+			if(!teacherCode){
+				teacherCode = new Code({})
+			}
+
 			return res.status(200).json({ teacherCode: teacherCode.code });
 		} else {
 			if (!user)
@@ -386,6 +395,10 @@ const updateCode = async (req, res) => {
 		if (user.rank === "captain") {
 			let teacherCode = await Code.find({});
 			teacherCode = teacherCode[0];
+
+			if(!teacherCode){
+				teacherCode = new Code({})
+			}
 
 			teacherCode.code = newCode;
 
