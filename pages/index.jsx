@@ -1,4 +1,4 @@
-import styles from "../styles/pages/Home.module.scss";
+import styles from "../styles/Pages/Home.module.scss";
 import { Button } from "../proton";
 import { useState, useRef, useEffect } from "react";
 import {

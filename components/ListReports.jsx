@@ -1,4 +1,4 @@
-import styles from "../styles/components/ListReports.module.scss";
+import styles from "../styles/Components/ListReports.module.scss";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";

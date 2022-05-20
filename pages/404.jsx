@@ -1,4 +1,4 @@
-import styles from "../styles/pages/Error.module.scss";
+import styles from "../styles/Pages/Error.module.scss";
 import { Button } from "../proton";
 import { useRouter } from "next/router";
 
