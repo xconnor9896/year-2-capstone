@@ -249,8 +249,8 @@ const Captcha = ({ captchaState, setCaptchaState }) => {
 							id="stringInput"
 							type="text"
 							placeholder="Answer"
-							spellcheck="false"
-							autocomplete="off"
+							spellCheck="false"
+							autoComplete="off"
 							onKeyDown={(e) => {
 								if (e.key === "Enter") {
 									e.preventDefault();
