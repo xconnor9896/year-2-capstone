@@ -1,4 +1,4 @@
-import styles from "../styles/components/ListReports.module.scss";
+import styles from "../styles/Components/ListReports.module.scss";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import getSquad from "../pages/util/getSquad";
 
-import {baseURL} from "../pages/util/authUser";
+import {baseURL} from "../server/util/authUser";
 
 import { FaFilter, FaSort, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { Button, Card, Pagination } from "../proton";

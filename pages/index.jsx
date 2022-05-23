@@ -1,4 +1,4 @@
-import styles from "../styles/pages/Home.module.scss";
+import styles from "../styles/Pages/Home.module.scss";
 import { Button } from "../proton";
 import { useState, useRef, useEffect } from "react";
 import {
@@ -20,7 +20,7 @@ import Input from "../components/Input";
 import { FileDrop } from "react-file-drop";
 import Captcha from "../components/Captcha";
 import axios from "axios";
-import { setToken, baseURL } from "./util/authUser";
+import { setToken, baseURL } from "../server/util/authUser";
 import { useRouter } from "next/router";
 
 const LoginPage = ({ setState }) => {
@@ -43,26 +43,26 @@ const LoginPage = ({ setState }) => {
 
       if (!email || !password) throw "Email + Password must be provided.";
 
-      // send the data to the server
-      const response = await axios
-        .post("${baseURL}/api/v1/user/login", {
-          email,
-          password,
-        })
-        .then((res) => {
-          setToken(res.data);
-          router.push("/dashboard");
-          setLoading(false);
-          // setState(res.data);
-        })
-        .catch((err) => {
-          throw err;
-          // setLoading(false);
-        });
-    } catch (err) {
-      console.error(err);
-      setErrorMessage(err.response.data ? err.response.data : err);
-    }
+			// send the data to the server
+			const response = await axios
+				.post(`${baseURL}/api/v1/user/login`, {
+					email,
+					password,
+				})
+				.then((res) => {
+					setToken(res.data);
+					router.push("/dashboard");
+					setLoading(false);
+					// setState(res.data);
+				})
+				.catch((err) => {
+					throw err;
+					// setLoading(false);
+				});
+		} catch (err) {
+			console.error(err);
+			setErrorMessage(err.response.data ? err.response.data : err);
+		}
 
     setLoading(false);
   };
@@ -131,6 +131,7 @@ const LoginPage = ({ setState }) => {
 
 const RecoveryPage = ({ setState }) => {
   const [loading, setLoading] = useState(false);
+  const [inputEmail, setEmail] = useState("");
   const handleChange = async (e) => {
     const { value } = e.target;
 

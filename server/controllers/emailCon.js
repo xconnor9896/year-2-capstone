@@ -1,5 +1,5 @@
 // require("dotenv").config();
-let baseURL = `http:localhost:${process.env.PORT || 3000}`;
+let baseURL = `https://west-mec-law-and-public-safety.herokuapp.com`;
 const sgMail = require("@sendgrid/mail");
 const { getMaxListeners } = require("../models/UserModel");
 const userModel = require("../models/UserModel");

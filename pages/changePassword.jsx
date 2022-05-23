@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+<<<<<<< HEAD
 require('dotenv').config();
 import {baseURL} from "../pages/util/authUser";
+=======
+import {baseURL} from "../server/util/authUser";
 
-const changePassword = () => {
+const ChangePassword = () => {
+>>>>>>> bf80670fd3a76be9d6503785cee2c2306cf5eec3
+
   const [inputEmail, setEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -85,4 +90,4 @@ const changePassword = () => {
     </>
   );
 };
-export default changePassword;
+export default ChangePassword;

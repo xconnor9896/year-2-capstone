@@ -8,7 +8,7 @@ import Navbar from "../components/Navbar";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { destroyCookie, parseCookies } from "nookies";
-import { redirectUser, baseURL } from "./util/authUser";
+import { redirectUser, baseURL } from "../server/util/authUser";
 
 function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(false);

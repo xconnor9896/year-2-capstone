@@ -1,4 +1,4 @@
-import styles from "../styles/pages/Reports.module.scss";
+import styles from "../styles/Pages/Reports.module.scss";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import ListReports from "../components/ListReports";

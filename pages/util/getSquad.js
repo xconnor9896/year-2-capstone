@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import {baseURL} from "./authUser";
+import {baseURL} from "../../server/util/authUser";
 
 const getSquad = async (squadNumber) => {
 	try {

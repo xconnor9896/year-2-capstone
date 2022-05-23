@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 
 import { Select, Option } from "./Select";
 
-import {baseURL} from "../pages/util/authUser";
+import {baseURL} from "../server/util/authUser";
 
 import Cookies from "js-cookie";
 import axios from "axios";
