@@ -35,9 +35,7 @@ const createUser = async (req, res) => {
 	};
 
 	try {
-		const emailRegex =
-			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
-		if (!emailRegex.test(email))
+		if (!isEmail(email))
 			return res.status(401).send("Email is not in proper format. (1)");
 		if (password.length < 8) {
 			return res
