@@ -2,7 +2,7 @@ import axios from "axios";
 import cookie from "js-cookie";
 import Router from "next/router";
 
-export const baseURL = `http://localhost:${process.env.PORT || 3000}`;
+export const baseURL = process.env.BASE_URL;
 
 export const logoutUser = () => {
 	cookie.remove("token");
