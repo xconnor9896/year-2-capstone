@@ -4,6 +4,7 @@ const { connectDB } = require("./server/util/connect");
 const express = require("express");
 require("dotenv").config();
 const fileUpload = require("express-fileupload");
+const cors = require('cors');
 
 // const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(
 		useTempFiles: true,
 	})
 );
+app.use(cors());
 
 // cloudinary
 const cloudinary = require("cloudinary").v2;
