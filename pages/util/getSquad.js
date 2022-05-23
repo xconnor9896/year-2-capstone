@@ -7,7 +7,7 @@ const getSquad = async (squadNumber) => {
 		const token = Cookies.get("token");
 
 		const res = await axios.get(
-			`/api/v1/squad/${squadNumber}`,
+			`${baseURL}/api/v1/squad/${squadNumber}`,
 			{
 				headers: {
 					authorization: `Bearer ${token}`,

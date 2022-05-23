@@ -1,7 +1,9 @@
 import cookie from "js-cookie";
 import Router from "next/router";
 
-export const baseURL = `http://localhost:${process.env.PORT || 3000}`;
+// export const baseURL = `http://localhost:${process.env.PORT || 3000}`;
+
+export const baseURL = `https://west-mec-law-and-public-safety.herokuapp.com`;
 
 export const logoutUser = () => {
 	cookie.remove("token");

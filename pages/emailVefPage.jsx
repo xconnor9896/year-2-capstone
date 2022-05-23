@@ -13,7 +13,7 @@ const EmailVefPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     axios
-    .post(`/api/v1/email/verf`,{
+    .post(`${baseURL}/api/v1/email/verf`,{
       inputEmail : inputEmail
     })
     .then(response => {

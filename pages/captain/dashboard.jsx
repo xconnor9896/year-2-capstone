@@ -55,7 +55,7 @@ const Dashboard = ({ user }) => {
 	const getUser = async (userId) => {
 		try {
 			const res = await axios.get(
-				`/api/v1/user/${userId}`,
+				`${baseURL}/api/v1/user/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`/api/v1/user/code/${userId}`,
+				`${baseURL}/api/v1/user/code/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ const Dashboard = ({ user }) => {
 		setTeacherCodeLoading(true);
 		try {
 			const res = await axios.post(
-				`/api/v1/user/code/${userId}`,
+				`${baseURL}/api/v1/user/code/${userId}`,
 				{ newCode },
 				{
 					headers: {
@@ -120,7 +120,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.get(
-				`/api/v1/user/all`,
+				`${baseURL}/api/v1/user/all`,
 
 				{
 					headers: {
@@ -201,7 +201,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`/api/v1/squad`,
+				`${baseURL}/api/v1/squad`,
 				{ userId: user._id },
 				{
 					headers: {
@@ -225,7 +225,7 @@ const Dashboard = ({ user }) => {
 
 		try {
 			const res = await axios.delete(
-				`/api/v1/squad/${squadNumber}`,
+				`${baseURL}/api/v1/squad/${squadNumber}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -255,7 +255,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`/api/v1/squad/name/${squadNumber}`,
+				`${baseURL}/api/v1/squad/name/${squadNumber}`,
 				{ userId: user._id, squadName: newName },
 				{
 					headers: {
@@ -283,7 +283,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`/api/v1/squad/${squadNumber}`,
+				`${baseURL}/api/v1/squad/${squadNumber}`,
 				{ userId: officerId },
 				{
 					headers: {
@@ -311,7 +311,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`/api/v1/squad/remove/${squadNumber}`,
+				`${baseURL}/api/v1/squad/remove/${squadNumber}`,
 				{ officerId, userId: user._id },
 				{
 					headers: {

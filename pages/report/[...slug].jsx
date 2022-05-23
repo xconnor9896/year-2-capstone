@@ -101,7 +101,7 @@ export default function Report({
 			console.log(temporaryUrgency);
 
 			const res = await axios.delete(
-				`/api/v1/report/${report._id}`,
+				`${baseURL}/api/v1/report/${report._id}`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ export default function Report({
 
 		try {
 			const res = await axios.post(
-				`/api/v1/report/verify/${report._id}`,
+				`${baseURL}/api/v1/report/verify/${report._id}`,
 				{
 					userId: currentUserId,
 				},
@@ -153,7 +153,7 @@ export default function Report({
 
 		try {
 			const res = await axios.post(
-				`/api/v1/report/importance/${report._id}`,
+				`${baseURL}/api/v1/report/importance/${report._id}`,
 				{
 					userId: currentUserId,
 					importance: temporaryUrgency,

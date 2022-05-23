@@ -45,7 +45,7 @@ const LoginPage = ({ setState }) => {
 
 			// send the data to the server
 			const response = await axios
-				.post(`/api/v1/user/login`, {
+				.post(`${baseURL}/api/v1/user/login`, {
 					email,
 					password,
 				})
@@ -141,7 +141,7 @@ const RecoveryPage = ({ setState }) => {
     setLoading(true);
     e.preventDefault();
     axios
-      .post(`/api/v1/email/reset`, {
+      .post(`${baseURL}/api/v1/email/reset`, {
         inputEmail: inputEmail,
       })
       .then((response) => {
@@ -338,7 +338,7 @@ const SignUpPage = ({ setState }) => {
     // Send the data to the server.
     try {
       const res = await axios.post(
-        `/api/v1/user/signup`,
+        `${baseURL}/api/v1/user/signup`,
         tempFormData,
         {
           headers: {
