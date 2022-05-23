@@ -57,7 +57,7 @@ const sendVerfEmail = async (req, res) => {
       .send(
         (verfEmail = {
           to: inputEmail, // Change to your recipient
-          from: "ztaylo273@west-mec.org", // Change to your verified sender
+          from: "westmeclps@gmail.com", // Change to your verified sender
 
           subject: "Email Verf",
           html: `   
@@ -166,12 +166,6 @@ const sendPassResetEmail = async (req, res) => {
     const user = users.find((user) => {
       return user.email == inputEmail;
     });
-    console.log(user);
-    user.pass = randomNumberGen().toString();
-    await user.save();
-    console.log(user);
-
-    emailUrl = `${user.pass}`;
 
     if (user.email == inputEmail) {
       console.log(`We have ${inputEmail} as one of our users`);
@@ -194,7 +188,7 @@ const sendPassResetEmail = async (req, res) => {
     .send(
       (resetPass = {
         to: inputEmail, // Change to your recipient
-        from: "ztaylo273@west-mec.org", // Change to your verified sender
+        from: "westmeclps@gmail.com", // Change to your verified sender
 
         subject: "Password Reset",
         html: `   
@@ -226,7 +220,7 @@ const sendPassResetEmail = async (req, res) => {
             width: 10%;
             font-size: 1rem;
           "
-          action="${baseURL}/api/v1/email/v2?pass=${emailUrl}"
+          action="${baseURL}/changePassword"
           method="post"
         >
           <button style="background-color: black; color: whitesmoke;  border: whitesmoke ">

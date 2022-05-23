@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 require('dotenv').config();
 import {baseURL} from "../pages/util/authUser";
-// let navigate = useNavigate();
 
 const changePassword = () => {
   const [inputEmail, setEmail] = useState("");
