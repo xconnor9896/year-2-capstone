@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 export default function Profile({ user: currentUser, user: { _id } }) {
   const router = useRouter();
@@ -25,9 +26,6 @@ export default function Profile({ user: currentUser, user: { _id } }) {
           authorization: `Bearer ${token}`,
         },
       });
-
-      console.log(res.data.rank + "ooooooooooooooooo");
-
       return res.data;
     } catch (err) {
       console.error(`Failed to get user with ID:`, userId, err);
@@ -41,7 +39,6 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 
     const { squadNumber } = user;
     if (squadNumber) {
-      // let squads = squadNumber;
       let squads = [];
 
       for (let num of squadNumber) {
@@ -94,10 +91,21 @@ export default function Profile({ user: currentUser, user: { _id } }) {
           }
         ></div>
         <div className={styles.banner}>
-          <img />
+          <div
+            className={styles.imgBanner}
+            style={
+              profilePicURL && {
+                backgroundImage: `url("${profilePicURL}")`,
+              }
+            }
+          ></div>
           {/* <a href="http://localhost:3000/emailVefPage">Verfiy Your Email</a> */}
         </div>
+        <h1 className={styles.userTitle}>
+          {rank === "captain" ? <>Cpt</> : <>officer</>}. {lastName}
+        </h1>
         <Tabs
+          firstName={firstName}
           lastName={lastName}
           badgeNum={badgeNumber}
           email={email}
@@ -107,12 +115,14 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 
       <div className={styles.display}>
         {squads.length < 1 && (
-          <h3 className={styles.noMsg}>No Squads to Display</h3>
+          <h3 className={styles.noMsg}>
+            Hmmm seems lonely in here... ask your teacher to add you to a squad!
+          </h3>
         )}
         {squads.map((squad) => {
           const { _id, squadName, squadNumber, officers } = squad;
 
-          if (officers[0] && squadNumber == currentUser._id.squadNumber[0]) {
+          if (currentUser) {
             return officers.map((officer) => {
               const {
                 name: { firstName, lastName },
@@ -125,7 +135,17 @@ export default function Profile({ user: currentUser, user: { _id } }) {
 
               return (
                 <div className={styles.classmate}>
-                  <h1>{`${firstName} ${lastName}, email: ${squadNumber}`}</h1>
+                  <a className={styles.inner} href={`/profile/${_id}`}>
+                    <div
+                      className={styles.pfp}
+                      style={
+                        profilePicURL && {
+                          backgroundImage: `url("${profilePicURL}")`,
+                        }
+                      }
+                    ></div>
+                    <h2>{`${firstName} ${lastName}`}</h2>
+                  </a>
                 </div>
               );
             });

@@ -15,7 +15,7 @@ import {
 const Dashboard = ({ user }) => {
   console.log(user)
 
-  const { email, rank, name: {firstName: name} } = user
+  const { email, rank, name: {firstName: name}, _id } = user
 
 
 	const router = useRouter();
@@ -56,7 +56,7 @@ const Dashboard = ({ user }) => {
 						</div>
 						<div className={styles.btn}>
 							<FaRegIdBadge className={styles.label} />
-							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${email}`)}}>
+							<button className={styles.profileBtn} onClick={() => {router.push(`/profile/${_id}`)}}>
 								{" "}
 								My Profile
 							</button>

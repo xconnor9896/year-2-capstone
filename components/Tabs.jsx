@@ -1,12 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/Tabs.module.scss";
-import {
-  FaNetworkWired,
-  FaUserFriends,
-  FaInfoCircle,
-} from "react-icons/fa";
+import { FaNetworkWired, FaUserFriends, FaInfoCircle } from "react-icons/fa";
 
-const Tabs = ({ firstName, lastName, email, rank }) => {
+const Tabs = ({ firstName, lastName, email, rank, badgeNum }) => {
   const [tabOpen, setTabOpen] = useState(1);
 
   // *=====================================================================
@@ -41,22 +37,23 @@ const Tabs = ({ firstName, lastName, email, rank }) => {
       </ul>
       <ul className={styles.info}>
         <li className={tabOpen === 1 ? styles.active : styles.hidden}>
-          <h2>
-            {rank}.{lastName}
-          </h2>
-          <h2>Rank: {rank}</h2>
+          <div className={styles.infoBlock}>
+            <h1 className={styles.title}>{firstName} {lastName}</h1>
+          </div>
         </li>
         <li className={tabOpen === 2 ? styles.active : styles.hidden}>
-          <h2>
-            All of {rank}. {lastName}'s Reports
-          </h2>
+          <div className={styles.infoBlock}></div>
         </li>
         <li className={tabOpen === 3 ? styles.active : styles.hidden}>
-          <h2>Phone: {email}</h2>
+          <div className={styles.infoBlock}>
+          <h1 className={styles.title}>Email: {email}</h1>
+          <h1 className={styles.title}>Badge Num: {badgeNum}</h1>
+          <h1 className={styles.title}>Rank: {rank}</h1>
+          </div>
         </li>
       </ul>
     </div>
   );
 };
 
-export default Tabs
+export default Tabs;
