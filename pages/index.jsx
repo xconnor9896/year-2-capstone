@@ -365,6 +365,9 @@ const SignUpPage = ({ setState }) => {
 		} catch (err) {
 			console.error("Error at sign up form submission.", err);
 
+			if (!err.response || !err.response.data)
+				return setErr("Unknown server-side error.");
+
 			const [message, event] = err.response.data.split(" (");
 
 			return setErr(message, Number(event.split(")")[0]));
