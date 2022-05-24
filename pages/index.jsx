@@ -359,7 +359,7 @@ const SignUpPage = ({ setState }) => {
 				}
 			);
 
-			console.log(res.data);
+			console.log(res);
 
 			setToken(res.data);
 		} catch (err) {
