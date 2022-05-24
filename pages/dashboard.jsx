@@ -10,6 +10,7 @@ import { FaUser, FaFileSignature } from "react-icons/fa";
 import { Card, Button } from "../proton";
 
 
+import { baseURL } from "../server/util/authUser";
 
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -51,7 +52,7 @@ const Dashboard = ({ user }) => {
 
 			// Creating the report.
 			const res = await axios.get(
-				`${process.env.PORT}/api/v1/report/${user._id}`,
+				`${baseURL}/api/v1/report/${user._id}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
