@@ -25,7 +25,7 @@ const ChangePassword = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		axios
-			.post(`${baseURL}/api/v1/email/v2`, {
+			.post(`${baseURL(window)}/api/v1/email/v2`, {
 				inputEmail: inputEmail,
 				inputPassword: inputPassword,
 				confirmPassword: confirmPassword,

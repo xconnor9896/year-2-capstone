@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import Input from "../../components/Input";
 import Cookies from "js-cookie";
 
-import {baseURL} from "../../server/util/authUser";
+import { baseURL } from "../../server/util/authUser";
 
 import getSquad from "../util/getSquad";
 
@@ -55,7 +55,7 @@ const Dashboard = ({ user }) => {
 	const getUser = async (userId) => {
 		try {
 			const res = await axios.get(
-				`${baseURL}/api/v1/user/${userId}`,
+				`${baseURL(window)}/api/v1/user/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const Dashboard = ({ user }) => {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`${baseURL}/api/v1/user/code/${userId}`,
+				`${baseURL(window)}/api/v1/user/code/${userId}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ const Dashboard = ({ user }) => {
 		setTeacherCodeLoading(true);
 		try {
 			const res = await axios.post(
-				`${baseURL}/api/v1/user/code/${userId}`,
+				`${baseURL(window)}/api/v1/user/code/${userId}`,
 				{ newCode },
 				{
 					headers: {
@@ -120,7 +120,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.get(
-				`${baseURL}/api/v1/user/all`,
+				`${baseURL(window)}/api/v1/user/all`,
 
 				{
 					headers: {
@@ -201,7 +201,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`${baseURL}/api/v1/squad`,
+				`${baseURL(window)}/api/v1/squad`,
 				{ userId: user._id },
 				{
 					headers: {
@@ -225,7 +225,7 @@ const Dashboard = ({ user }) => {
 
 		try {
 			const res = await axios.delete(
-				`${baseURL}/api/v1/squad/${squadNumber}`,
+				`${baseURL(window)}/api/v1/squad/${squadNumber}`,
 				{
 					headers: {
 						authorization: `Bearer ${token}`,
@@ -255,7 +255,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`${baseURL}/api/v1/squad/name/${squadNumber}`,
+				`${baseURL(window)}/api/v1/squad/name/${squadNumber}`,
 				{ userId: user._id, squadName: newName },
 				{
 					headers: {
@@ -283,7 +283,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`${baseURL}/api/v1/squad/${squadNumber}`,
+				`${baseURL(window)}/api/v1/squad/${squadNumber}`,
 				{ userId: officerId },
 				{
 					headers: {
@@ -311,7 +311,7 @@ const Dashboard = ({ user }) => {
 			// console.log(userId);
 			// Getting the report data.
 			const res = await axios.post(
-				`${baseURL}/api/v1/squad/remove/${squadNumber}`,
+				`${baseURL(window)}/api/v1/squad/remove/${squadNumber}`,
 				{ officerId, userId: user._id },
 				{
 					headers: {

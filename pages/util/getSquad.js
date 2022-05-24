@@ -1,13 +1,13 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import {baseURL} from "../../server/util/authUser";
+import { baseURL } from "../../server/util/authUser";
 
 const getSquad = async (squadNumber) => {
 	try {
 		const token = Cookies.get("token");
 
 		const res = await axios.get(
-			`${baseURL}/api/v1/squad/${squadNumber}`,
+			`${baseURL(window)}/api/v1/squad/${squadNumber}`,
 			{
 				headers: {
 					authorization: `Bearer ${token}`,

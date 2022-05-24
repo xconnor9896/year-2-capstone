@@ -81,31 +81,31 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 	if (!token) {
 		isProtectedRoute && redirectUser(ctx, "/");
 	} else {
-    try {
-      const res = await axios.get(`${baseURL}/api/v1/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+		try {
+			const res = await axios.get(`${baseURL(window)}/api/v1/user`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
 			// console.log(res);
-      const { user } = res.data;
+			const { user } = res.data;
 
-      // if (user) !isProtectedRoute && redirectUser(ctx, "/");
-      pageProps.user = user;
-      pageProps.token = token;
+			// if (user) !isProtectedRoute && redirectUser(ctx, "/");
+			pageProps.user = user;
+			pageProps.token = token;
 
-      		if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
-      		if (!user || !token)
-      			throw new Error("No user or token. Deleting bad cookie.");
-      	} catch (err) {
-      		console.error(err);
-      		destroyCookie(ctx, "token");
-      		redirectUser(ctx, "/");
-      	}
-      }
+			if (user && ctx.pathname === "/") redirectUser(ctx, "/dashboard");
+			if (!user || !token)
+				throw new Error("No user or token. Deleting bad cookie.");
+		} catch (err) {
+			console.error(err);
+			destroyCookie(ctx, "token");
+			redirectUser(ctx, "/");
+		}
+	}
 
-      return { pageProps };
-    }
+	return { pageProps };
+};
 
 export default MyApp;

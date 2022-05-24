@@ -5,62 +5,63 @@ const { getMaxListeners } = require("../models/UserModel");
 const userModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
 
-
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 let emailUrl = "";
 
 const sendVerfEmail = async (req, res) => {
-  //us
-  const { inputEmail } = req.body;
-  user = userModel.find({});
-  const randomNumberGen = () => {
-    randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
-    return randomNumber;
-  };
+	//us
+	const { inputEmail } = req.body;
+	user = userModel.find({});
+	const randomNumberGen = () => {
+		randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
+		return randomNumber;
+	};
 
-  try {
-    // const num = randomNumberGen();
-    // console.log(randomNumber);
-    const users = await userModel.find({});
-    const user = users.find((user) => {
-      return user.email == inputEmail;
-    });
-    console.log(user);
-    user.verfiy = randomNumberGen().toString();
-    await user.save();
-    console.log(user);
+	try {
+		// const num = randomNumberGen();
+		// console.log(randomNumber);
+		const users = await userModel.find({});
+		const user = users.find((user) => {
+			return user.email == inputEmail;
+		});
+		console.log(user);
+		user.verfiy = randomNumberGen().toString();
+		await user.save();
+		console.log(user);
 
-    emailUrl = `${user.verfiy}`;
+		emailUrl = `${user.verfiy}`;
 
-    if (user.email == inputEmail) {
-      console.log(`We have ${inputEmail} as one of our users`);
-    } else if (user.email != inputEmail) {
-      console.log(`${inputEmail} we dont have this email as one of users`);
-      inputEmail = 0;
-    } else {
-      console.log("idk what happended");
-    }
-    // return(emailUrl)
-  } catch (err) {
-    // alert(
-    //   "Im sorry we dont have that email as a user please check the email or sign up"
-    // );
-    console.log(err);
-    return res.status(500).send("error");
-  }
+		if (user.email == inputEmail) {
+			console.log(`We have ${inputEmail} as one of our users`);
+		} else if (user.email != inputEmail) {
+			console.log(
+				`${inputEmail} we dont have this email as one of users`
+			);
+			inputEmail = 0;
+		} else {
+			console.log("idk what happended");
+		}
+		// return(emailUrl)
+	} catch (err) {
+		// alert(
+		//   "Im sorry we dont have that email as a user please check the email or sign up"
+		// );
+		console.log(err);
+		return res.status(500).send("error");
+	}
 
-  // sending the email
-  return (
-    sgMail
-      //This is the actually sending the email which i used html to style and over all create
-      .send(
-        (verfEmail = {
-          to: inputEmail, // Change to your recipient
-          from: "westmeclps@gmail.com", // Change to your verified sender
+	// sending the email
+	return (
+		sgMail
+			//This is the actually sending the email which i used html to style and over all create
+			.send(
+				(verfEmail = {
+					to: inputEmail, // Change to your recipient
+					from: "westmeclps@gmail.com", // Change to your verified sender
 
-          subject: "Email Verf",
-          html: `   
+					subject: "Email Verf",
+					html: `   
       <div
       class="EmailVefDiv"
       style="
@@ -90,7 +91,7 @@ const sendVerfEmail = async (req, res) => {
           font-size: 1rem;
         "
         method="post"
-        action="${baseURL}/api/v1/email/v1?verify=${emailUrl}"
+        action="${baseURL(window)}/api/v1/email/v1?verify=${emailUrl}"
       >
         <button style="background-color: black; color: whitesmoke">
           Email Verify 
@@ -98,43 +99,43 @@ const sendVerfEmail = async (req, res) => {
       </form>
     </div>
       `,
-        })
-      )
-      // This is just here so u can stop it from running after its done and also to let the user know tp check their email
-      .then((data) => {
-        return res.status(202).send("Email Sent");
-      })
-      //This is to make it log a error and stop the function so its not just running forever this is where you would put anything to tell the user that its not working
-      .catch((error) => {
-        console.error(error);
-        return res.status(401).send(error);
-      })
-  );
+				})
+			)
+			// This is just here so u can stop it from running after its done and also to let the user know tp check their email
+			.then((data) => {
+				return res.status(202).send("Email Sent");
+			})
+			//This is to make it log a error and stop the function so its not just running forever this is where you would put anything to tell the user that its not working
+			.catch((error) => {
+				console.error(error);
+				return res.status(401).send(error);
+			})
+	);
 };
 
 //This is what runs when they get to the page
 const verifyController = async (req, res) => {
-  try {
-    let params = req.query;
-    // console.log(params);
-    let urlNumber = params.verify;
-    const users = await userModel.find({}); // getting all the users
+	try {
+		let params = req.query;
+		// console.log(params);
+		let urlNumber = params.verify;
+		const users = await userModel.find({}); // getting all the users
 
-    // finding the user i want to change by using the number we get from the url and checking it by all the users verfiy
-    const user = users.find((user) => {
-      return user.verfiy == urlNumber;
-    });
-    console.log(user);
-    // console.log(`This is the choosen user`)
-    // console.log(urlNumber)
-    user.verfiy = "true";
-    user.save();
-    // console.log(user.verfiy)
-    return res.status(202).redirect("/emailVerifiedPg")
-  } catch (err) {
-    console.log(err);
-    return res.status(401).send(err);
-  }
+		// finding the user i want to change by using the number we get from the url and checking it by all the users verfiy
+		const user = users.find((user) => {
+			return user.verfiy == urlNumber;
+		});
+		console.log(user);
+		// console.log(`This is the choosen user`)
+		// console.log(urlNumber)
+		user.verfiy = "true";
+		user.save();
+		// console.log(user.verfiy)
+		return res.status(202).redirect("/emailVerifiedPg");
+	} catch (err) {
+		console.log(err);
+		return res.status(401).send(err);
+	}
 };
 
 // const passwordResetEmail = {
@@ -150,48 +151,50 @@ const verifyController = async (req, res) => {
 // };
 
 const sendPassResetEmail = async (req, res) => {
-  //Getting some data a number that ill use later
-  const { inputEmail } = req.body;
-  user = userModel.find({});
-  const randomNumberGen = () => {
-    randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
-    return randomNumber;
-  };
+	//Getting some data a number that ill use later
+	const { inputEmail } = req.body;
+	user = userModel.find({});
+	const randomNumberGen = () => {
+		randomNumber = Math.floor(Math.random() * 10000000000000000) + 1000000;
+		return randomNumber;
+	};
 
-  //Checks and making a random Number so i can use it for a orignaal url
-  try {
-    // const num = randomNumberGen();
-    // console.log(randomNumber);
-    const users = await userModel.find({});
-    const user = users.find((user) => {
-      return user.email == inputEmail;
-    });
+	//Checks and making a random Number so i can use it for a orignaal url
+	try {
+		// const num = randomNumberGen();
+		// console.log(randomNumber);
+		const users = await userModel.find({});
+		const user = users.find((user) => {
+			return user.email == inputEmail;
+		});
 
-    if (user.email == inputEmail) {
-      console.log(`We have ${inputEmail} as one of our users`);
-    } else if (user.email != inputEmail) {
-      console.log(`${inputEmail} we dont have this email as one of users`);
-      inputEmail = 0;
-    } else {
-      console.log("idk what happended");
-    }
-    // return(emailUrl)
-  } catch (err) {
-    // alert(
-    //   "Im sorry we dont have that email as a user please check the email or sign up"
-    // );
-    console.log(err);
-    return res.status(500).send("error");
-  }
-  //It actually sending the email
-  return sgMail
-    .send(
-      (resetPass = {
-        to: inputEmail, // Change to your recipient
-        from: "westmeclps@gmail.com", // Change to your verified sender
+		if (user.email == inputEmail) {
+			console.log(`We have ${inputEmail} as one of our users`);
+		} else if (user.email != inputEmail) {
+			console.log(
+				`${inputEmail} we dont have this email as one of users`
+			);
+			inputEmail = 0;
+		} else {
+			console.log("idk what happended");
+		}
+		// return(emailUrl)
+	} catch (err) {
+		// alert(
+		//   "Im sorry we dont have that email as a user please check the email or sign up"
+		// );
+		console.log(err);
+		return res.status(500).send("error");
+	}
+	//It actually sending the email
+	return sgMail
+		.send(
+			(resetPass = {
+				to: inputEmail, // Change to your recipient
+				from: "westmeclps@gmail.com", // Change to your verified sender
 
-        subject: "Password Reset",
-        html: `   
+				subject: "Password Reset",
+				html: `   
         <div
         class="PasswordReset"
         style="
@@ -220,7 +223,7 @@ const sendPassResetEmail = async (req, res) => {
             width: 10%;
             font-size: 1rem;
           "
-          action="${baseURL}/changePassword"
+          action="${baseURL(window)}/changePassword"
           method="post"
         >
           <button style="background-color: black; color: whitesmoke;  border: whitesmoke ">
@@ -229,69 +232,73 @@ const sendPassResetEmail = async (req, res) => {
         </form>
       </div>
       `,
-      })
-    )
-    .then((data) => {
-      return res.status(202).send("Email Sent");
-    })
-    .catch((error) => {
-      console.error(error);
-      return res.status(401).send(error);
-    });
+			})
+		)
+		.then((data) => {
+			return res.status(202).send("Email Sent");
+		})
+		.catch((error) => {
+			console.error(error);
+			return res.status(401).send(error);
+		});
 };
 
 const passwordChange = async (req, res) => {
-  const users = await userModel.find({});
+	const users = await userModel.find({});
 
-  let inputEmail = req.body.inputEmail;
-  let inputPassword = req.body.inputPassword;
-  let confirmPassword = req.body.confirmPassword;
+	let inputEmail = req.body.inputEmail;
+	let inputPassword = req.body.inputPassword;
+	let confirmPassword = req.body.confirmPassword;
 
-  const user = users.find((user) => {
-    return user.email == inputEmail;
-  });
+	const user = users.find((user) => {
+		return user.email == inputEmail;
+	});
 
-  if (!user || user == undefined || user.email == undefined || !inputEmail || inputEmail == undefined || !confirmPassword) {
-    return(
-    res.send("<h1>Im sorry we couldnt find that user<h1>")
-    )
-  }
+	if (
+		!user ||
+		user == undefined ||
+		user.email == undefined ||
+		!inputEmail ||
+		inputEmail == undefined ||
+		!confirmPassword
+	) {
+		return res.send("<h1>Im sorry we couldnt find that user<h1>");
+	}
 
-  try {
+	try {
+		// console.log(`This is the inputed email ${inputEmail} and this is the users ${users}`)
 
-    // console.log(`This is the inputed email ${inputEmail} and this is the users ${users}`)
+		console.log(user);
+		// if (user.email == undefined) {
+		//   alert(
+		//     "Im sorry that email doesnt exist in our website check if you mispelled or that you have signed up "
+		//   );
+		// }
 
-    console.log(user);
-    // if (user.email == undefined) {
-    //   alert(
-    //     "Im sorry that email doesnt exist in our website check if you mispelled or that you have signed up "
-    //   );
-    // }
-
-    console.log(`This is the email ${user.email}`);
-    console.log(`This is the password ${user.password}`);
-    if (inputPassword == confirmPassword && inputEmail == user.email) {
-      bcrypt.genSalt(10, (err, salt) =>
-        bcrypt.hash(inputPassword, salt, (err, hash) => {
-          if (err) throw err;
-          user.password = hash;
-          user.save();
-          res.redirect("/");
-        })
-      );
-    } else {
-      console.log("Password didnt match at emailCon line 285");
-      return;
-    }
-  } catch (err) {
-    // console.log(`This is the catch error ${err}`);
-    return res.status(401).send(` Im sorry something went wrong ${err}`);
-  }
+		console.log(`This is the email ${user.email}`);
+		console.log(`This is the password ${user.password}`);
+		if (inputPassword == confirmPassword && inputEmail == user.email) {
+			bcrypt.genSalt(10, (err, salt) =>
+				bcrypt.hash(inputPassword, salt, (err, hash) => {
+					if (err) throw err;
+					user.password = hash;
+					user.save();
+					res.redirect("/");
+				})
+			);
+		} else {
+			console.log("Password didnt match at emailCon line 285");
+			return;
+		}
+	} catch (err) {
+		// console.log(`This is the catch error ${err}`);
+		return res.status(401).send(` Im sorry something went wrong ${err}`);
+	}
 };
 
 module.exports = {
-  sendVerfEmail,
-  sendPassResetEmail,
-  verifyController,
-  passwordChange,
+	sendVerfEmail,
+	sendPassResetEmail,
+	verifyController,
+	passwordChange,
 };
