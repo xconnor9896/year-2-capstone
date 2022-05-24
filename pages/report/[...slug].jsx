@@ -16,7 +16,7 @@ import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
 import getReport from "../util/getReport";
 import axios from "axios";
-import { baseURL } from "../../server/util/authUser";
+import { baseURL } from "../../util/authUser";
 
 export default function Report({
 	user,

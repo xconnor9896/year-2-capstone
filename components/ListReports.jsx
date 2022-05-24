@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import Cookies from "js-cookie";
 import axios from "axios";
-import getSquad from "../pages/util/getSquad";
+import getSquad from "../util/getSquad";
 
 import { baseURL } from "../server/util/authUser";
 

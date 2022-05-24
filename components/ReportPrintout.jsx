@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import styles from "../styles/Components/ReportPrintout.module.scss";
 import { FaCheckSquare, FaSquare } from "react-icons/fa";
 
-import getReport from "../pages/util/getReport";
+import getReport from "../util/getReport";
 
 const ReportPrintout = ({ id, userId }) => {
 	const checkbox = (val) => {
@@ -420,7 +420,7 @@ const ReportPrintout = ({ id, userId }) => {
 
 							return (
 								<div key={_id} className={styles.personInfo}>
-									<article >
+									<article>
 										<section>
 											<header>
 												Person{" "}
