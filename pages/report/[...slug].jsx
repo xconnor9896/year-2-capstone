@@ -14,7 +14,7 @@ import {
 import Modal from "../../components/Modal";
 import { Option, Select } from "../../components/Select";
 import { useRouter } from "next/router";
-import getReport from "../util/getReport";
+import getReport from "../../util/getReport";
 import axios from "axios";
 import { baseURL } from "../../util/authUser";
 
